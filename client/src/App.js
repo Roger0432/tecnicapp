@@ -3,12 +3,14 @@ import './App.css';
 import { PrimerComponent } from './components/PrimerComponent';
 import { SegonComponent } from './components/SegonComponent';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function App() {
 
   const [backEndData, setBackEndData] = useState([{}]);
  
   useEffect(() => {
-    fetch('/api')
+    fetch(`${BACKEND_URL}/api`)
       .then(res => res.json())
       .then(data => setBackEndData(data));
   }, []);
