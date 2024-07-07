@@ -3,9 +3,8 @@ import './App.css';
 import { PrimerComponent } from './components/PrimerComponent';
 import { SegonComponent } from './components/SegonComponent';
 
-//const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 //const BACKEND_URL = "";
-const BACKEND_URL = "https://tecnicapp-server.vercel.app";
 
 function App() {
 
