@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { PrimerComponent } from './components/PrimerComponent';
-import { SegonComponent } from './components/SegonComponent';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 //const BACKEND_URL = "";
@@ -26,8 +24,6 @@ function App() {
           ))}
         </ul>
 
-        <PrimerComponent/>
-        <SegonComponent/>
       </header>
     </div>
   );
