@@ -16,6 +16,8 @@ function App() {
       .then(data => setBackEndData(data));
   }, []);
 
+  console.log(backEndData);
+
   return (
     <div className="App">
       <header className="App-header">    
@@ -25,7 +27,6 @@ function App() {
             <li key={index}>{user}</li>
           ))}
         </ul>
-
 
 
         <PrimerComponent/>
