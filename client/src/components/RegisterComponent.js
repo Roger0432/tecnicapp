@@ -55,7 +55,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
                 <input type="text" id="codiactivacio" name="codiactivacio" placeholder="Codi d'activació" autoComplete="one-time-code" />
             </div>
 
-            <button>Registrar-se</button>
+            <button id="register-btn">Registrar-se</button>
             <br></br>
             <a href="#login" onClick={ canviarMostrarLogin }>Ja tens compte? Inicia sessió aquí.</a>
 
