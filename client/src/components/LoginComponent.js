@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import '../index.css'
 
-//const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const BACKEND_URL = "";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const LoginComponent = ({ canviarMostrarLogin }) => {
 
