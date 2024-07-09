@@ -17,7 +17,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
     useEffect(() => {
         const buscarRols = async () => {
             try {
-                const response = await fetch(`${BACKEND_URL}rols`);
+                const response = await fetch(`${BACKEND_URL}/rols`);
                 const data = await response.json();
                 setRols(data);
             } catch (error) {
@@ -54,7 +54,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
 
         const data = { nom, cognoms, email, password, rol, codiactivacio };
     
-        const response = await fetch(`${BACKEND_URL}register`, {
+        const response = await fetch(`${BACKEND_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
