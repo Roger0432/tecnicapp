@@ -3,7 +3,7 @@ import './App.css';
 import { LoginComponent } from './components/LoginComponent';
 import { RegisterComponent } from './components/RegisterComponent';
 
-//const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 //const BACKEND_URL = "";
 
 function App() {
