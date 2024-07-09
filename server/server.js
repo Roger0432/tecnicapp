@@ -81,8 +81,8 @@ app.post('/register', async (req, res) => {
         }
 
         const queryInsert = `
-            INSERT INTO users (nom, cognoms, email, password, rol) 
-            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${rol}')
+            INSERT INTO users (nom, cognoms, email, password, rol, descodificat) 
+            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${rol}', '${password}')
         `;
         await client.query(queryInsert);
         client.release();

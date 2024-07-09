@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+//const BACKEND_URL = "";
+
 export const RegisterComponent = ({ canviarMostrarLogin }) => { 
 
     const [nom, setNom] = useState('');
@@ -40,7 +43,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
 
         const data = { nom, cognoms, email, password, rol, codiactivacio };
     
-        const response = await fetch('/register', {
+        const response = await fetch(`${BACKEND_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
