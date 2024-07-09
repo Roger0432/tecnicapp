@@ -39,7 +39,7 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const client = await pool.connect();
-        const query = `SELECT * FROM users WHERE email = '${email}'`;
+        const query = `SELECT email, password FROM users WHERE email = '${email}'`;
         const result = await client.query(query);
         client.release();
 
@@ -81,16 +81,32 @@ app.post('/register', async (req, res) => {
         }
 
         const queryInsert = `
-            INSERT INTO users (nom, cognoms, email, password, rol, descodificat) 
-            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${rol}', '${password}')
+            INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id) 
+            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${password}', '${rol}')
         `;
+
+        console.log("querInsert: "+queryInsert);
+
         await client.query(queryInsert);
         client.release();
 
         res.status(201).json({ msg: 'Usuari creat correctament' });
 
     } catch (error) {
-        res.status(500).json({ msg: 'Error del servidor.' });
+        res.status(500).json({ msg: 'Error del servidor:'+error });
+    }
+});
+
+app.get('/rols', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const query = `SELECT id, rol FROM rols`;
+        const result = await client.query(query);
+        client.release();
+        res.json(result.rows);
+
+    } catch (error) {
+        res.status(500).json({ msg: error });
     }
 });
 

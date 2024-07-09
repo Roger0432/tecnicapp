@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-//const BACKEND_URL = "";
+//const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = "";
 
 export const RegisterComponent = ({ canviarMostrarLogin }) => { 
 
@@ -13,6 +13,20 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
     const [rol, setRol] = useState('Selecciona un rol');
     const [codiactivacio, setCodiactivacio] = useState('');
     const [error, setError] = useState('');
+    const [rols, setRols] = useState([]);
+
+    useEffect(() => {
+        const buscarRols = async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}rols`);
+                const data = await response.json();
+                setRols(data);
+            } catch (error) {
+                console.error('Error fetching roles:', error);
+            }
+        };
+        buscarRols();
+    }, []);
 
     const handleNomChange = (event) => setNom(event.target.value);
     const handleCognomsChange = (event) => setCognoms(event.target.value);
@@ -30,12 +44,10 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
             setError('Has d\'omplir tots els camps');
             return;
         }
-
         if (password !== repetirpassword) {
             setError('Les contrasenyes no coincideixen');
             return;
         }
-
         if (password.length < 6) {
             setError('La contrasenya ha de tenir com a mínim 6 caràcters');
             return;
@@ -43,7 +55,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
 
         const data = { nom, cognoms, email, password, rol, codiactivacio };
     
-        const response = await fetch(`${BACKEND_URL}/register`, {
+        const response = await fetch(`${BACKEND_URL}register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -108,22 +120,15 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
                     name="roltecnica" 
                     value={rol} 
                     onChange={handleRolChange} 
-                    autoComplete="off">       
+                    autoComplete="off">
 
                     <option value="Selecciona un rol" disabled>Selecciona un rol</option>
-                    <option value="Cap de colla">Cap de colla</option>
-                    <option value="Sots cap de colla">Sots cap de colla</option>
-                    <option value="Cap de troncs">Cap de troncs</option>
-                    <option value="Cap de canalla">Cap de canalla</option>
-                    <option value="Cap de pinyes">Cap de pinyes</option>
-                    <option value="Cap de baixos">Cap de baixos</option>
-                    <option value="Cap de crosses">Cap de crosses</option>
-                    <option value="Equip de troncs">Equip de troncs</option>
-                    <option value="Equip de canalla">Equip de canalla</option>
-                    <option value="Equip de pinyes">Equip de pinyes</option>
-                    <option value="Equip de baixos">Equip de baixos</option>
-                    <option value="Equip de crosses">Equip de crosses</option>
-                    <option value="Altres">Altres</option>
+                    {rols.map((role) => (
+                        <option key={role.id} value={role.id}>
+                            {role.rol}
+                        </option>
+                    ))}
+
                 </select>
             </div>
 
