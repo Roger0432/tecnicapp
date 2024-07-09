@@ -23,6 +23,7 @@ const POSTGRES_USER="default"
 const POSTGRES_PORT="5432"
 const JWT_SECRET="tecnicapp-secret"
 const JWT_REFRESH_SECRET="tecnicapp-refreh-secret"
+const CODI_ACTIVACIO="tecnica2024"
 
 const pool = new Pool({
     user: POSTGRES_USER,
@@ -43,34 +44,28 @@ app.post('/login', async (req, res) => {
         client.release();
 
         if (result.rows.length == 0) {0
-            return res.status(401).send({ error: "Usuari incorrecte" });
+            return res.status(401).json({ msg: "Usuari incorrecte" });
         }
 
         const user_db = result.rows[0];
 
-        console.log("\nuser password: ", password);
-        console.log("db password: ", user_db.password);
-        console.log("bcrypt compare: ", bcrypt.compare(password, user_db.password));
-        
         if (!(await bcrypt.compare(password, user_db.password))) {
-            return res.status(401).send({ error: "Contrasenya incorrecte" });
+            return res.status(401).json({ msg: "Contrasenya incorrecte" });
         }
 
         const token = jwt.sign({ email: user_db.email }, JWT_SECRET, { expiresIn: '1h' });
         const refreshToken = jwt.sign({ email: user_db.email }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
         res.json({ token, refreshToken });
-        console.log("Usuari autenticat correctament");
 
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error del servidor.');
+        res.status(500).json({ msg: 'Error del servidor.' });
     }
 });
 
 
 app.post('/register', async (req, res) => {
     const { nom, cognoms, email, password, rol } = req.body;
-    
     try {
         const client = await pool.connect();
         const queryCount = `SELECT COUNT(*) AS count FROM users WHERE email = '${email}'`;
@@ -78,7 +73,11 @@ app.post('/register', async (req, res) => {
         const count = result.rows[0].count;
     
         if (count > 0) {
-          return res.status(400).send('Aquest correu electrònic ja està registrat.');
+            return res.status(400).json({ msg: 'Aquest correu electrònic ja està registrat.' });
+        }
+
+        if (req.body.codiactivacio != CODI_ACTIVACIO) {
+            return res.status(400).json({ msg: 'Codi d\'activació incorrecte' });
         }
 
         const queryInsert = `
@@ -88,11 +87,10 @@ app.post('/register', async (req, res) => {
         await client.query(queryInsert);
         client.release();
 
-        res.status(201).send('Usuari creat correctament');
+        res.status(201).json({ msg: 'Usuari creat correctament' });
 
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error del servidor.');
+        res.status(500).json({ msg: 'Error del servidor.' });
     }
 });
 

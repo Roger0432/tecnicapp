@@ -7,26 +7,23 @@ export const LoginComponent = ({ canviarMostrarLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-    const handleEmailChange = (event) => {
-      setEmail(event.target.value);
-    };
-  
-    const handlePasswordChange = (event) => {
-      setPassword(event.target.value);
-    };
+  const handleEmailChange = (event) => setEmail(event.target.value);
+  const handlePasswordChange = (event) => setPassword(event.target.value);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     setError('');
+
     const data = { email, password };
     const response = await fetch('/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
+
     if (!response.ok) {
       const error = await response.json();
-      setError(error.error);
+      setError(error.msg);
       return;
     }
   }
