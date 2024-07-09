@@ -58,8 +58,8 @@ app.post('/login', async (req, res) => {
         res.json({ token, refreshToken });
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ msg: 'Error del servidor.' });
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor' });
     }
 });
 
@@ -73,7 +73,7 @@ app.post('/register', async (req, res) => {
         const count = result.rows[0].count;
     
         if (count > 0) {
-            return res.status(400).json({ msg: 'Aquest correu electrònic ja està registrat.' });
+            return res.status(400).json({ msg: 'Aquest correu electrònic ja està registrat' });
         }
 
         if (req.body.codiactivacio != CODI_ACTIVACIO) {
@@ -85,17 +85,17 @@ app.post('/register', async (req, res) => {
             VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${password}', '${rol}')
         `;
 
-        console.log("querInsert: "+queryInsert);
-
         await client.query(queryInsert);
         client.release();
 
         res.status(201).json({ msg: 'Usuari creat correctament' });
 
     } catch (error) {
-        res.status(500).json({ msg: 'Error del servidor:'+error });
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor' });
     }
 });
+
 
 app.get('/rols', async (req, res) => {
     try {
@@ -106,9 +106,13 @@ app.get('/rols', async (req, res) => {
         res.json(result.rows);
 
     } catch (error) {
-        res.status(500).json({ msg: error });
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor' });
     }
 });
+
+
+
 
 
 app.listen(port, () => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-export const RegisterComponent = ({ canviarMostrarLogin }) => { 
+export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => { 
 
     const [nom, setNom] = useState('');
     const [cognoms, setCognoms] = useState('');
@@ -39,7 +39,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
         event.preventDefault();
         setError('');
 
-        if (nom === '' || cognoms === '' || email === '' || password === '' || repetirpassword === '' || rol === '' || codiactivacio === '') {
+        if (nom === '' || cognoms === '' || email === '' || password === '' || repetirpassword === '' || rol === 'Selecciona un rol' || codiactivacio === '') {
             setError('Has d\'omplir tots els camps');
             return;
         }
@@ -66,6 +66,7 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
             return;
         }
 
+        onAuthSuccess();
     }
 
         
@@ -172,7 +173,8 @@ export const RegisterComponent = ({ canviarMostrarLogin }) => {
 
             <button id="register-btn" onClick={handleRegister}>Registrar-se</button>
             <br></br>
-            <a href="#login" onClick={ canviarMostrarLogin }>Ja tens compte? Inicia sessió aquí.</a>
+            <a href="#login" onClick={(event) => { event.preventDefault(); canviarMostrarLogin(); }} aria-label="Inicia sessió aquí si ja tens un comte.">Ja tens compte? Inicia sessió aquí.</a>
+
             <br></br>
             <div className="error">{error}</div>
 

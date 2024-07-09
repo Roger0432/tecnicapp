@@ -3,7 +3,7 @@ import '../index.css'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-export const LoginComponent = ({ canviarMostrarLogin }) => {
+export const LoginComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +33,8 @@ export const LoginComponent = ({ canviarMostrarLogin }) => {
       setError(error.msg);
       return;
     }
+
+    onAuthSuccess();
   }
 
   return (
@@ -68,7 +70,8 @@ export const LoginComponent = ({ canviarMostrarLogin }) => {
 
       <button id="login-btn" onClick={handleLogin}>Iniciar sessió</button>
       <br></br>
-      <a href="#registre" onClick={canviarMostrarLogin}>No tens compte? Registra't aquí.</a>
+      <a href="#registre" onClick={(event) => { event.preventDefault(); canviarMostrarLogin(); }} aria-label="Registra't aquí si no tens compte.">No tens compte? Registra't aquí.</a>
+
       <br></br>
       <div className="error">{error}</div>
 

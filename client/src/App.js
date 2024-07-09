@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import './App.css';
 import { LoginComponent } from './components/LoginComponent';
 import { RegisterComponent } from './components/RegisterComponent';
-
-//const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { MainComponent } from './components/MainComponent';
 
 function App() {
 
+  const [authSuccess, setAuthSuccess] = useState(false);
   const [mostrarLogin, setMostrarLogin] = useState(true);
 
   const canviarMostrarLogin = () => setMostrarLogin(!mostrarLogin);
@@ -16,9 +16,13 @@ function App() {
 
       <h1>TECNICAPP</h1>
 
-      {mostrarLogin ? (
-        <LoginComponent canviarMostrarLogin={canviarMostrarLogin} />
-      ) : ( <RegisterComponent canviarMostrarLogin={canviarMostrarLogin} /> )}
+      {authSuccess ? (
+        <MainComponent />
+      ) : (
+        mostrarLogin ? 
+        ( <LoginComponent onAuthSuccess={() => setAuthSuccess(true)} canviarMostrarLogin={canviarMostrarLogin} /> ) : 
+        ( <RegisterComponent onAuthSuccess={() => setAuthSuccess(true)} canviarMostrarLogin={canviarMostrarLogin} /> )
+      )}
 
     </div>
   );
