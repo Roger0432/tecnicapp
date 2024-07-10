@@ -40,7 +40,7 @@ export const LoginComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
   return (
     <div>
 
-      <h2>LOGIN</h2>
+      <h2>INICIAR SESSIÓ</h2>
 
       <div className="form-group">
         <label htmlFor="lg-email">Correu electrònic</label>
@@ -52,6 +52,7 @@ export const LoginComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
           autoComplete="username" 
           value={email}
           onChange={handleEmailChange}  
+          required
         />
       </div>
 
@@ -65,10 +66,11 @@ export const LoginComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
           autoComplete="current-password"
           value={password}
           onChange={handlePasswordChange}
+          required
         />
       </div>
 
-      <button id="login-btn" onClick={handleLogin}>Iniciar sessió</button>
+      <button id="login-btn" onClick={handleLogin}>Entra</button>
       <br></br>
       <a href="#registre" onClick={(event) => { event.preventDefault(); canviarMostrarLogin(); }} aria-label="Registra't aquí si no tens compte.">No tens compte? Registra't aquí.</a>
 

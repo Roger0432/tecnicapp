@@ -84,6 +84,7 @@ export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
                     autoComplete="given-name"
                     value={nom}
                     onChange={handleNomChange}
+                    required
                 />
             </div>
 
@@ -97,6 +98,7 @@ export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
                     autoComplete="family-name" 
                     value={cognoms}
                     onChange={handleCognomsChange}
+                    required
                 />
             </div>
 
@@ -110,6 +112,7 @@ export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
                     autoComplete="email" 
                     value={email}
                     onChange={handleEmailChange}
+                    required
                 />
             </div>
 
@@ -142,6 +145,7 @@ export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
                     autoComplete="new-password" 
                     value={password}
                     onChange={handlePasswordChange}
+                    required
                 />
             </div>
 
@@ -155,6 +159,7 @@ export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
                     autoComplete="new-password"
                     value={repetirpassword}
                     onChange={handleRepetirpasswordChange}
+                    required
                 />
             </div>
 
@@ -168,10 +173,11 @@ export const RegisterComponent = ({ canviarMostrarLogin, onAuthSuccess }) => {
                     autoComplete="one-time-code" 
                     value={codiactivacio}
                     onChange={handleCodiactivacioChange}
+                    required
                 />
             </div>
 
-            <button id="register-btn" onClick={handleRegister}>Registrar-se</button>
+            <button id="register-btn" onClick={handleRegister}>Crea un compte</button>
             <br></br>
             <a href="#login" onClick={(event) => { event.preventDefault(); canviarMostrarLogin(); }} aria-label="Inicia sessió aquí si ja tens un comte.">Ja tens compte? Inicia sessió aquí.</a>
 
