@@ -22,7 +22,6 @@ const POSTGRES_PASSWORD="o1fvCj6tIAHc"
 const POSTGRES_USER="default"
 const POSTGRES_PORT="5432"
 const JWT_SECRET="tecnicapp-secret"
-const JWT_REFRESH_SECRET="tecnicapp-refreh-secret"
 const CODI_ACTIVACIO="tecnica2024"
 
 const pool = new Pool({
@@ -35,6 +34,29 @@ const pool = new Pool({
 });
 
 
+function generateToken(email) {
+    return jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
+}
+
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ msg: 'Token no proporcionat', status: false });
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ msg: 'Token no vàlid', status: false });
+        req.user = user;
+        next();
+    });
+}
+
+
+app.get('/verify-token', authenticateToken, (req, res) => {
+    res.status(200).json({ msg: 'Token verificat correctament', status: true });
+});
+
+
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -44,22 +66,21 @@ app.post('/login', async (req, res) => {
         client.release();
 
         if (result.rows.length == 0) {0
-            return res.status(401).json({ msg: "Usuari incorrecte" });
+            return res.status(401).json({ msg: "Usuari incorrecte", status: false });
         }
 
         const user_db = result.rows[0];
 
         if (!(await bcrypt.compare(password, user_db.password))) {
-            return res.status(401).json({ msg: "Contrasenya incorrecte" });
+            return res.status(401).json({ msg: "Contrasenya incorrecte", status: false });
         }
 
-        const token = jwt.sign({ email: user_db.email }, JWT_SECRET, { expiresIn: '1h' });
-        const refreshToken = jwt.sign({ email: user_db.email }, JWT_REFRESH_SECRET, { expiresIn: '7d' });
-        res.json({ token, refreshToken });
+        const authtoken = generateToken(email);
+        res.status(200).json({ authtoken: authtoken, status: true });
 
     } catch (error) {
         console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor' });
+        res.status(500).json({ msg: 'Error del servidor', status: false });
     }
 });
 
@@ -73,26 +94,27 @@ app.post('/register', async (req, res) => {
         const count = result.rows[0].count;
     
         if (count > 0) {
-            return res.status(400).json({ msg: 'Aquest correu electrònic ja està registrat' });
+            return res.status(400).json({ msg: 'Aquest correu electrònic ja està registrat', status: false });
         }
 
         if (req.body.codiactivacio != CODI_ACTIVACIO) {
-            return res.status(400).json({ msg: 'Codi d\'activació incorrecte' });
+            return res.status(400).json({ msg: 'Codi d\'activació incorrecte', status: false });
         }
 
         const queryInsert = `
             INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id) 
-            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${password}', '${rol}')
+            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${password}', ${rol})
         `;
 
         await client.query(queryInsert);
         client.release();
 
-        res.status(201).json({ msg: 'Usuari creat correctament' });
+        const authtoken = generateToken(email);
+        res.status(200).json({ authtoken: authtoken, status: true });
 
     } catch (error) {
         console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor' });
+        res.status(500).json({ msg: 'Error del servidor', status: false });
     }
 });
 
@@ -103,16 +125,13 @@ app.get('/rols', async (req, res) => {
         const query = `SELECT id, rol FROM rols`;
         const result = await client.query(query);
         client.release();
-        res.json(result.rows);
+        res.status(200).json({ rols: result.rows, status: true });
 
     } catch (error) {
         console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor' });
+        res.status(500).json({ msg: 'Error del servidor', status: false });
     }
 });
-
-
-
 
 
 app.listen(port, () => {
