@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function DetallsAssaig() {
   const [assaig, setAssaig] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`/assaig/${id}`)
+    fetch(`${BACKEND_URL}/assaig/${id}`)
       .then(response => response.json())
       .then(data => setAssaig(data.assaig))
       .catch(error => console.error('Error:', error));

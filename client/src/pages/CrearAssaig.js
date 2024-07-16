@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/App.css';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function CrearAssaig () {
 
   const [dia, setDia] = useState('');
@@ -20,7 +22,7 @@ function CrearAssaig () {
       return;
     }
 
-    fetch('/crear-assaig', {
+    fetch(`${BACKEND_URL}/crear-assaig`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dia, lloc, hora, nom }),

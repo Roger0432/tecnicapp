@@ -1,0 +1,79 @@
+/* Assaigs.css */
+.search-bar-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    width: 30%;
+    padding: 10px 10px 10px 40px; 
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #ccc;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #f2f2f2;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #727272;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+th:hover {
+    cursor: pointer;
+    background-color: #555555;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    cursor: pointer;
+    background-color: #ebe9e9;
+}
+
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+}
+
+th:first-child, td:first-child {
+    border-left: none;
+}
+
+th:last-child, td:last-child {
+    border-right: none;
+}
+  

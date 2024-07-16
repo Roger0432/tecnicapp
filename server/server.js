@@ -169,8 +169,6 @@ app.post('/crear-assaig', async (req, res) => {
             VALUES ('${dia}', '${lloc}', '${hora}', '${hora_fi}', true, '${nom}') RETURNING id
         `;
 
-        console.log(query);
-
         const result = await client.query(query);
         client.release();
 
