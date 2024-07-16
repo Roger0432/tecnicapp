@@ -38,7 +38,6 @@ function generateToken(email) {
     return jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
 }
 
-
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -51,7 +50,32 @@ function authenticateToken(req, res, next) {
     });
 }
 
+function sumarHores(hora, hores) {
+    const [h, m] = hora.split(':');
+    const d = new Date();
+    d.setHours(h);
+    d.setMinutes(m);
+    d.setHours(d.getHours() + hores);
+    return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
 
+function formatDate(dateString) {
+    const date = new Date(dateString);
+  
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getUTCFullYear();
+  
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
+}
+
+function formatTime(timeString) {
+    const [hours, minutes] = timeString.split(':');
+    return `${hours}:${minutes}`;
+}
+  
+  
 app.get('/verify-token', authenticateToken, (req, res) => {
     res.status(200).json({ msg: 'Token verificat correctament', status: true });
 });
@@ -126,6 +150,80 @@ app.get('/rols', async (req, res) => {
         const result = await client.query(query);
         client.release();
         res.status(200).json({ rols: result.rows, status: true });
+
+    } catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+});
+
+
+app.post('/crear-assaig', async (req, res) => {
+    const { dia, lloc, hora, nom } = req.body;
+    const hora_fi = sumarHores(hora, 2);
+
+    try {
+        const client = await pool.connect();
+        const query = `
+            INSERT INTO assaigsdiades (dia, lloc, hora_inici, hora_fi, assaig, nom)
+            VALUES ('${dia}', '${lloc}', '${hora}', '${hora_fi}', true, '${nom}') RETURNING id
+        `;
+
+        console.log(query);
+
+        const result = await client.query(query);
+        client.release();
+
+        const id = result.rows[0].id;
+        res.status(200).json({ msg: 'Assaig creat correctament', id: id, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+});
+
+
+app.get('/assaigs', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = true`;
+        const result = await client.query(query);
+        client.release();
+
+        result.rows.forEach(assaig => {
+            assaig.dia = formatDate(assaig.dia);
+            assaig.hora_inici = formatTime(assaig.hora_inici);
+            assaig.hora_fi = formatTime(assaig.hora_fi);
+        });
+
+        res.status(200).json({ assaigs: result.rows, status: true });
+    }
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+});
+
+
+app.get('/assaig/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const client = await pool.connect();
+        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE id = ${id}`;
+        const result = await client.query(query);
+        client.release();
+
+        if (result.rows.length == 0) {
+            return res.status(404).json({ msg: 'Assaig no trobat', status: false });
+        }
+
+        const assaig = result.rows[0];
+        assaig.dia = formatDate(assaig.dia);
+        assaig.hora_inici = formatTime(assaig.hora_inici);
+        assaig.hora_fi = formatTime(assaig.hora_fi);
+
+        res.status(200).json({ assaig: assaig, status: true });
 
     } catch (error) {
         console.error("Error: ", error);

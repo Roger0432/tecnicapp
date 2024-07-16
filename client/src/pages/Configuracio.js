@@ -2,7 +2,7 @@ import React from 'react'
 
 function Configuracio () {
   return (
-    <div>Configuració</div>
+    <div className='page'>Configuració</div>
   )
 }
 

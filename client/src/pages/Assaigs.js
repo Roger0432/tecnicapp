@@ -2,7 +2,14 @@ import React from 'react'
 
 function Assaigs () {
   return (
-    <div>Assaigs</div>
+    <div className='page'>
+      
+      Assaigs
+      
+        
+      
+      
+    </div>
   )
 }
 

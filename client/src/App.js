@@ -10,6 +10,7 @@ import Membres from './pages/Membres';
 import Perfil from './pages/Perfil';
 import Configuracio from './pages/Configuracio';
 import CrearAssaig from './pages/CrearAssaig';
+import DetallsAssaig from './pages/DetallsAssaig';
 
 //const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -67,6 +68,7 @@ function App() {
         <Route path="/configuracio" element={<Configuracio />} />
 
         <Route path="/crear-assaig" element={<CrearAssaig />} />
+        <Route path="/assaig/:id" element={<DetallsAssaig />} />
       </Routes>
     </div>
   );

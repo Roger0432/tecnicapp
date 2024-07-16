@@ -2,7 +2,7 @@ import React from 'react'
 
 function Diades () {
   return (
-    <div>Diades</div>
+    <div className='page'>Diades</div>
   )
 }
 

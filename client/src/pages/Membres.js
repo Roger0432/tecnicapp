@@ -2,7 +2,7 @@ import React from 'react'
 
 function Membres () {
   return (
-    <div>Membres</div>
+    <div className='page'>Membres</div>
   )
 }
 

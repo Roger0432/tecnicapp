@@ -11,7 +11,7 @@ function Registre () {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repetirpassword, setRepetirpassword] = useState('');
-    const [rol, setRol] = useState('Selecciona un rol');
+    const [rol, setRol] = useState('0');
     const [codiactivacio, setCodiactivacio] = useState('');
     const [error, setError] = useState('');
     const [rols, setRols] = useState([]);
@@ -46,7 +46,7 @@ function Registre () {
         event.preventDefault();
         setError('');
 
-        if (nom === '' || cognoms === '' || email === '' || password === '' || repetirpassword === '' || rol === 'Selecciona un rol' || codiactivacio === '') {
+        if (nom === '' || cognoms === '' || email === '' || password === '' || repetirpassword === '' || rol === '0' || codiactivacio === '') {
             setError('Has d\'omplir tots els camps');
             return;
         }
@@ -79,18 +79,21 @@ function Registre () {
                 setError(data.msg || 'Error del servidor');
             }
         })
-        .catch(error => console.error('Error:', error));        
+        .catch(error => {
+            console.error('Error:', error);
+            setError('Error del servidor');
+        });     
     }
 
 
     return (
-        <div>
+        <div className='page'>
 
             <h2>REGISTRE</h2>
             
             <form id="register-form" onSubmit={handleRegister}>
                 <div className="form-group">
-                    <label htmlFor="nom">Nom</label>
+                    <label htmlFor="nom">Nom </label>
                     <input 
                         type="text"
                         id="nom"
@@ -103,7 +106,7 @@ function Registre () {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="cognoms">Cognoms</label>
+                    <label htmlFor="cognoms">Cognoms </label>
                     <input 
                         type="text"
                         id="cognoms" 
@@ -116,7 +119,7 @@ function Registre () {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="email">Correu electrònic</label>
+                    <label htmlFor="email">Correu electrònic </label>
                     <input 
                         type="text" 
                         id="email" 
@@ -129,7 +132,7 @@ function Registre () {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="roltecnica">Rol a tècnica</label>
+                    <label htmlFor="roltecnica">Rol a tècnica </label>
                     <select 
                         id="roltecnica" 
                         name="roltecnica" 
@@ -137,7 +140,7 @@ function Registre () {
                         onChange={handleRolChange} 
                         autoComplete="off">
 
-                        <option value="Selecciona un rol" disabled>Selecciona un rol</option>
+                        <option value="0" disabled>Selecciona un rol</option>
                         {rols.map((role) => (
                             <option key={role.id} value={role.id}>
                                 {role.rol}
@@ -148,7 +151,7 @@ function Registre () {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="password">Contrasenya</label>
+                    <label htmlFor="password">Contrasenya </label>
                     <input 
                         type="password" 
                         id="password" 
@@ -161,7 +164,7 @@ function Registre () {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="repetirpassword">Repetir contrasenya</label>
+                    <label htmlFor="repetirpassword">Repetir contrasenya </label>
                     <input 
                         type="password" 
                         id="repetirpassword" 
@@ -174,7 +177,7 @@ function Registre () {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="codiactivacio">Codi d'activació</label>
+                    <label htmlFor="codiactivacio">Codi d'activació </label>
                     <input 
                         type="text" 
                         id="codiactivacio" 

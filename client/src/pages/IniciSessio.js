@@ -41,18 +41,21 @@ function IniciSessio() {
           setError(data.msg);
         }
       })
-      .catch(error => console.error('Error:', error)); 
+      .catch(error => {
+        console.error('Error:', error);
+        setError('Error del servidor');
+      });
     }
     
 
   return (
-    <div>
+    <div className='page'>
 
       <h2>INICI DE SESSIÓ</h2>
 
       <form id="login-form" onSubmit={handleLogin}>
         <div className="form-group">
-          <label htmlFor="lg-email">Correu electrònic</label>
+          <label htmlFor="lg-email">Correu electrònic </label>
           <input 
             type="text"
             id="lg-email" 
@@ -65,7 +68,7 @@ function IniciSessio() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="lg-password">Contrasenya</label>
+          <label htmlFor="lg-password">Contrasenya </label>
           <input 
             type="password" 
             id="lg-password" 
