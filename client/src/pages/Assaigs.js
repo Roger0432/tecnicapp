@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
+import { MdDeleteOutline } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import '../styles/Assaigs.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -8,6 +11,7 @@ function Assaigs() {
   const [assaigs, setAssaigs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/assaigs`, {
@@ -68,6 +72,48 @@ function Assaigs() {
     setSortConfig({ key, direction });
   };
 
+  const detallsAssaig = (id) => {
+    navigate('/assaig/' + id);
+  };
+
+  const borrarAssaig = (id) => {
+    Swal.fire({
+      title: 'Estàs segur?',
+      text: "No podràs recuperar aquest assaig!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, esborra!',
+      cancelButtonText: 'Cancel·la'
+    })
+    .then((result) => {
+      if (result.isConfirmed) {
+
+        fetch(`${BACKEND_URL}/borrar-assaig/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status) {
+            setAssaigs(assaigs.filter(assaig => assaig.id !== id));
+            Swal.fire(
+              'Esborrat!',
+              "L'assaig ha estat esborrat.",
+              'success'
+            );
+          } else {
+            console.error('Failed to delete assaig');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+    });
+  };
+
   return (
     <div className='page'>
       <h2>Assaigs</h2>
@@ -86,22 +132,26 @@ function Assaigs() {
           <thead>
             <tr>
               <th onClick={() => requestSort('nom')}>Nom</th>
-              <th onClick={() => requestSort('diaSetmana')}>Dia de la Setmana</th>
-              <th onClick={() => requestSort('dia')}>Dia</th>
+              <th onClick={() => requestSort('diaSetmana')}>Dia</th>
+              <th onClick={() => requestSort('dia')}>Data</th>
               <th onClick={() => requestSort('hora')}>Hora</th>
               <th onClick={() => requestSort('lloc')}>Lloc</th>
               <th>Castells</th>
+              <th>Borrar Assaig</th>
             </tr>
           </thead>
           <tbody>
             {filteredAssaigs.map((assaig, index) => (
               <tr key={index}>
-                <td>{assaig.nom}</td>
-                <td>{assaig.diaSetmana}</td>
-                <td>{assaig.dia}</td>
-                <td>{assaig.hora}</td>
-                <td>{assaig.lloc}</td>
-                <td>{assaig.castells}</td>
+                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.nom}</td>
+                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.diaSetmana}</td>
+                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.dia}</td>
+                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.hora}</td>
+                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.lloc}</td>
+                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.castells}</td>
+                <td>
+                  <MdDeleteOutline className="delete-icon" onClick={() => borrarAssaig(assaig.id)} />
+                </td>
               </tr>
             ))}
           </tbody>

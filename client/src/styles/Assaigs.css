@@ -41,7 +41,7 @@ th, td {
 th {
     background-color: #727272;
     color: white;
-    text-transform: uppercase;
+    
     letter-spacing: 0.1em;
 }
 
@@ -75,5 +75,15 @@ th:first-child, td:first-child {
 
 th:last-child, td:last-child {
     border-right: none;
+}
+
+.delete-icon {
+    font-size: 1.5rem;
+    color: #7c7c7c;
+    cursor: pointer;
+}
+  
+.delete-icon:hover {
+    color: #1a1a1a;
 }
   

@@ -62,7 +62,7 @@ function CrearAssaig () {
           <select value={lloc} onChange={(e) => setLloc(e.target.value)} >
               <option value="0" disabled>Selecciona un lloc</option>
               <option value="Plaça del TecnoCampus">Plaça del TecnoCampus</option>
-              <option value="Loca de Capgrossos">Local de Capgrossos</option>
+              <option value="Local de Capgrossos">Local de Capgrossos</option>
           </select>
         </div>
 

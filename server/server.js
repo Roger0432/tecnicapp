@@ -185,7 +185,7 @@ app.post('/crear-assaig', async (req, res) => {
 app.get('/assaigs', async (req, res) => {
     try {
         const client = await pool.connect();
-        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = true`;
+        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = true`;
         const result = await client.query(query);
         client.release();
 
@@ -224,6 +224,23 @@ app.get('/assaig/:id', async (req, res) => {
         res.status(200).json({ assaig: assaig, status: true });
 
     } catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+});
+
+
+app.delete('/borrar-assaig/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const client = await pool.connect();
+        const query = `DELETE FROM assaigsdiades WHERE id = ${id}`;
+
+        await client.query(query);
+        client.release();
+        res.status(200).json({ msg: 'Assaig eliminat correctament', status: true });
+    }
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
     }
