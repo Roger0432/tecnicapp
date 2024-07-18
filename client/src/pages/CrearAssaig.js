@@ -12,6 +12,8 @@ function CrearAssaig () {
   const [error, setError] = useState('');
   const [nom, setNom] = useState('Assaig general');
   const navigate = useNavigate();
+  const assaig = true;
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ function CrearAssaig () {
     fetch(`${BACKEND_URL}/crear-assaig`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dia, lloc, hora, nom }),
+      body: JSON.stringify({ dia, lloc, hora, assaig, nom }),
     })
     .then(response => response.json())
     .then(data => {

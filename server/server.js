@@ -74,8 +74,102 @@ function formatTime(timeString) {
     const [hours, minutes] = timeString.split(':');
     return `${hours}:${minutes}`;
 }
-  
-  
+
+const crearAssaigDiada = async (req, res) => {
+    
+    const { dia, lloc, hora, assaig, nom } = req.body;
+    const hora_fi = sumarHores(hora, 2);
+
+    const client = await pool.connect();
+
+    const query = `
+        INSERT INTO assaigsdiades (dia, lloc, hora_inici, hora_fi, assaig, nom)
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+    `;
+    const values = [dia, lloc, hora, hora_fi, assaig, nom];
+
+    try {
+        const result = await client.query(query, values);
+        const id = result.rows[0].id;
+        res.status(200).json({ msg: 'Assaig creat correctament', id: id, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+};
+
+const totsAssaigsDiades = async (req, res) => {
+    const assaig = req.body.assaig;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = '${assaig}'`;
+        const result = await client.query(query);
+
+        result.rows.forEach(assaig => {
+            assaig.dia = formatDate(assaig.dia);
+            assaig.hora_inici = formatTime(assaig.hora_inici);
+            assaig.hora_fi = formatTime(assaig.hora_fi);
+        });
+
+        res.status(200).json({ assaigs: result.rows, status: true });
+    } catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } finally {
+        client.release();
+    }
+};
+
+const getByIdAssaigDiada = async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE id = $1`;
+        const result = await client.query(query, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ msg: 'Assaig no trobat', status: false });
+        }
+
+        const assaig = result.rows[0];
+        assaig.dia = formatDate(assaig.dia);
+        assaig.hora_inici = formatTime(assaig.hora_inici);
+        assaig.hora_fi = formatTime(assaig.hora_fi);
+
+        res.status(200).json({ assaig: assaig, status: true });
+    } catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } finally {
+        client.release();
+    }
+};
+
+const borrarAssaigDiada = async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `DELETE FROM assaigsdiades WHERE id = $1`;
+        
+        await client.query(query, [id]);
+        
+        res.status(200).json({ msg: 'Assaig eliminat correctament', status: true });
+    } catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } finally {
+        client.release();
+    }
+};
+
+
 app.get('/verify-token', authenticateToken, (req, res) => {
     res.status(200).json({ msg: 'Token verificat correctament', status: true });
 });
@@ -158,91 +252,44 @@ app.get('/rols', async (req, res) => {
 });
 
 
-app.post('/crear-assaig', async (req, res) => {
-    const { dia, lloc, hora, nom } = req.body;
-    const hora_fi = sumarHores(hora, 2);
+app.post('/crear-assaig', crearAssaigDiada);
 
+
+app.post('/assaigs', totsAssaigsDiades);
+
+
+app.get('/assaig/:id', getByIdAssaigDiada);
+
+
+app.delete('/borrar-assaig/:id', borrarAssaigDiada);
+
+
+app.post('/crear-diada', crearAssaigDiada);
+
+
+app.post('/diades', totsAssaigsDiades);
+
+
+app.get('/diada/:id', getByIdAssaigDiada);
+
+
+app.delete('/borrar-diada/:id', borrarAssaigDiada);
+
+
+app.get('/membres', async (req, res) => {
+    let client;
     try {
-        const client = await pool.connect();
-        const query = `
-            INSERT INTO assaigsdiades (dia, lloc, hora_inici, hora_fi, assaig, nom)
-            VALUES ('${dia}', '${lloc}', '${hora}', '${hora_fi}', true, '${nom}') RETURNING id
-        `;
-
+        client = await pool.connect();
+        const query = `SELECT sobrenom, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
         const result = await client.query(query);
-        client.release();
-
-        const id = result.rows[0].id;
-        res.status(200).json({ msg: 'Assaig creat correctament', id: id, status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    }
-});
-
-
-app.get('/assaigs', async (req, res) => {
-    try {
-        const client = await pool.connect();
-        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = true`;
-        const result = await client.query(query);
-        client.release();
-
-        result.rows.forEach(assaig => {
-            assaig.dia = formatDate(assaig.dia);
-            assaig.hora_inici = formatTime(assaig.hora_inici);
-            assaig.hora_fi = formatTime(assaig.hora_fi);
-        });
-
-        res.status(200).json({ assaigs: result.rows, status: true });
-    }
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    }
-});
-
-
-app.get('/assaig/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        const client = await pool.connect();
-        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE id = ${id}`;
-        const result = await client.query(query);
-        client.release();
-
-        if (result.rows.length == 0) {
-            return res.status(404).json({ msg: 'Assaig no trobat', status: false });
-        }
-
-        const assaig = result.rows[0];
-        assaig.dia = formatDate(assaig.dia);
-        assaig.hora_inici = formatTime(assaig.hora_inici);
-        assaig.hora_fi = formatTime(assaig.hora_fi);
-
-        res.status(200).json({ assaig: assaig, status: true });
+        res.status(200).json({ membres: result.rows, status: true });
 
     } catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
     }
-});
-
-
-app.delete('/borrar-assaig/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        const client = await pool.connect();
-        const query = `DELETE FROM assaigsdiades WHERE id = ${id}`;
-
-        await client.query(query);
+    finally {
         client.release();
-        res.status(200).json({ msg: 'Assaig eliminat correctament', status: true });
-    }
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
     }
 });
 

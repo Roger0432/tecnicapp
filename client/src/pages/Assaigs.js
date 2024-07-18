@@ -3,7 +3,7 @@ import { IoSearchOutline } from 'react-icons/io5';
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import '../styles/Assaigs.css';
+import '../styles/Table.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -14,9 +14,12 @@ function Assaigs() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const assaig = true;
+
     fetch(`${BACKEND_URL}/assaigs`, {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ assaig }),
     })
       .then(response => response.json())
       .then(data => {
@@ -89,7 +92,6 @@ function Assaigs() {
     })
     .then((result) => {
       if (result.isConfirmed) {
-
         fetch(`${BACKEND_URL}/borrar-assaig/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
@@ -131,13 +133,28 @@ function Assaigs() {
         <table>
           <thead>
             <tr>
-              <th onClick={() => requestSort('nom')}>Nom</th>
-              <th onClick={() => requestSort('diaSetmana')}>Dia</th>
-              <th onClick={() => requestSort('dia')}>Data</th>
-              <th onClick={() => requestSort('hora')}>Hora</th>
-              <th onClick={() => requestSort('lloc')}>Lloc</th>
+              <th 
+                onClick={() => requestSort('nom')} 
+                className={sortConfig.key === 'nom' ? 'active' : ''}
+              >Nom</th>
+              <th 
+                onClick={() => requestSort('diaSetmana')} 
+                className={sortConfig.key === 'diaSetmana' ? 'active' : ''}
+              >Dia</th>
+              <th 
+                onClick={() => requestSort('dia')} 
+                className={sortConfig.key === 'dia' ? 'active' : ''}
+              >Data</th>
+              <th 
+                onClick={() => requestSort('hora')} 
+                className={sortConfig.key === 'hora' ? 'active' : ''}
+              >Hora</th>
+              <th 
+                onClick={() => requestSort('lloc')} 
+                className={sortConfig.key === 'lloc' ? 'active' : ''}
+              >Lloc</th>
               <th>Castells</th>
-              <th>Borrar Assaig</th>
+              <th>Borrar</th>
             </tr>
           </thead>
           <tbody>
