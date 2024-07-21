@@ -27,7 +27,6 @@ function Assaigs() {
           ...assaig,
           diaSetmana: getDiaSetmana(assaig.dia),
           hora: `${assaig.hora_inici} - ${assaig.hora_fi}`,
-          castells: ''
         }));
         setAssaigs(updatedAssaigs);
       })
@@ -153,7 +152,6 @@ function Assaigs() {
                 onClick={() => requestSort('lloc')} 
                 className={sortConfig.key === 'lloc' ? 'active' : ''}
               >Lloc</th>
-              <th>Castells</th>
               <th>Borrar</th>
             </tr>
           </thead>
@@ -165,7 +163,6 @@ function Assaigs() {
                 <td onClick={() => detallsAssaig(assaig.id)}>{assaig.dia}</td>
                 <td onClick={() => detallsAssaig(assaig.id)}>{assaig.hora}</td>
                 <td onClick={() => detallsAssaig(assaig.id)}>{assaig.lloc}</td>
-                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.castells}</td>
                 <td>
                   <MdDeleteOutline className="delete-icon" onClick={() => borrarAssaig(assaig.id)} />
                 </td>

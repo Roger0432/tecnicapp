@@ -11,6 +11,8 @@ import Perfil from './pages/Perfil';
 import Configuracio from './pages/Configuracio';
 import CrearAssaig from './pages/CrearAssaig';
 import DetallsAssaig from './pages/DetallsAssaig';
+import CrearDiada from './pages/CrearDiada';
+import DetallsDiada from './pages/DetallsDiada';
 
 //const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -69,6 +71,8 @@ function App() {
 
         <Route path="/crear-assaig" element={<CrearAssaig />} />
         <Route path="/assaig/:id" element={<DetallsAssaig />} />
+        <Route path="/crear-diada" element={<CrearDiada />} />
+        <Route path="/diada/:id" element={<DetallsDiada />} />
       </Routes>
     </div>
   );

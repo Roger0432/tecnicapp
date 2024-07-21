@@ -6,8 +6,8 @@ function Main () {
   return (
     <div className='page'>
 
-      <Link to="/crear-assaig"> <button>Crear Assaig</button> </Link>
-      <Link to="/crear-diada"> <button>Crear diades</button> </Link>
+      <Link to="/crear-assaig"> <button>Crear assaig</button> </Link>
+      <Link to="/crear-diada"> <button>Crear diada</button> </Link>
 
     </div>
   )

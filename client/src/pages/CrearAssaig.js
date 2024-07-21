@@ -14,7 +14,6 @@ function CrearAssaig () {
   const navigate = useNavigate();
   const assaig = true;
   
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
@@ -46,39 +45,42 @@ function CrearAssaig () {
   };
 
   return (
-    <div className='page'>
-      <form onSubmit={handleSubmit}>
+  <div className='page'>
 
-        <div className="form-group">
-          <label>Nom </label>
-          <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} />
-        </div>
+    <h2>Crear assaig</h2>
 
-        <div className="form-group">
-          <label>Dia </label>
-          <input type="date" value={dia} onChange={(e) => setDia(e.target.value)} />
-        </div>
+    <form onSubmit={handleSubmit}>
 
-        <div className="form-group">
-          <label>Lloc </label>
-          <select value={lloc} onChange={(e) => setLloc(e.target.value)} >
-              <option value="0" disabled>Selecciona un lloc</option>
-              <option value="Plaça del TecnoCampus">Plaça del TecnoCampus</option>
-              <option value="Local de Capgrossos">Local de Capgrossos</option>
-          </select>
-        </div>
+      <div className="form-group">
+        <label>Nom </label>
+        <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom de l\'assaig" />
+      </div>
 
-        <div className="form-group">
-          <label>Hora </label>
-          <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
-        </div>
+      <div className="form-group">
+        <label>Dia </label>
+        <input type="date" value={dia} onChange={(e) => setDia(e.target.value)} />
+      </div>
 
-        <button type="submit">Guardar</button>
-        <Link to="/main"> <button>Cancel·lar</button> </Link>
-        <div className="error">{error}</div>
+      <div className="form-group">
+        <label>Lloc </label>
+        <select value={lloc} onChange={(e) => setLloc(e.target.value)} >
+          <option value="0" disabled>Selecciona un lloc</option>
+          <option value="Plaça del TecnoCampus">Plaça del TecnoCampus</option>
+          <option value="Local de Capgrossos">Local de Capgrossos</option>
+        </select>
+      </div>
 
-      </form>
-    </div>
+      <div className="form-group">
+        <label>Hora </label>
+        <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
+      </div>
+
+      <button type="submit">Guardar</button>
+      <Link to="/main"> <button>Cancel·lar</button> </Link>
+      <div className="error">{error}</div>
+
+    </form>
+  </div>
   );
 };
 

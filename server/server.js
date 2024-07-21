@@ -76,7 +76,6 @@ function formatTime(timeString) {
 }
 
 const crearAssaigDiada = async (req, res) => {
-    
     const { dia, lloc, hora, assaig, nom } = req.body;
     const hora_fi = sumarHores(hora, 2);
 
@@ -84,7 +83,8 @@ const crearAssaigDiada = async (req, res) => {
 
     const query = `
         INSERT INTO assaigsdiades (dia, lloc, hora_inici, hora_fi, assaig, nom)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id
     `;
     const values = [dia, lloc, hora, hora_fi, assaig, nom];
 
@@ -107,8 +107,8 @@ const totsAssaigsDiades = async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = '${assaig}'`;
-        const result = await client.query(query);
+        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = $1`;
+        const result = await client.query(query, [assaig]);
 
         result.rows.forEach(assaig => {
             assaig.dia = formatDate(assaig.dia);
@@ -143,10 +143,12 @@ const getByIdAssaigDiada = async (req, res) => {
         assaig.hora_fi = formatTime(assaig.hora_fi);
 
         res.status(200).json({ assaig: assaig, status: true });
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
-    } finally {
+    } 
+    finally {
         client.release();
     }
 };
@@ -157,14 +159,15 @@ const borrarAssaigDiada = async (req, res) => {
     try {
         client = await pool.connect();
         const query = `DELETE FROM assaigsdiades WHERE id = $1`;
-        
         await client.query(query, [id]);
         
         res.status(200).json({ msg: 'Assaig eliminat correctament', status: true });
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
-    } finally {
+    } 
+    finally {
         client.release();
     }
 };
@@ -179,9 +182,8 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const client = await pool.connect();
-        const query = `SELECT email, password FROM users WHERE email = '${email}'`;
-        const result = await client.query(query);
-        client.release();
+        const query = `SELECT email, password FROM users WHERE email = $1`;
+        const result = await client.query(query, [email]);
 
         if (result.rows.length == 0) {0
             return res.status(401).json({ msg: "Usuari incorrecte", status: false });
@@ -196,9 +198,13 @@ app.post('/login', async (req, res) => {
         const authtoken = generateToken(email);
         res.status(200).json({ authtoken: authtoken, status: true });
 
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
     }
 });
 
@@ -207,8 +213,8 @@ app.post('/register', async (req, res) => {
     const { nom, cognoms, email, password, rol } = req.body;
     try {
         const client = await pool.connect();
-        const queryCount = `SELECT COUNT(*) AS count FROM users WHERE email = '${email}'`;
-        const result = await client.query(queryCount);
+        const queryCount = `SELECT COUNT(*) AS count FROM users WHERE email = $1`;
+        const result = await client.query(queryCount, [email]);
         const count = result.rows[0].count;
     
         if (count > 0) {
@@ -219,20 +225,30 @@ app.post('/register', async (req, res) => {
             return res.status(400).json({ msg: 'Codi d\'activació incorrecte', status: false });
         }
 
+        /*
         const queryInsert = `
             INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id) 
             VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${password}', ${rol})
         `;
+        */
 
-        await client.query(queryInsert);
-        client.release();
+        const queryInsert = `
+            INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+        const values = [nom, cognoms, email, bcrypt.hashSync(password, 10), password, rol];
+        await client.query(queryInsert, values);
 
         const authtoken = generateToken(email);
         res.status(200).json({ authtoken: authtoken, status: true });
 
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
     }
 });
 
@@ -242,12 +258,15 @@ app.get('/rols', async (req, res) => {
         const client = await pool.connect();
         const query = `SELECT id, rol FROM rols`;
         const result = await client.query(query);
-        client.release();
         res.status(200).json({ rols: result.rows, status: true });
 
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
     }
 });
 
@@ -283,8 +302,8 @@ app.get('/membres', async (req, res) => {
         const query = `SELECT sobrenom, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
         const result = await client.query(query);
         res.status(200).json({ membres: result.rows, status: true });
-
-    } catch (error) {
+    } 
+    catch (error) {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
     }
