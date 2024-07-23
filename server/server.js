@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 dotenv.config();
 
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN,
+    origin: 'https://tecnicapp-client.vercel.app',
 };
 app.use(cors(corsOptions));
 
