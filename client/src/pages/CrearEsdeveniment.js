@@ -4,7 +4,7 @@ import '../styles/App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function CrearAssaig () {
+function CrearEsdeveniment ({ assaig }) {
 
   const [dia, setDia] = useState('');
   const [lloc, setLloc] = useState('0');
@@ -12,7 +12,6 @@ function CrearAssaig () {
   const [error, setError] = useState('');
   const [nom, setNom] = useState('Assaig general');
   const navigate = useNavigate();
-  const assaig = true;
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +22,7 @@ function CrearAssaig () {
       return;
     }
 
-    fetch(`${BACKEND_URL}/crear-assaig`, {
+    fetch(`${BACKEND_URL}/crear-esdeveniment`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dia, lloc, hora, assaig, nom }),
@@ -31,7 +30,12 @@ function CrearAssaig () {
     .then(response => response.json())
     .then(data => {
       if (data.status) {
-        navigate('/assaig/' + data.id);
+        if (assaig) {
+          navigate('/assaig/' + data.id);
+        }
+        else {
+          navigate('/diada/' + data.id);
+        }
       } 
       else {
         setError(data.msg);
@@ -84,4 +88,4 @@ function CrearAssaig () {
   );
 };
 
-export default CrearAssaig;
+export default CrearEsdeveniment;

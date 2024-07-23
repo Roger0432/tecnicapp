@@ -4,15 +4,12 @@ import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
 import Navbar from './components/Navbar';
 import Main from './pages/Main';
-import Assaigs from './pages/Assaigs';
-import Diades from './pages/Diades';
+import Esdeveniments from './pages/Esdeveniments';
 import Membres from './pages/Membres';
 import Perfil from './pages/Perfil';
 import Configuracio from './pages/Configuracio';
-import CrearAssaig from './pages/CrearAssaig';
-import DetallsAssaig from './pages/DetallsAssaig';
-import CrearDiada from './pages/CrearDiada';
-import DetallsDiada from './pages/DetallsDiada';
+import CrearEsdeveniment from './pages/CrearEsdeveniment';
+import DetallsEsdeveniment from './pages/DetallsEsdeveniment';
 import PlantillaTronc from './components/PlantillaTronc';
 
 function App() {
@@ -27,17 +24,17 @@ function App() {
 
         <Route path="/" element={<Main />} />
         <Route path="/main" element={<Main />} />
-        <Route path="/assaigs" element={<Assaigs />} />
-        <Route path="/diades" element={<Diades />} />
+        <Route path="/assaigs" element={<Esdeveniments assaig={true} />} />
+        <Route path="/diades" element={<Esdeveniments assaig={false} />} />
         <Route path="/membres" element={<Membres />} />
 
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/configuracio" element={<Configuracio />} />
 
-        <Route path="/crear-assaig" element={<CrearAssaig />} />
-        <Route path="/assaig/:id" element={<DetallsAssaig />} />
-        <Route path="/crear-diada" element={<CrearDiada />} />
-        <Route path="/diada/:id" element={<DetallsDiada />} />
+        <Route path="/crear-assaig" element={<CrearEsdeveniment assaig={true} />} />
+        <Route path="/assaig/:id" element={<DetallsEsdeveniment assaig={true} />} />
+        <Route path="/crear-diada" element={<CrearEsdeveniment assaig={false} />} />
+        <Route path="/diada/:id" element={<DetallsEsdeveniment assaig={false} />} />
       </Routes>
     </div>
   );

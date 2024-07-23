@@ -66,103 +66,6 @@ function formatTime(timeString) {
     return `${hours}:${minutes}`;
 }
 
-const crearEsdeveniment = async (req, res) => {
-    const { dia, lloc, hora, assaig, nom } = req.body;
-    const hora_fi = sumarHores(hora, 2);
-
-    let client = await pool.connect();
-
-    const query = `
-        INSERT INTO esdeveniments (dia, lloc, hora_inici, hora_fi, assaig, nom)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id
-    `;
-    const values = [dia, lloc, hora, hora_fi, assaig, nom];
-
-    try {
-        const result = await client.query(query, values);
-        const id = result.rows[0].id;
-        res.status(200).json({ msg: 'Assaig creat correctament', id: id, status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    } 
-    finally {
-        client.release();
-    }
-};
-
-const totsEsdeveniments = async (req, res) => {
-    const assaig = req.body.assaig;
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE assaig = $1`;
-        const result = await client.query(query, [assaig]);
-
-        result.rows.forEach(assaig => {
-            assaig.dia = formatDate(assaig.dia);
-            assaig.hora_inici = formatTime(assaig.hora_inici);
-            assaig.hora_fi = formatTime(assaig.hora_fi);
-        });
-
-        res.status(200).json({ assaigs: result.rows, status: true });
-    } catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    } finally {
-        client.release();
-    }
-};
-
-const getByIdEsdeveniment = async (req, res) => {
-    const id = req.params.id;
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE id = $1`;
-        const result = await client.query(query, [id]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ msg: 'Assaig no trobat', status: false });
-        }
-
-        const assaig = result.rows[0];
-        assaig.dia = formatDate(assaig.dia);
-        assaig.hora_inici = formatTime(assaig.hora_inici);
-        assaig.hora_fi = formatTime(assaig.hora_fi);
-
-        res.status(200).json({ assaig: assaig, status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    } 
-    finally {
-        client.release();
-    }
-};
-
-const borrarEsdeveniment = async (req, res) => {
-    const id = req.params.id;
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `DELETE FROM esdeveniments WHERE id = $1`;
-        await client.query(query, [id]);
-        
-        res.status(200).json({ msg: 'Assaig eliminat correctament', status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    } 
-    finally {
-        client.release();
-    }
-};
-
 
 app.get('/verify-token', authenticateToken, (req, res) => {
     res.status(200).json({ msg: 'Token verificat correctament', status: true });
@@ -258,28 +161,105 @@ app.get('/rols', async (req, res) => {
 });
 
 
-app.post('/crear-assaig', crearEsdeveniment);
+app.post('/crear-esdeveniment', async (req, res) => {
+    const { dia, lloc, hora, assaig, nom } = req.body;
+    const hora_fi = sumarHores(hora, 2);
+
+    let client = await pool.connect();
+
+    const query = `
+        INSERT INTO esdeveniments (dia, lloc, hora_inici, hora_fi, assaig, nom)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id
+    `;
+    const values = [dia, lloc, hora, hora_fi, assaig, nom];
+
+    try {
+        const result = await client.query(query, values);
+        const id = result.rows[0].id;
+        res.status(200).json({ msg: 'Esdeveniment creat correctament', id: id, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
 
 
-app.post('/assaigs', totsEsdeveniments);
+app.post('/esdeveniments', async (req, res) => {
+    const assaig = req.body.assaig;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE assaig = $1`;
+        const result = await client.query(query, [assaig]);
+
+        result.rows.forEach(esdeveniment => {
+            esdeveniment.dia = formatDate(esdeveniment.dia);
+            esdeveniment.hora_inici = formatTime(esdeveniment.hora_inici);
+            esdeveniment.hora_fi = formatTime(esdeveniment.hora_fi);
+        });
+
+        res.status(200).json({ esdeveniments: result.rows, status: true });
+    } catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } finally {
+        client.release();
+    }
+});
 
 
-app.get('/assaig/:id', getByIdEsdeveniment);
+app.get('/esdeveniment/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE id = $1`;
+        const result = await client.query(query, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ msg: 'Esdeveniment no trobat', status: false });
+        }
+
+        const esdeveniment = result.rows[0];
+        esdeveniment.dia = formatDate(esdeveniment.dia);
+        esdeveniment.hora_inici = formatTime(esdeveniment.hora_inici);
+        esdeveniment.hora_fi = formatTime(esdeveniment.hora_fi);
+
+        res.status(200).json({ esdeveniment: esdeveniment, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
 
 
-app.delete('/borrar-assaig/:id', borrarEsdeveniment);
-
-
-app.post('/crear-diada', crearEsdeveniment);
-
-
-app.post('/diades', totsEsdeveniments);
-
-
-app.get('/diada/:id', getByIdEsdeveniment);
-
-
-app.delete('/borrar-diada/:id', borrarEsdeveniment);
+app.delete('/borrar-esdeveniment/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `DELETE FROM esdeveniments WHERE id = $1`;
+        await client.query(query, [id]);
+        
+        res.status(200).json({ msg: 'Esdeveniment eliminat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
 
 
 app.get('/membres', async (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useState, useEffect } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
@@ -7,33 +7,32 @@ import '../styles/Table.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function Assaigs() {
-  const [assaigs, setAssaigs] = useState([]);
+function Esdeveniments({ assaig }) {
+  const [esdeveniments, setEsdeveniments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const navigate = useNavigate();
 
   useEffect(() => {
-    const assaig = false;
 
-    fetch(`${BACKEND_URL}/diades`, {
+    fetch(`${BACKEND_URL}/esdeveniments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ assaig }),
     })
       .then(response => response.json())
       .then(data => {
-        const updatedAssaigs = data.assaigs.map(assaig => ({
-          ...assaig,
-          diaSetmana: getDiaSetmana(assaig.dia),
-          hora: `${assaig.hora_inici} - ${assaig.hora_fi}`,
+        const updatedEsdeveniment = data.esdeveniments.map(esdeveniment => ({
+          ...esdeveniment,  
+          diaSetmana: getDiaSetmana(esdeveniment.dia),
+          hora: `${esdeveniment.hora_inici} - ${esdeveniment.hora_fi}`,
         }));
-        setAssaigs(updatedAssaigs);
+        setEsdeveniments(updatedEsdeveniment);
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []);
+  }, [assaig]);
 
   const getDiaSetmana = (dateString) => {
     const diasSetmana = ['Diumenge', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte'];
@@ -46,7 +45,7 @@ function Assaigs() {
     setSearchTerm(event.target.value);
   };
 
-  const sortedAssaigs = [...assaigs].sort((a, b) => {
+  const sortedEsdeveniments = [...esdeveniments].sort((a, b) => {
     if (sortConfig.key) {
       const direction = sortConfig.direction === 'asc' ? 1 : -1;
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -60,8 +59,8 @@ function Assaigs() {
     return 0;
   });
 
-  const filteredAssaigs = sortedAssaigs.filter(assaig =>
-    Object.values(assaig).some(value =>
+  const filteredEsdeveniments = sortedEsdeveniments.filter(esdeveniment =>
+    Object.values(esdeveniment).some(value =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
@@ -74,14 +73,18 @@ function Assaigs() {
     setSortConfig({ key, direction });
   };
 
-  const detallsAssaig = (id) => {
-    navigate('/diada/' + id);
+  const detallsEsdeveniment = (id) => {
+    if (assaig) {
+      navigate(`/assaig/${id}`);
+    } else {
+      navigate(`/diada/${id}`);
+    }
   };
 
-  const borrarAssaig = (id) => {
+  const borrarEsdeveniment = (id) => {
     Swal.fire({
       title: 'Estàs segur?',
-      text: "No podràs recuperar aquesta diada!",
+      text: "No podràs recuperar aquest esdeveniment!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -91,21 +94,21 @@ function Assaigs() {
     })
     .then((result) => {
       if (result.isConfirmed) {
-        fetch(`${BACKEND_URL}/borrar-assaig/${id}`, {
+        fetch(`${BACKEND_URL}/borrar-esdeveniment/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
         })
         .then(response => response.json())
         .then(data => {
           if (data.status) {
-            setAssaigs(assaigs.filter(assaig => assaig.id !== id));
+            setEsdeveniments(esdeveniments.filter(esdeveniment => esdeveniment.id !== id));
             Swal.fire(
               'Esborrat!',
-              "L'assaig ha estat esborrat.",
+              "L'esdeveniment ha estat esborrat.",
               'success'
             );
           } else {
-            console.error('Failed to delete assaig');
+            console.error('Failed to delete esdeveniment');
           }
         })
         .catch(error => {
@@ -156,15 +159,15 @@ function Assaigs() {
             </tr>
           </thead>
           <tbody>
-            {filteredAssaigs.map((assaig, index) => (
+            {filteredEsdeveniments.map((esdeveniment, index) => (
               <tr key={index}>
-                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.nom}</td>
-                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.diaSetmana}</td>
-                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.dia}</td>
-                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.hora}</td>
-                <td onClick={() => detallsAssaig(assaig.id)}>{assaig.lloc}</td>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.nom}</td>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.diaSetmana}</td>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.dia}</td>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.hora}</td>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.lloc}</td>
                 <td>
-                  <MdDeleteOutline className="delete-icon" onClick={() => borrarAssaig(assaig.id)} />
+                  <MdDeleteOutline className="delete-icon" onClick={() => borrarEsdeveniment(esdeveniment.id)} />
                 </td>
               </tr>
             ))}
@@ -175,4 +178,4 @@ function Assaigs() {
   );
 }
 
-export default Assaigs;
+export default Esdeveniments;
