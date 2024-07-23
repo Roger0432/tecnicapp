@@ -1,5 +1,5 @@
-import React/*, { useEffect }*/ from 'react';
-import { Routes, Route, /*useNavigate, useLocation */} from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, } from 'react-router-dom';
 import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
 import Navbar from './components/Navbar';
@@ -13,49 +13,14 @@ import CrearAssaig from './pages/CrearAssaig';
 import DetallsAssaig from './pages/DetallsAssaig';
 import CrearDiada from './pages/CrearDiada';
 import DetallsDiada from './pages/DetallsDiada';
-
-//const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import PlantillaTronc from './components/PlantillaTronc';
 
 function App() {
-
-  /*
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    const checkToken = () => {
-      const token = localStorage.getItem('authtoken');
-  
-      if (!token) {
-        navigate('/inicisessio');
-      } else {
-        fetch(`${BACKEND_URL}/verify-token`, {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${token}` },
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status) {
-            navigate('/main');
-          } else {
-            localStorage.clear();
-            navigate('/inicisessio');
-          }
-        })
-        .catch(error => {
-          console.error('Error verifying token:', error);
-          localStorage.clear();
-          navigate('/inicisessio');
-        });
-      }
-    };
-    checkToken();
-  }, [navigate, location.pathname]);
-  */
 
   return (
     <div className="App">
       <Navbar />
+      <PlantillaTronc files={3} columnes={3} />
       <Routes>
         <Route path="/inicisessio" element={<IniciSessio />} />
         <Route path="/registre" element={<Registre />} />

@@ -11,25 +11,16 @@ const port = process.env.PORT || 5000;
 dotenv.config();
 
 const corsOptions = {
-    origin: 'https://tecnicapp-client.vercel.app',
+    origin: process.env.CORS_ORIGIN,
 };
 app.use(cors(corsOptions));
 
-//arxiu .env
-const POSTGRES_DATABASE="verceldb"
-const POSTGRES_HOST="ep-calm-tooth-a2colsi9-pooler.eu-central-1.aws.neon.tech"
-const POSTGRES_PASSWORD="o1fvCj6tIAHc"
-const POSTGRES_USER="default"
-const POSTGRES_PORT="5432"
-const JWT_SECRET="tecnicapp-secret"
-const CODI_ACTIVACIO="tecnica2024"
-
 const pool = new Pool({
-    user: POSTGRES_USER,
-    host: POSTGRES_HOST,
-    database: POSTGRES_DATABASE,
-    password: POSTGRES_PASSWORD,
-    port: POSTGRES_PORT,
+    user: process.env.POSTGRES_USER,
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_DATABASE,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.POSTGRES_PORT,
     ssl: { rejectUnauthorized: false }
 });
 
@@ -75,14 +66,14 @@ function formatTime(timeString) {
     return `${hours}:${minutes}`;
 }
 
-const crearAssaigDiada = async (req, res) => {
+const crearEsdeveniment = async (req, res) => {
     const { dia, lloc, hora, assaig, nom } = req.body;
     const hora_fi = sumarHores(hora, 2);
 
-    const client = await pool.connect();
+    let client = await pool.connect();
 
     const query = `
-        INSERT INTO assaigsdiades (dia, lloc, hora_inici, hora_fi, assaig, nom)
+        INSERT INTO esdeveniments (dia, lloc, hora_inici, hora_fi, assaig, nom)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id
     `;
@@ -102,12 +93,12 @@ const crearAssaigDiada = async (req, res) => {
     }
 };
 
-const totsAssaigsDiades = async (req, res) => {
+const totsEsdeveniments = async (req, res) => {
     const assaig = req.body.assaig;
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE assaig = $1`;
+        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE assaig = $1`;
         const result = await client.query(query, [assaig]);
 
         result.rows.forEach(assaig => {
@@ -125,12 +116,12 @@ const totsAssaigsDiades = async (req, res) => {
     }
 };
 
-const getByIdAssaigDiada = async (req, res) => {
+const getByIdEsdeveniment = async (req, res) => {
     const id = req.params.id;
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM assaigsdiades WHERE id = $1`;
+        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE id = $1`;
         const result = await client.query(query, [id]);
 
         if (result.rows.length === 0) {
@@ -153,12 +144,12 @@ const getByIdAssaigDiada = async (req, res) => {
     }
 };
 
-const borrarAssaigDiada = async (req, res) => {
+const borrarEsdeveniment = async (req, res) => {
     const id = req.params.id;
     let client;
     try {
         client = await pool.connect();
-        const query = `DELETE FROM assaigsdiades WHERE id = $1`;
+        const query = `DELETE FROM esdeveniments WHERE id = $1`;
         await client.query(query, [id]);
         
         res.status(200).json({ msg: 'Assaig eliminat correctament', status: true });
@@ -180,8 +171,9 @@ app.get('/verify-token', authenticateToken, (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
+    let client;
     try {
-        const client = await pool.connect();
+        client = await pool.connect();
         const query = `SELECT email, password FROM users WHERE email = $1`;
         const result = await client.query(query, [email]);
 
@@ -211,8 +203,9 @@ app.post('/login', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { nom, cognoms, email, password, rol } = req.body;
+    let client;
     try {
-        const client = await pool.connect();
+        client = await pool.connect();
         const queryCount = `SELECT COUNT(*) AS count FROM users WHERE email = $1`;
         const result = await client.query(queryCount, [email]);
         const count = result.rows[0].count;
@@ -224,13 +217,6 @@ app.post('/register', async (req, res) => {
         if (req.body.codiactivacio != CODI_ACTIVACIO) {
             return res.status(400).json({ msg: 'Codi d\'activació incorrecte', status: false });
         }
-
-        /*
-        const queryInsert = `
-            INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id) 
-            VALUES ('${nom}', '${cognoms}', '${email}', '${bcrypt.hashSync(password, 10)}', '${password}', ${rol})
-        `;
-        */
 
         const queryInsert = `
             INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id)
@@ -254,8 +240,9 @@ app.post('/register', async (req, res) => {
 
 
 app.get('/rols', async (req, res) => {
+    let client;
     try {
-        const client = await pool.connect();
+        client = await pool.connect();
         const query = `SELECT id, rol FROM rols`;
         const result = await client.query(query);
         res.status(200).json({ rols: result.rows, status: true });
@@ -271,28 +258,28 @@ app.get('/rols', async (req, res) => {
 });
 
 
-app.post('/crear-assaig', crearAssaigDiada);
+app.post('/crear-assaig', crearEsdeveniment);
 
 
-app.post('/assaigs', totsAssaigsDiades);
+app.post('/assaigs', totsEsdeveniments);
 
 
-app.get('/assaig/:id', getByIdAssaigDiada);
+app.get('/assaig/:id', getByIdEsdeveniment);
 
 
-app.delete('/borrar-assaig/:id', borrarAssaigDiada);
+app.delete('/borrar-assaig/:id', borrarEsdeveniment);
 
 
-app.post('/crear-diada', crearAssaigDiada);
+app.post('/crear-diada', crearEsdeveniment);
 
 
-app.post('/diades', totsAssaigsDiades);
+app.post('/diades', totsEsdeveniments);
 
 
-app.get('/diada/:id', getByIdAssaigDiada);
+app.get('/diada/:id', getByIdEsdeveniment);
 
 
-app.delete('/borrar-diada/:id', borrarAssaigDiada);
+app.delete('/borrar-diada/:id', borrarEsdeveniment);
 
 
 app.get('/membres', async (req, res) => {

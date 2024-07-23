@@ -8,7 +8,6 @@ function Main () {
 
       <Link to="/crear-assaig"> <button>Crear assaig</button> </Link>
       <Link to="/crear-diada"> <button>Crear diada</button> </Link>
-
     </div>
   )
 }
