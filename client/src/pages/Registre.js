@@ -11,7 +11,7 @@ function Registre () {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repetirpassword, setRepetirpassword] = useState('');
-    const [rol, setRol] = useState('0');
+    const [rol, setRol] = useState('');
     const [codiactivacio, setCodiactivacio] = useState('');
     const [error, setError] = useState('');
     const [rols, setRols] = useState([]);
@@ -140,7 +140,7 @@ function Registre () {
                         onChange={handleRolChange} 
                         autoComplete="off">
 
-                        <option value="0" disabled>Selecciona un rol</option>
+                        <option value='' disabled>Selecciona un rol</option>
                         {rols.map((role) => (
                             <option key={role.id} value={role.id}>
                                 {role.rol}

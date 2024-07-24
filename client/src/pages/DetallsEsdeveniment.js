@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { CiCalendarDate, CiClock1, CiLocationOn } from "react-icons/ci";
+import '../styles/DetallsEsdeveniment.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -10,7 +12,14 @@ function DetallsEsdeveniment() {
   useEffect(() => {
     fetch(`${BACKEND_URL}/esdeveniment/${id}`)
       .then(response => response.json())
-      .then(data => setDetalls(data.esdeveniment))
+      .then(data => {
+        if (data.status) {
+          setDetalls(data.esdeveniment);
+        }
+        else {
+          console.error(data.msg);
+        }
+      })
       .catch(error => console.error('Error:', error));
   }, [id]);
 
@@ -20,11 +29,25 @@ function DetallsEsdeveniment() {
 
   return (
     <div className="page">
-      <h1>Detalls de l'Esdeveniment</h1>
-      <p><strong>Nom: </strong> {detalls.nom}</p>
-      <p><strong>Dia: </strong> {detalls.dia}</p>
-      <p><strong>Lloc: </strong> {detalls.lloc}</p>
-      <p><strong>Hora: </strong> {detalls.hora_inici}</p>
+
+      <h1>{detalls.nom}</h1>
+      <div className="detalls">
+        <span className="detall-item"><CiCalendarDate /> {detalls.dia}</span>
+        <span className="detall-item"><CiClock1 /> {detalls.hora_inici} - {detalls.hora_fi}</span>
+        <span className="detall-item"><CiLocationOn /> {detalls.lloc}</span>
+      </div>
+
+      {detalls.assaig ? <h2>Proves</h2> : <h2>Castells</h2>}
+      
+      {detalls.castells.map((castell, index) => (
+        <div key={index} className="castell">
+          <Link className='castell' to={`/castell/${detalls.id[index]}`}>
+            {castell}
+          </Link>
+        </div>
+      ))}
+
+
     </div>
   );
 }

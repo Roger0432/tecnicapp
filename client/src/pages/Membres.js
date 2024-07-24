@@ -77,9 +77,9 @@ function Membres() {
           <thead>
             <tr>
               <th 
-                onClick={() => requestSort('sobrenom')} 
-                className={sortConfig.key === 'sobrenom' ? 'active' : ''}
-              >Sobrenom</th>
+                onClick={() => requestSort('Mote')} 
+                className={sortConfig.key === 'mote' ? 'active' : ''}
+              >Mote</th>
               <th 
                 onClick={() => requestSort('nom')} 
                 className={sortConfig.key === 'nom' ? 'active' : ''}
@@ -105,7 +105,7 @@ function Membres() {
           <tbody>
             {filteredMembres.map((membre, index) => (
               <tr key={index}>
-                <td>{membre.sobrenom}</td>
+                <td>{membre.mote}</td>
                 <td>{membre.nom}</td>
                 <td>{membre.cognoms}</td>
                 <td>{membre.alcada_hombro + ' cm'}</td>

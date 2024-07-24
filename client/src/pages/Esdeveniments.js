@@ -120,7 +120,9 @@ function Esdeveniments({ assaig }) {
 
   return (
     <div className='page'>
-      <h2>Assaigs</h2>
+
+      {assaig ? <h1>Assaigs</h1> : <h1>Diades</h1>}
+
       <div className='table-container'>
         <div className="search-bar-container">
           <IoSearchOutline className="search-icon" />

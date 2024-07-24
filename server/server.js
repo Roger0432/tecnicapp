@@ -218,7 +218,30 @@ app.get('/esdeveniment/:id', async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE id = $1`;
+        const query = `
+            SELECT 
+                e.dia,
+                e.lloc,
+                e.hora_inici,
+                e.hora_fi,
+                e.nom,
+                e.assaig,
+                ARRAY_AGG(ec.id) AS id,
+                ARRAY_AGG(c.nom) AS castells,
+                ARRAY_AGG(r.descripcio) AS resultats
+            FROM 
+                esdeveniments e
+            LEFT JOIN 
+                esdeveniments_castells ec ON e.id = ec.esdeveniment_id
+            LEFT JOIN 
+                castells c ON ec.castell_id = c.id
+            LEFT JOIN 
+                resultats r ON ec.resultat_id = r.id
+            WHERE 
+                e.id = $1
+            GROUP BY 
+                e.dia, e.lloc, e.hora_inici, e.hora_fi, e.nom, e.assaig;
+        `;
         const result = await client.query(query, [id]);
 
         if (result.rows.length === 0) {
@@ -262,11 +285,40 @@ app.delete('/borrar-esdeveniment/:id', async (req, res) => {
 });
 
 
+app.get('/castell/:id', async (req, res) => {
+    const id = req.params.id;   
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT c.nom, c.amplada, c.alcada
+            FROM castells c
+            JOIN esdeveniments_castells ec ON c.id = ec.castell_id
+            WHERE ec.id = $1
+        `;
+        const result = await client.query(query, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ msg: 'Castell no trobat', status: false });
+        }
+
+        res.status(200).json({ castell: result.rows[0], status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
 app.get('/membres', async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT sobrenom, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
+        const query = `SELECT mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
         const result = await client.query(query);
         res.status(200).json({ membres: result.rows, status: true });
     } 
@@ -278,6 +330,9 @@ app.get('/membres', async (req, res) => {
         client.release();
     }
 });
+
+
+
 
 
 app.listen(port, () => {

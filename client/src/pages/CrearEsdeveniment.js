@@ -6,12 +6,15 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function CrearEsdeveniment ({ assaig }) {
 
+  const text_nom = assaig ? 'Assaig general' : '';
+
   const [dia, setDia] = useState('');
-  const [lloc, setLloc] = useState('0');
+  const [lloc, setLloc] = useState('');
   const [hora, setHora] = useState('');
   const [error, setError] = useState('');
-  const [nom, setNom] = useState('Assaig general');
+  const [nom, setNom] = useState(text_nom);
   const navigate = useNavigate();
+  
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,39 +54,109 @@ function CrearEsdeveniment ({ assaig }) {
   return (
   <div className='page'>
 
-    <h2>Crear assaig</h2>
+    {assaig ? (
+      <>
+        <h2>Crear assaig</h2>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Nom </label>
+            <input
+              type="text"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+              placeholder="Nom de l'assaig"
+            />
+          </div>
 
-    <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Dia </label>
+            <input
+              type="date"
+              value={dia}
+              onChange={(e) => setDia(e.target.value)}
+            />
+          </div>
 
-      <div className="form-group">
-        <label>Nom </label>
-        <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom de l\'assaig" />
-      </div>
+          <div className="form-group">
+            <label>Lloc </label>
+            <select value={lloc} onChange={(e) => setLloc(e.target.value)}>
+              <option value="0" disabled>
+                Selecciona un lloc
+              </option>
+              <option value="Plaça del TecnoCampus">Plaça del TecnoCampus</option>
+              <option value="Local de Capgrossos">Local de Capgrossos</option>
+            </select>
+          </div>
 
-      <div className="form-group">
-        <label>Dia </label>
-        <input type="date" value={dia} onChange={(e) => setDia(e.target.value)} />
-      </div>
+          <div className="form-group">
+            <label>Hora </label>
+            <input
+              type="time"
+              value={hora}
+              onChange={(e) => setHora(e.target.value)}
+            />
+          </div>
 
-      <div className="form-group">
-        <label>Lloc </label>
-        <select value={lloc} onChange={(e) => setLloc(e.target.value)} >
-          <option value="0" disabled>Selecciona un lloc</option>
-          <option value="Plaça del TecnoCampus">Plaça del TecnoCampus</option>
-          <option value="Local de Capgrossos">Local de Capgrossos</option>
-        </select>
-      </div>
+          <button type="submit">Guardar</button>
+          <Link to="/main">
+            <button type="button">Cancel·lar</button>
+          </Link>
+          <div className="error">{error}</div>
+        </form>
+      </>
+    ) : (
+      <>
+        <h2>Crear diada</h2>
 
-      <div className="form-group">
-        <label>Hora </label>
-        <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
-      </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Nom </label>
+            <input
+              type="text"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+              placeholder="Nom de la diada"
+            />
+          </div>
 
-      <button type="submit">Guardar</button>
-      <Link to="/main"> <button>Cancel·lar</button> </Link>
-      <div className="error">{error}</div>
+          <div className="form-group">
+            <label>Dia </label>
+            <input
+              type="date"
+              value={dia}
+              onChange={(e) => setDia(e.target.value)}
+            />
+          </div>
 
-    </form>
+          <div className="form-group">
+            <label>Lloc </label>
+            <input
+              type="text"
+              value={lloc}
+              onChange={(e) => setLloc(e.target.value)}
+              placeholder="Lloc de la diada"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Hora </label>
+            <input
+              type="time"
+              value={hora}
+              onChange={(e) => setHora(e.target.value)}
+            />
+          </div>
+
+          <button type="submit">Guardar</button>
+          <Link to="/main">
+            <button type="button">Cancel·lar</button>
+          </Link>
+          <div className="error">{error}</div>
+        </form>
+      </>
+    )}
+
   </div>
   );
 };
