@@ -11,6 +11,7 @@ import Configuracio from './pages/Configuracio';
 import CrearEsdeveniment from './pages/CrearEsdeveniment';
 import DetallsEsdeveniment from './pages/DetallsEsdeveniment';
 import EditarCastell from './pages/EditarCastell';
+import CrearCastell from './pages/CrearCastell';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
 
         <Route path="/" element={<Main />} />
         <Route path="/main" element={<Main />} />
+
         <Route path="/membres" element={<Membres />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/configuracio" element={<Configuracio />} />
@@ -33,10 +35,14 @@ function App() {
         <Route path="/crear-assaig" element={<CrearEsdeveniment assaig={true} />} /> 
         <Route path="/crear-diada" element={<CrearEsdeveniment assaig={false} />} />
 
-        <Route path="/assaig/:id" element={<DetallsEsdeveniment assaig={true} />} />
-        <Route path="/diada/:id" element={<DetallsEsdeveniment assaig={false} />} />
+        <Route path="/assaig/:id" element={<DetallsEsdeveniment />} />
+        <Route path="/diada/:id" element={<DetallsEsdeveniment />} />
 
+        <Route path="prova/:id" element={<EditarCastell />} />
         <Route path="castell/:id" element={<EditarCastell />} />
+
+        <Route path="/nova-prova/:id" element={<CrearCastell assaig={true} />} />
+        <Route path="/nou-castell/:id" element={<CrearCastell assaig={false} />} />
 
 
       </Routes>

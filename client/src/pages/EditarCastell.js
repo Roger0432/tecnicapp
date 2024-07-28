@@ -14,7 +14,8 @@ function EditarCastell() {
             .then(data => {
                 if (data.status) {
                     setCastell(data.castell);
-                } else {
+                } 
+                else {
                     console.error(data.msg);
                 }
             })

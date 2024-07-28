@@ -15,8 +15,7 @@ function DetallsEsdeveniment() {
       .then(data => {
         if (data.status) {
           setDetalls(data.esdeveniment);
-        }
-        else {
+        } else {
           console.error(data.msg);
         }
       })
@@ -29,7 +28,6 @@ function DetallsEsdeveniment() {
 
   return (
     <div className="page">
-
       <h1>{detalls.nom}</h1>
       <div className="detalls">
         <span className="detall-item"><CiCalendarDate /> {detalls.dia}</span>
@@ -37,17 +35,44 @@ function DetallsEsdeveniment() {
         <span className="detall-item"><CiLocationOn /> {detalls.lloc}</span>
       </div>
 
-      {detalls.assaig ? <h2>Proves</h2> : <h2>Castells</h2>}
-      
-      {detalls.castells.map((castell, index) => (
-        <div key={index} className="castell">
-          <Link className='castell' to={`/castell/${detalls.id[index]}`}>
-            {castell}
+      {console.log('DetallsEsdeveniment: ',detalls)}
+      {detalls.assaig ? (
+        <>
+          <h2>Proves</h2> 
+          <Link className='link' to={`/nova-prova/${id}`}>
+            Nova prova
           </Link>
-        </div>
-      ))}
 
+          {detalls.castells[0] !== null ? (
+            detalls.castells.map((prova, index) => (
+              <div key={index}>
+                <Link className='link' to={`/prova/${detalls.id[index]}`}>
+                  {prova}
+                </Link>
+              </div>
+            ))
+          ) : null}
+  
+        </>
+      ) : (
+        <>
+          <h2>Castells</h2>
+          <Link className="link" to={`/nou-castell/${id}`}>
+            Nou castell
+          </Link>
 
+          {detalls.castells[0] !== null ? (
+            detalls.castells.map((castell, index) => (
+              <div key={index}>
+                <Link className='link' to={`/castell/${detalls.id[index]}`}>
+                  {castell}
+                </Link>
+              </div>
+            ))
+          ) : null}
+
+        </>
+      )}
     </div>
   );
 }

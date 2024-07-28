@@ -102,11 +102,12 @@ function Esdeveniments({ assaig }) {
         .then(data => {
           if (data.status) {
             setEsdeveniments(esdeveniments.filter(esdeveniment => esdeveniment.id !== id));
-            Swal.fire(
-              'Esborrat!',
-              "L'esdeveniment ha estat esborrat.",
-              'success'
-            );
+              Swal.fire({
+                  title: 'Esborrat!',
+                  icon: 'success',
+                  timer: 1000,
+                  showConfirmButton: false
+              });
           } else {
             console.error('Failed to delete esdeveniment');
           }

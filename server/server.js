@@ -332,7 +332,48 @@ app.get('/membres', async (req, res) => {
 });
 
 
+app.get('/castells', async (req, res) => {
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `SELECT id, nom FROM castells ORDER BY id`;
+        const result = await client.query(query);
+        res.status(200).json({ castells: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
+    }
+});
 
+
+app.post('/guardar-castells', async (req, res) => {
+    const selectedCastells = req.body.castells;
+    const resultat_per_fer = 1;
+    
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `INSERT INTO esdeveniments_castells (esdeveniment_id, castell_id, resultat_id) VALUES ($1, $2, $3)`;
+        await client.query('BEGIN');
+        for (const castell of selectedCastells) {
+            await client.query(query, [req.body.esdeveniment_id, castell.id, resultat_per_fer]);
+        }
+        await client.query('COMMIT');
+        res.status(200).json({ msg: 'Castells guardats correctament', status: true });
+    } 
+    catch (error) {
+        await client.query('ROLLBACK');
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
 
 
 app.listen(port, () => {

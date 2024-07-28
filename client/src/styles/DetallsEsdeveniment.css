@@ -1,3 +1,46 @@
 .detall-item {
   padding-right: 25px;
 }
+
+.nou-castell, .nova-prova {
+  width: 150px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.nou-castell:hover, .nova-prova:hover {
+  background-color: #dadada;
+  color: #000000;
+}
+
+.link {
+  width: 150px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #000;
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+  margin: 10px 0 10px 0;
+}
+
+.castell, .prova {
+  width: 150px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #000;
+}
+
+.castell, .prova {
+  margin: 10px 0 10px 0;
+}
