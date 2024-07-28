@@ -13,7 +13,7 @@
   cursor: pointer;
 }
 
-.nou-castell:hover, .nova-prova:hover {
+.nou-castell:hover, .nova-prova:hover, .link:hover {
   background-color: #dadada;
   color: #000000;
 }
@@ -29,18 +29,10 @@
   cursor: pointer;
   text-decoration: none;
   color: #000;
-  margin: 10px 0 10px 0;
+  margin: 10px 10px 10px 0;
 }
 
 .castell, .prova {
-  width: 150px;
-  height: 30px;
   display: flex;
   align-items: center;
-  padding: 10px;
-  border: 1px solid #000;
-}
-
-.castell, .prova {
-  margin: 10px 0 10px 0;
 }

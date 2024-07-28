@@ -376,6 +376,25 @@ app.post('/guardar-castells', async (req, res) => {
 });
 
 
+app.delete('/borrar-castell/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `DELETE FROM esdeveniments_castells WHERE id = $1`;
+        await client.query(query, [id]);
+        res.status(200).json({ msg: 'Castell eliminat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
 app.listen(port, () => {
     console.log('Server is running on port ' + port);
 });
