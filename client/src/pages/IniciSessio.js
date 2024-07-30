@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function IniciSessio() {
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('authtoken');
+    if (token) {
+      navigate('/main');
+    }
+  }, [navigate]);
 
   const handleEmailChange = (event) => setEmail(event.target.value);
   const handlePasswordChange = (event) => setPassword(event.target.value);
@@ -19,7 +24,7 @@ function IniciSessio() {
     setError('');
 
     if (email === '' || password === '') {
-      setError('Has d\'omplir tots els camps');
+      setError("Has d'omplir tots els camps");
       return;
     }
 
@@ -35,8 +40,7 @@ function IniciSessio() {
           localStorage.setItem('email', email);
           localStorage.setItem('authtoken', token);
           navigate('/main');
-        }
-        else {
+        } else {
           localStorage.clear();
           setError(data.msg);
         }
@@ -45,17 +49,14 @@ function IniciSessio() {
         console.error('Error:', error);
         setError('Error del servidor');
       });
-    }
-    
+  }
 
   return (
     <div className='page'>
-
       <h2>INICI DE SESSIÓ</h2>
-
       <form id="login-form" onSubmit={handleLogin}>
         <div className="form-group">
-          <label htmlFor="lg-email">Correu electrònic </label>
+          <label htmlFor="lg-email">Correu electrònic</label>
           <input 
             type="text"
             id="lg-email" 
@@ -66,9 +67,8 @@ function IniciSessio() {
             onChange={handleEmailChange}
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="lg-password">Contrasenya </label>
+          <label htmlFor="lg-password">Contrasenya</label>
           <input 
             type="password" 
             id="lg-password" 
@@ -79,15 +79,12 @@ function IniciSessio() {
             onChange={handlePasswordChange}
           />
         </div>
-
         <button id="login-btn" type="submit">Entra</button>
       </form>
-
       <Link to="/registre">No tens compte? Registra't aquí.</Link>
       <div className="error">{error}</div>
-
     </div>
-  )
+  );
 }
 
 export default IniciSessio;

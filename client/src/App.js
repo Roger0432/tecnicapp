@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
 import Navbar from './components/Navbar';
@@ -13,11 +13,45 @@ import DetallsEsdeveniment from './pages/DetallsEsdeveniment';
 import EditarCastell from './pages/EditarCastell';
 import CrearCastell from './pages/CrearCastell';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('authtoken');
+
+    if (!token) {
+      navigate('/inicisessio');
+      return;
+    }
+
+    fetch(`${BACKEND_URL}/verify-token`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          setIsAuthenticated(true);
+        } else {
+          navigate('/inicisessio');
+          localStorage.clear();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        navigate('/inicisessio');
+      });
+  }, [navigate]);
 
   return (
     <div className="App">
-      <Navbar />
+      {isAuthenticated && <Navbar />}
       <Routes>
         <Route path="/inicisessio" element={<IniciSessio />} />
         <Route path="/registre" element={<Registre />} />
@@ -43,8 +77,6 @@ function App() {
 
         <Route path="/nova-prova/:id" element={<CrearCastell assaig={true} />} />
         <Route path="/nou-castell/:id" element={<CrearCastell assaig={false} />} />
-
-
       </Routes>
     </div>
   );

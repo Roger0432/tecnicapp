@@ -24,6 +24,9 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
+const JWT_SECRET = process.env.JWT_SECRET;
+const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
+
 
 function generateToken(email) {
     return jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
