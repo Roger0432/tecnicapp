@@ -24,28 +24,12 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-/*
-const POSTGRES_DATABASE="verceldb"
-const POSTGRES_HOST="ep-calm-tooth-a2colsi9-pooler.eu-central-1.aws.neon.tech"
-const POSTGRES_PASSWORD="o1fvCj6tIAHc"
-const POSTGRES_USER="default"
-const POSTGRES_PORT="5432"
 
-const pool = new Pool({
-    user: POSTGRES_USER,
-    host: POSTGRES_HOST,
-    database: POSTGRES_DATABASE,
-    password: POSTGRES_PASSWORD,
-    port: POSTGRES_PORT,
-    ssl: { rejectUnauthorized: false }
-});
-*/
+//JWT_SECRET="tecnicapp-secret"
+//CODI_ACTIVACIO="tecnica2024"
 
-JWT_SECRET="tecnicapp-secret"
-CODI_ACTIVACIO="tecnica2024"
-
-//const JWT_SECRET = process.env.JWT_SECRET;
-//const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
+const JWT_SECRET = process.env.JWT_SECRET;
+const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
 
 
 
