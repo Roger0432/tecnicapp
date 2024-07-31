@@ -25,11 +25,11 @@ const pool = new Pool({
 });
 
 
-//JWT_SECRET="tecnicapp-secret"
-CODI_ACTIVACIO="tecnica2024"
+JWT_SECRET="tecnicapp-secret"
+//CODI_ACTIVACIO="tecnica2024"
 
-const JWT_SECRET = process.env.JWT_SECRET;
-//const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
+//const JWT_SECRET = process.env.JWT_SECRET;
+const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
 
 
 
