@@ -1,8 +1,7 @@
 import React from 'react';
 import '../styles/Tronc.css';
 
-const PlantillaTronc = ({ files, columnes }) => {
-
+const PlantillaTronc = ({ files, columnes, agulla }) => {
   const carregarTaula = () => {
     const table = [];
 
@@ -13,6 +12,7 @@ const PlantillaTronc = ({ files, columnes }) => {
   };
 
   const carregarCanalla = (table) => {
+
     const enxaneta = [];
     const acotxador = [];
     const dosos = [];
@@ -111,15 +111,25 @@ const PlantillaTronc = ({ files, columnes }) => {
   }
 
   const carregarTronc = (table) => {
+
+    if (columnes === 1) { // pilar
+      files += 2;
+    }
+  
     for (let i = 0; i < files; i++) {
       const row = [];
       for (let j = 0; j < columnes; j++) {
         row.push(<td className='cela' key={`tronc-${i}-${j}`}>Tronc</td>);
       }
+  
+      if (agulla) { // afegir una columna a la dreta del tronc per l'agulla
+        row.push(<td className='cela agulla' key={`agulla-${i}`}>Agulla</td>);
+      }
+  
       table.push(<tr key={`tronc-row-${i}`}>{row}</tr>);
     }
   }
-
+  
   return (
     <div>
       <table className='tronc'>
