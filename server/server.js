@@ -398,6 +398,29 @@ app.delete('/borrar-castell/:id', async (req, res) => {
 });
 
 
+app.post('/perfil', async (req, res) => {
+    const email = req.body.email;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT u.nom, u.cognoms, u.email, r.rol
+            FROM users u JOIN rols r ON u.rol_id = r.id 
+            WHERE u.email = $1
+        `;
+        const result = await client.query(query, [email]);
+        res.status(200).json({ dades: result.rows[0], status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
 app.listen(port, () => {
     console.log('Server is running on port ' + port);
 });
