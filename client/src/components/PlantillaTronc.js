@@ -7,12 +7,12 @@ const PlantillaTronc = ({ files, columnes, agulla }) => {
 
     carregarCanalla(table);
     carregarTronc(table);
+    carregarBaixos(table);
 
     return table;
   };
 
   const carregarCanalla = (table) => {
-
     const enxaneta = [];
     const acotxador = [];
     const dosos = [];
@@ -108,10 +108,9 @@ const PlantillaTronc = ({ files, columnes, agulla }) => {
         table.push(<tr key='canalla-row'>{canallaRow}</tr>);
         break;
     }
-  }
+  };
 
   const carregarTronc = (table) => {
-
     if (columnes === 1) { // pilar
       files += 2;
     }
@@ -119,16 +118,26 @@ const PlantillaTronc = ({ files, columnes, agulla }) => {
     for (let i = 0; i < files; i++) {
       const row = [];
       for (let j = 0; j < columnes; j++) {
-        row.push(<td className='cela' key={`tronc-${i}-${j}`}>Tronc</td>);
+        row.push(<td className='cela' key={`tronc-${i}-${j}`}>{`Tronc - ${i}-${j}`}</td>);
       }
   
-      if (agulla) { // afegir una columna a la dreta del tronc per l'agulla
-        row.push(<td className='cela agulla' key={`agulla-${i}`}>Agulla</td>);
+      if (agulla) {
+        row.push(<td className='cela agulla' key={`agulla-${i}`}>{`Agulla - ${i}`}</td>);
       }
   
       table.push(<tr key={`tronc-row-${i}`}>{row}</tr>);
     }
-  }
+  };
+
+  const carregarBaixos = (table) => {
+    const baixos = [];
+    let col = columnes;
+    if (agulla) col += 1;
+    for (let i = 0; i < col; i++) {
+      baixos.push(<td className='cela baix' key={`baix-${i}`}>{`Baix - ${i}`}</td>);
+    }
+    table.push(<tr key='baixos-row'>{baixos}</tr>);
+  };
   
   return (
     <div>
