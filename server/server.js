@@ -15,7 +15,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-/*
 const pool = new Pool({
     user: process.env.POSTGRES_USER,
     host: process.env.POSTGRES_HOST,
@@ -25,17 +24,12 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
-*/
-
+/*
 const POSTGRES_DATABASE="verceldb"
 const POSTGRES_HOST="ep-calm-tooth-a2colsi9-pooler.eu-central-1.aws.neon.tech"
 const POSTGRES_PASSWORD="o1fvCj6tIAHc"
 const POSTGRES_USER="default"
 const POSTGRES_PORT="5432"
-const JWT_SECRET="tecnicapp-secret"
-const CODI_ACTIVACIO="tecnica2024"
 
 const pool = new Pool({
     user: POSTGRES_USER,
@@ -45,6 +39,14 @@ const pool = new Pool({
     port: POSTGRES_PORT,
     ssl: { rejectUnauthorized: false }
 });
+*/
+
+JWT_SECRET="tecnicapp-secret"
+CODI_ACTIVACIO="tecnica2024"
+
+//const JWT_SECRET = process.env.JWT_SECRET;
+//const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
+
 
 
 function generateToken(email) {
