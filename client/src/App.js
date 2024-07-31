@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
 import Navbar from './components/Navbar';
@@ -18,9 +18,16 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem('authtoken');
+    const currentPath = window.location.pathname;
+    const publicRoutes = ['/inicisessio', '/registre'];
+
+    if (publicRoutes.includes(currentPath)) {
+      return;
+    }
 
     if (!token) {
       navigate('/inicisessio');
@@ -46,12 +53,13 @@ function App() {
       .catch(error => {
         console.error('Error:', error);
         navigate('/inicisessio');
+        localStorage.clear();
       });
   }, [navigate]);
 
   return (
     <div className="App">
-      {isAuthenticated && <Navbar />}
+      {!['/inicisessio', '/registre'].includes(location.pathname) && isAuthenticated && <Navbar />}
       <Routes>
         <Route path="/inicisessio" element={<IniciSessio />} />
         <Route path="/registre" element={<Registre />} />

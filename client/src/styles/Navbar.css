@@ -57,7 +57,8 @@
   z-index: 1;
 }
 
-.dropdown-content a {
+.dropdown-content a,
+.dropdown-content .dropdown-item {
   color: black;
   padding: 12px 16px;
   display: flex;
@@ -65,8 +66,10 @@
   text-decoration: none;
 }
 
-.dropdown-content a:hover {
+.dropdown-content a:hover,
+.dropdown-content .dropdown-item:hover {
   background-color: #f1f1f1;
+  cursor: pointer;
 }
 
 .icons-dropdown-items {
