@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { IoSearchOutline } from 'react-icons/io5';
 import '../styles/Table.css';
 
@@ -62,6 +63,9 @@ function Membres() {
   return (
     <div className='page'>
       <h1>Membres</h1>
+
+      <Link to="/crear-membre" className="link">Crear membre</Link>
+
       <div className='table-container'>
         <div className="search-bar-container">
           <IoSearchOutline className="search-icon" />

@@ -335,6 +335,30 @@ app.get('/membres', async (req, res) => {
 });
 
 
+app.post('/crear-membre', async (req, res) => {
+    const { mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris } = req.body;
+    let client;
+
+    try {
+        client = await pool.connect();
+        const query = `
+            INSERT INTO membres (mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+        const values = [mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris];
+        await client.query(query, values);
+        res.status(200).json({ msg: 'Membre creat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
 app.get('/castells', async (req, res) => {
     let client;
     try {

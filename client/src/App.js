@@ -11,7 +11,8 @@ import Configuracio from './pages/Configuracio';
 import CrearEsdeveniment from './pages/CrearEsdeveniment';
 import DetallsEsdeveniment from './pages/DetallsEsdeveniment';
 import EditarCastell from './pages/EditarCastell';
-import CrearCastell from './pages/CrearCastell';
+import AfegirCastell from './pages/AfegirCastell';
+import CrearMembre from './pages/CrearMembre';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -68,6 +69,8 @@ function App() {
         <Route path="/main" element={<Main />} />
 
         <Route path="/membres" element={<Membres />} />
+        <Route path="/crear-membre" element={<CrearMembre />} />
+        
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/configuracio" element={<Configuracio />} />
 
@@ -83,8 +86,8 @@ function App() {
         <Route path="prova/:id" element={<EditarCastell />} />
         <Route path="castell/:id" element={<EditarCastell />} />
 
-        <Route path="/nova-prova/:id" element={<CrearCastell assaig={true} />} />
-        <Route path="/nou-castell/:id" element={<CrearCastell assaig={false} />} />
+        <Route path="/nova-prova/:id" element={<AfegirCastell assaig={true} />} />
+        <Route path="/nou-castell/:id" element={<AfegirCastell assaig={false} />} />
       </Routes>
     </div>
   );

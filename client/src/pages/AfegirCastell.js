@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function CrearCastell({ assaig }) {
+function AfegirCastell({ assaig }) {
   const [castells, setCastells] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCastells, setFilteredCastells] = useState([]);
@@ -124,4 +124,4 @@ function CrearCastell({ assaig }) {
   );
 }
 
-export default CrearCastell;
+export default AfegirCastell;
