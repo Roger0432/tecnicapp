@@ -29,7 +29,7 @@ const JWT_SECRET="tecnicapp-secret"
 
 
 function generateToken(email) {
-    return jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ email }, JWT_SECRET, { expiresIn: '24h' });
 }
 
 function authenticateToken(req, res, next) {
@@ -410,6 +410,30 @@ app.post('/perfil', async (req, res) => {
         `;
         const result = await client.query(query, [email]);
         res.status(200).json({ dades: result.rows[0], status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+app.get('/tronc/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT m.id AS id_membre, m.mote, mp.posicio
+            FROM membres_posicions mp
+            JOIN membres m ON mp.membre_id = m.id
+            WHERE mp.esdeveniment_castell_id = $1
+        `;
+        const result = await client.query(query, [id]);
+        res.status(200).json({ castellers: result.rows, status: true });
     } 
     catch (error) {
         console.error("Error: ", error);

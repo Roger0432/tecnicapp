@@ -29,7 +29,14 @@ function EditarCastell() {
     return (
         <div className="page">
             <h1>{castell.nom}</h1>
-            <PlantillaTronc files={parseInt(castell.alcada - 4, 10)} columnes={parseInt(castell.amplada, 10)} agulla={castell.agulla} />
+
+            <PlantillaTronc 
+                id={id}
+                files={parseInt(castell.alcada - 4, 10)} 
+                columnes={parseInt(castell.amplada, 10)} 
+                agulla={castell.agulla} 
+            />
+            
         </div>
     );
 }
