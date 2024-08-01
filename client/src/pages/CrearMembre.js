@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function CrearMembre() {
-  const [mote, setMote] = useState('');
-  const [nom, setNom] = useState('');
-  const [cognoms, setCognoms] = useState('');
-  const [alcadaHombro, setAlcadaHombro] = useState('');
-  const [alcadaMans, setAlcadaMans] = useState('');
-  const [comentaris, setComentaris] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { membre = {}, editar = false } = location.state || {};
+  
+  const [mote, setMote] = useState(membre.mote || '');
+  const [nom, setNom] = useState(membre.nom || '');
+  const [cognoms, setCognoms] = useState(membre.cognoms || '');
+  const [alcadaHombro, setAlcadaHombro] = useState(membre.alcada_hombro || '');
+  const [alcadaMans, setAlcadaMans] = useState(membre.alcada_mans || '');
+  const [comentaris, setComentaris] = useState(membre.comentaris || '');
   const [error, setError] = useState('');
-  const navigate = useNavigate();  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -31,8 +34,14 @@ function CrearMembre() {
       comentaris 
     };
 
-    fetch(`${BACKEND_URL}/crear-membre`, {
-      method: 'POST',
+    let url = `${BACKEND_URL}`;
+    if (editar) url += `/editar-membre/${membre.id}`;
+    else url += '/crear-membre';
+
+    const method = editar ? 'PUT' : 'POST';
+
+    fetch(url, {
+      method: method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
@@ -40,13 +49,12 @@ function CrearMembre() {
       .then(data => {
         if (data.status) {
           Swal.fire({
-            title: 'Membre creat',
+            title: editar ? 'Membre actualitzat' : 'Membre creat',
             icon: 'success',
             showConfirmButton: false,
             timer: 1000
           })
           .then(() => navigate('/membres'));
-
         } else {
           console.error('Error:', data.msg);
         }
@@ -58,7 +66,7 @@ function CrearMembre() {
 
   return (
     <div className="page">
-      <h1>Nou membre</h1>
+      <h2>{editar ? 'Editar Membre' : 'Crear Membre'}</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -91,7 +99,7 @@ function CrearMembre() {
           <textarea value={comentaris} onChange={(e) => setComentaris(e.target.value)} id="comentaris" name="comentaris" placeholder="Comentaris"></textarea>
         </div>
 
-        <button type="submit">Crear</button>
+        <button type="submit">{editar ? 'Guardar' : 'Crear'}</button>
         <div className="error">{error}</div>
       </form>
     </div>

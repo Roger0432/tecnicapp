@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 dotenv.config();
 
 const corsOptions = {
-    origin: 'https://tecnicapp-client.vercel.app',
+    origin: ['https://tecnicapp-client.vercel.app', 'http://localhost:3000'],
 };
 app.use(cors(corsOptions));
 
@@ -288,6 +288,34 @@ app.delete('/borrar-esdeveniment/:id', async (req, res) => {
 });
 
 
+app.put('/editar-esdeveniment/:id', async (req, res) => {
+    const id = req.params.id;
+    const { dia, lloc, hora, nom } = req.body;
+    const hora_fi = sumarHores(hora, 2);  
+
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            UPDATE esdeveniments 
+            SET dia = $1, lloc = $2, hora_inici = $3, hora_fi = $4, nom = $5
+            WHERE id = $6
+        `;
+        const values = [dia, lloc, hora, hora_fi, nom, id];
+        await client.query(query, values);
+
+        res.status(200).json({ msg: 'Esdeveniment actualitzat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
+    }
+});
+
+
 app.get('/castell/:id', async (req, res) => {
     const id = req.params.id;   
     let client;
@@ -321,7 +349,7 @@ app.get('/membres', async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
+        const query = `SELECT id, mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
         const result = await client.query(query);
         res.status(200).json({ membres: result.rows, status: true });
     } 
@@ -348,6 +376,50 @@ app.post('/crear-membre', async (req, res) => {
         const values = [mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris];
         await client.query(query, values);
         res.status(200).json({ msg: 'Membre creat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+app.delete('/borrar-membre/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `DELETE FROM membres WHERE id = $1`;
+        await client.query(query, [id]);
+        res.status(200).json({ msg: 'Membre eliminat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+app.put('/editar-membre/:id', async (req, res) => {
+    const id = req.params.id;
+    const { mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris } = req.body;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            UPDATE membres 
+            SET mote = $1, nom = $2, cognoms = $3, alcada_hombro = $4, alcada_mans = $5, comentaris = $6
+            WHERE id = $7
+        `;
+        const values = [mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris, id];
+        await client.query(query, values);
+        res.status(200).json({ msg: 'Membre actualitzat correctament', status: true });
     } 
     catch (error) {
         console.error("Error: ", error);

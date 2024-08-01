@@ -1,6 +1,6 @@
-import React, {  useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdEdit } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import '../styles/Table.css';
@@ -14,7 +14,6 @@ function Esdeveniments({ assaig }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-
     fetch(`${BACKEND_URL}/esdeveniments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -119,9 +118,16 @@ function Esdeveniments({ assaig }) {
     });
   };
 
+  const editarEsdeveniment = (esdeveniment) => {
+    if (assaig) {
+      navigate('/editar-assaig', { state: { esdeveniment, editar: true } });
+    } else {
+      navigate('/editar-diada', { state: { esdeveniment, editar: true } });
+    }
+  };
+
   return (
     <div className='page'>
-
       {assaig ? <h1>Assaigs</h1> : <h1>Diades</h1>}
 
       <div className='table-container'>
@@ -158,7 +164,7 @@ function Esdeveniments({ assaig }) {
                 onClick={() => requestSort('lloc')} 
                 className={sortConfig.key === 'lloc' ? 'active' : ''}
               >Lloc</th>
-              <th>Borrar</th>
+              <th>Accions</th>
             </tr>
           </thead>
           <tbody>
@@ -170,7 +176,8 @@ function Esdeveniments({ assaig }) {
                 <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.hora}</td>
                 <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.lloc}</td>
                 <td>
-                  <MdDeleteOutline className="delete-icon" onClick={() => borrarEsdeveniment(esdeveniment.id)} />
+                  <MdEdit className="action-icon" onClick={() => editarEsdeveniment(esdeveniment)} />
+                  <MdDeleteOutline className="action-icon" onClick={() => borrarEsdeveniment(esdeveniment.id)} />
                 </td>
               </tr>
             ))}

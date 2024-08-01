@@ -70,7 +70,8 @@ function App() {
 
         <Route path="/membres" element={<Membres />} />
         <Route path="/crear-membre" element={<CrearMembre />} />
-        
+        <Route path="/editar-membre" element={<CrearMembre />} />
+
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/configuracio" element={<Configuracio />} />
 
@@ -79,7 +80,10 @@ function App() {
 
         <Route path="/crear-assaig" element={<CrearEsdeveniment assaig={true} />} /> 
         <Route path="/crear-diada" element={<CrearEsdeveniment assaig={false} />} />
-
+        
+        <Route path="/editar-assaig" element={<CrearEsdeveniment assaig={true} />} />
+        <Route path="/editar-diada" element={<CrearEsdeveniment assaig={false} />} />
+        
         <Route path="/assaig/:id" element={<DetallsEsdeveniment />} />
         <Route path="/diada/:id" element={<DetallsEsdeveniment />} />
 

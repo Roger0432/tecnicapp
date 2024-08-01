@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/App.css';
+import Swal from 'sweetalert2';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function CrearEsdeveniment ({ assaig }) {
 
   const text_nom = assaig ? 'Assaig general' : '';
-
-  const [dia, setDia] = useState('');
-  const [lloc, setLloc] = useState('');
-  const [hora, setHora] = useState('');
-  const [error, setError] = useState('');
-  const [nom, setNom] = useState(text_nom);
-  const navigate = useNavigate();
   
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { esdeveniment = {}, editar = false } = location.state || {};
+
+  const formatDate = (date) => {
+    const dateParts = date.split('-');
+    return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+  };
+  
+  const [nom, setNom] = useState(esdeveniment.nom || text_nom);
+  const [dia, setDia] = useState(formatDate(esdeveniment.dia) || '');
+  const [lloc, setLloc] = useState(esdeveniment.lloc || '0');
+  const [hora, setHora] = useState(esdeveniment.hora_inici || '');
+  const [error, setError] = useState('');
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,22 +33,38 @@ function CrearEsdeveniment ({ assaig }) {
       return;
     }
 
-    fetch(`${BACKEND_URL}/crear-esdeveniment`, {
-      method: 'POST',
+    const data = { dia, lloc, hora, nom };
+
+    let url = `${BACKEND_URL}`;
+    if (editar) url += `/editar-esdeveniment/${esdeveniment.id}`;
+    else url += '/crear-esdeveniment';
+
+    const method = editar ? 'PUT' : 'POST';
+
+    fetch(url, {
+      method: method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dia, lloc, hora, assaig, nom }),
+      body: JSON.stringify(data)
     })
     .then(response => response.json())
     .then(data => {
       if (data.status) {
-        if (assaig) {
-          navigate('/assaig/' + data.id);
-        }
-        else {
-          navigate('/diada/' + data.id);
-        }
-      } 
-      else {
+        Swal.fire({
+          icon: 'success',
+          title: { assaig } ? 'Assaig guardat correctament' : 'Diada guardada correctament',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        .then(() => {
+          if (assaig) {
+            navigate('/assaigs');
+          }
+          else {
+            navigate('/diades');
+          }
+        });
+      }
+     else {
         setError(data.msg);
       }
     })
@@ -56,8 +80,8 @@ function CrearEsdeveniment ({ assaig }) {
 
     {assaig ? (
       <>
-        <h2>Crear assaig</h2>
-        
+        { editar ? <h1>Editar assaig</h1> : <h1>Crear assaig</h1> }
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Nom </label>
@@ -99,15 +123,12 @@ function CrearEsdeveniment ({ assaig }) {
           </div>
 
           <button type="submit">Guardar</button>
-          <Link to="/main">
-            <button type="button">Cancel·lar</button>
-          </Link>
           <div className="error">{error}</div>
         </form>
       </>
     ) : (
       <>
-        <h2>Crear diada</h2>
+        { editar ? <h2>Editar diada</h2> : <h2>Crear diada</h2> }
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -149,9 +170,6 @@ function CrearEsdeveniment ({ assaig }) {
           </div>
 
           <button type="submit">Guardar</button>
-          <Link to="/main">
-            <button type="button">Cancel·lar</button>
-          </Link>
           <div className="error">{error}</div>
         </form>
       </>

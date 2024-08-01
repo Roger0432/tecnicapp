@@ -43,13 +43,13 @@ function DetallsEsdeveniment() {
         .then(response => response.json())
         .then(data => {
           if (data.status) {
-            window.location.reload();
             Swal.fire({
               title: 'Esborrat!',
               icon: 'success',
               timer: 1000,
               showConfirmButton: false
-            });
+            })
+            .then(() => window.location.reload());
           } else {
             console.error('Failed to delete castell');
           }
