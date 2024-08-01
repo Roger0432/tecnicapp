@@ -49,17 +49,17 @@ function CrearEsdeveniment ({ assaig }) {
     .then(response => response.json())
     .then(data => {
       if (data.status) {
+        const title = assaig ? 'Assaig guardat correctament' : 'Diada guardada correctament';
         Swal.fire({
           icon: 'success',
-          title: { assaig } ? 'Assaig guardat correctament' : 'Diada guardada correctament',
+          title: title,
           showConfirmButton: false,
           timer: 1000
         })
         .then(() => {
           if (assaig) {
             navigate('/assaigs');
-          }
-          else {
+          } else {
             navigate('/diades');
           }
         });
