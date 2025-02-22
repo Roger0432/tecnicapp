@@ -403,7 +403,7 @@ app.get('/membres-tronc/:id', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT m.id AS id_membre, m.mote, mp.posicio, m.alcada_hombro
+            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_hombro
             FROM membres_posicions mp
             JOIN membres m ON mp.membre_id = m.id
             WHERE mp.esdeveniment_castell_id = $1
@@ -417,6 +417,41 @@ app.get('/membres-tronc/:id', async (req, res) => {
     } 
     finally {
         client.release();
+    }
+});
+
+
+app.put('/actualitzar-tronc/:id', async (req, res) => {
+    const id = req.params.id;
+    const { membresTronc } = req.body; // Desestructuració per obtenir membresTronc
+    let client;
+
+    try {
+        client = await pool.connect();
+        await client.query('BEGIN');
+
+        // Eliminem les posicions existents per a aquest esdeveniment
+        const queryDelete = `DELETE FROM membres_posicions WHERE esdeveniment_castell_id = $1`;
+        await client.query(queryDelete, [id]);
+
+        // Inserim les noves posicions
+        const queryInsert = `INSERT INTO membres_posicions (esdeveniment_castell_id, membre_id, posicio) VALUES ($1, $2, $3)`;
+        for (const membre of membresTronc) {
+            await client.query(queryInsert, [id, membre.id, membre.posicio]);
+        }
+
+        await client.query('COMMIT');
+        res.status(200).json({ msg: 'Dades guardades correctament', status: true });
+    } 
+    catch (error) {
+        await client.query('ROLLBACK');
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        if (client) {
+            client.release();
+        }
     }
 });
 

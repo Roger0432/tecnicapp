@@ -87,8 +87,8 @@ function App() {
           <Route path="/assaig/:id" element={<DetallsEsdeveniment />} />
           <Route path="/diada/:id" element={<DetallsEsdeveniment />} />
 
-          <Route path="prova/:id" element={<EditarCastell />} />
-          <Route path="castell/:id" element={<EditarCastell />} />
+          <Route path="prova/:id" element={<EditarCastell assaig={true} />} />
+          <Route path="castell/:id" element={<EditarCastell assaig={false} />} />
 
           <Route path="/nova-prova/:id" element={<AfegirCastell assaig={true} />} />
           <Route path="/nou-castell/:id" element={<AfegirCastell assaig={false} />} />

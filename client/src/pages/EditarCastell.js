@@ -1,17 +1,18 @@
 import React, { useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PlantillaTronc from '../components/PlantillaTronc';
 import '../styles/EditarCastell.css';
 import '../styles/Tronc.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function EditarCastell() {
+function EditarCastell({assaig}) {
     const { id } = useParams();
     const [membresTronc, setMembresTronc] = useState([]);
     const [membresNoTronc, setMembresNoTronc] = useState([]);
     const [castellData, setCastellData] = useState([]);
     const [selectedCell, setSelectedCell] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         Promise.all([
@@ -37,83 +38,83 @@ function EditarCastell() {
     };
 
     const handleMemberSelect = (membreSeleccionat) => {
-        // Creem una còpia de les llistes actuals
+        // 1. Creem una còpia de les llistes actuals per evitar mutacions directes
         const membresTroncActuals = [...membresTronc];
         const membresNoTroncActuals = [...membresNoTronc];
-
-        // Busquem si la cel·la seleccionada ja té un membre assignat
+    
+        // 2. Busquem si la cel·la seleccionada ja té un membre assignat
         let membreAnterior = null;
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio === selectedCell) {
-                membreAnterior = membresTroncActuals[i];
+                membreAnterior = membresTroncActuals[i]; // Guardem el membre anterior
                 break;
             }
         }
     
-        // Si hi havia un membre anterior, l'afegim a membresNoTronc
+        // 3. Si hi havia un membre anterior, l'afegim a membresNoTronc
         if (membreAnterior) {
-            membresNoTroncActuals.push({ mote: membreAnterior.mote });
+            membresNoTroncActuals.push(membreAnterior); // Afegim tot l'objecte del membre
         }
     
-        // Eliminem el membre anterior del tronc (si n'hi havia)
+        // 4. Eliminem el membre anterior del tronc (si n'hi havia)
         const nousMembresTronc = [];
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio !== selectedCell) {
-                nousMembresTronc.push(membresTroncActuals[i]);
+                nousMembresTronc.push(membresTroncActuals[i]); // Conservem els membres que no són de la cel·la seleccionada
             }
         }
     
-        // Afegim el nou membre al tronc
-        nousMembresTronc.push({ posicio: selectedCell, mote: membreSeleccionat.mote });
+        // 5. Afegim el nou membre al tronc
+        nousMembresTronc.push({ ...membreSeleccionat, posicio: selectedCell }); // Copiem tot l'objecte i afegim la posició
     
-        //Eliminem el membre seleccionat de membresNoTronc
+        // 6. Eliminem el membre seleccionat de membresNoTronc
         const nousMembresNoTronc = [];
         for (let i = 0; i < membresNoTroncActuals.length; i++) {
-            if (membresNoTroncActuals[i].mote !== membreSeleccionat.mote) {
-                nousMembresNoTronc.push(membresNoTroncActuals[i]);
+            if (membresNoTroncActuals[i].id !== membreSeleccionat.id) { // Comparem per id
+                nousMembresNoTronc.push(membresNoTroncActuals[i]); // Conservem els membres que no són el seleccionat
             }
         }
     
-        // Actualitzem els estats amb les noves llistes
+        // 7. Actualitzem els estats amb les noves llistes
         setMembresTronc(nousMembresTronc);
         setMembresNoTronc(nousMembresNoTronc);
     
-        // Tanquem el pop-up
+        // 8. Tanquem el pop-up
         setSelectedCell(null);
     };
 
     const handleEliminarMembre = () => {
-        // Creem una còpia de les llistes actuals
+        // 1. Creem una còpia de les llistes actuals per evitar mutacions directes
         const membresTroncActuals = [...membresTronc];
         const membresNoTroncActuals = [...membresNoTronc];
     
-        // Busquem el membre assignat a la cel·la seleccionada
+        // 2. Busquem el membre assignat a la cel·la seleccionada
         let membreAnterior = null;
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio === selectedCell) {
-                membreAnterior = membresTroncActuals[i];
+                membreAnterior = membresTroncActuals[i]; // Guardem el membre anterior
                 break;
             }
         }
     
-        // Si hi havia un membre, l'afegim a membresNoTronc
+        // 3. Si hi havia un membre, l'afegim a membresNoTronc
         if (membreAnterior) {
-            membresNoTroncActuals.push({ mote: membreAnterior.mote });
+            membresNoTroncActuals.push(membreAnterior); // Afegim tot l'objecte del membre
         }
     
-        // Eliminem el membre del tronc
+        // 4. Eliminem el membre del tronc
         const nousMembresTronc = [];
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio !== selectedCell) {
-                nousMembresTronc.push(membresTroncActuals[i]);
+                nousMembresTronc.push(membresTroncActuals[i]); // Conservem els membres que no són de la cel·la seleccionada
             }
         }
     
-        // Actualitzem els estats amb les noves llistes
+        // 5. Actualitzem els estats amb les noves llistes
         setMembresTronc(nousMembresTronc);
         setMembresNoTronc(membresNoTroncActuals);
     
-        // Tanquem el pop-up
+        // 6. Tanquem el pop-up
         setSelectedCell(null);
     };
 
@@ -123,26 +124,25 @@ function EditarCastell() {
 
     const handleGuardar = () => {
         console.log("membresTronc", membresTronc);
-        console.log("membresNoTronc", membresNoTronc);
-        /*
+    
         fetch(`${BACKEND_URL}/actualitzar-tronc/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(membresTronc, membresNoTronc)
+            body: JSON.stringify({ membresTronc }) // Enviem les dades dins d'un objecte
         })
         .then(response => response.json())
         .then(data => {
             if (data.status) {
-                console.log('Dades guardades correctament');
+                if (assaig) navigate(`/assaigs`);
+                else navigate(`/diades/`);
             } else {
                 console.error(data.msg);
             }
         })
         .catch(error => console.error('Error:', error));
-        */
-    }
+    };
 
     return (
         <div className="page">
