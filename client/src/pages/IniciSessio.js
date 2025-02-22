@@ -28,7 +28,7 @@ function IniciSessio() {
       return;
     }
 
-    fetch(`${BACKEND_URL}/login`, {
+    fetch(`${BACKEND_URL}/inicisessio`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })

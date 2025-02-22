@@ -61,38 +61,38 @@ function App() {
   return (
     <div className="App">
       {!['/inicisessio', '/registre'].includes(location.pathname) && isAuthenticated && <Navbar />}
-      <Routes>
-        <Route path="/inicisessio" element={<IniciSessio />} />
-        <Route path="/registre" element={<Registre />} />
+        <Routes>
+          <Route path="/inicisessio" element={<IniciSessio />} />
+          <Route path="/registre" element={<Registre />} />
 
-        <Route path="/" element={<Main />} />
-        <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Main />} />
+          <Route path="/main" element={<Main />} />
 
-        <Route path="/membres" element={<Membres />} />
-        <Route path="/crear-membre" element={<CrearMembre />} />
-        <Route path="/editar-membre" element={<CrearMembre />} />
+          <Route path="/membres" element={<Membres />} />
+          <Route path="/crear-membre" element={<CrearMembre />} />
+          <Route path="/editar-membre" element={<CrearMembre />} />
 
-        <Route path="/perfil" element={<Perfil />} />
-        <Route path="/configuracio" element={<Configuracio />} />
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/configuracio" element={<Configuracio />} />
 
-        <Route path="/assaigs" element={<Esdeveniments assaig={true} />} />
-        <Route path="/diades" element={<Esdeveniments assaig={false} />} />
+          <Route path="/assaigs" element={<Esdeveniments assaig={true} />} />
+          <Route path="/diades" element={<Esdeveniments assaig={false} />} />
 
-        <Route path="/crear-assaig" element={<CrearEsdeveniment assaig={true} />} /> 
-        <Route path="/crear-diada" element={<CrearEsdeveniment assaig={false} />} />
-        
-        <Route path="/editar-assaig" element={<CrearEsdeveniment assaig={true} />} />
-        <Route path="/editar-diada" element={<CrearEsdeveniment assaig={false} />} />
-        
-        <Route path="/assaig/:id" element={<DetallsEsdeveniment />} />
-        <Route path="/diada/:id" element={<DetallsEsdeveniment />} />
+          <Route path="/crear-assaig" element={<CrearEsdeveniment assaig={true} />} /> 
+          <Route path="/crear-diada" element={<CrearEsdeveniment assaig={false} />} />
+          
+          <Route path="/editar-assaig" element={<CrearEsdeveniment assaig={true} />} />
+          <Route path="/editar-diada" element={<CrearEsdeveniment assaig={false} />} />
+          
+          <Route path="/assaig/:id" element={<DetallsEsdeveniment />} />
+          <Route path="/diada/:id" element={<DetallsEsdeveniment />} />
 
-        <Route path="prova/:id" element={<EditarCastell />} />
-        <Route path="castell/:id" element={<EditarCastell />} />
+          <Route path="prova/:id" element={<EditarCastell />} />
+          <Route path="castell/:id" element={<EditarCastell />} />
 
-        <Route path="/nova-prova/:id" element={<AfegirCastell assaig={true} />} />
-        <Route path="/nou-castell/:id" element={<AfegirCastell assaig={false} />} />
-      </Routes>
+          <Route path="/nova-prova/:id" element={<AfegirCastell assaig={true} />} />
+          <Route path="/nou-castell/:id" element={<AfegirCastell assaig={false} />} />
+        </Routes>
     </div>
   );
 }

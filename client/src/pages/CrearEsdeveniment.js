@@ -6,21 +6,20 @@ import Swal from 'sweetalert2';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function CrearEsdeveniment ({ assaig }) {
-
-  const text_nom = assaig ? 'Assaig general' : '';
   
   const navigate = useNavigate();
   const location = useLocation();
   const { esdeveniment = {}, editar = false } = location.state || {};
 
   const formatDate = (date) => {
+    if (!date) return '';
     const dateParts = date.split('-');
     return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
   };
   
-  const [nom, setNom] = useState(esdeveniment.nom || text_nom);
+  const [nom, setNom] = useState(esdeveniment.nom || assaig ? 'Assaig general' : '');
   const [dia, setDia] = useState(formatDate(esdeveniment.dia) || '');
-  const [lloc, setLloc] = useState(esdeveniment.lloc || '0');
+  const [lloc, setLloc] = useState(esdeveniment.lloc || assaig ? '0' : '');
   const [hora, setHora] = useState(esdeveniment.hora_inici || '');
   const [error, setError] = useState('');
   
@@ -33,7 +32,7 @@ function CrearEsdeveniment ({ assaig }) {
       return;
     }
 
-    const data = { dia, lloc, hora, nom };
+    const data = { dia, lloc, hora, assaig:assaig, nom };
 
     let url = `${BACKEND_URL}`;
     if (editar) url += `/editar-esdeveniment/${esdeveniment.id}`;
@@ -63,8 +62,7 @@ function CrearEsdeveniment ({ assaig }) {
             navigate('/diades');
           }
         });
-      }
-     else {
+      } else {
         setError(data.msg);
       }
     })

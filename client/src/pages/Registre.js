@@ -65,7 +65,7 @@ function Registre() {
 
     const data = { nom, cognoms, email, password, rol, codiactivacio };
 
-    fetch(`${BACKEND_URL}/register`, {
+    fetch(`${BACKEND_URL}/registre`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)

@@ -78,7 +78,7 @@ function DetallsEsdeveniment() {
         <>
           <h2>Proves</h2> 
           <Link className='link' to={`/nova-prova/${id}`}>
-            Nova prova
+            Afegir prova
           </Link>
 
           {detalls.castells[0] !== null ? (
@@ -97,7 +97,7 @@ function DetallsEsdeveniment() {
         <>
           <h2>Castells</h2>
           <Link className="link" to={`/nou-castell/${id}`}>
-            Nou castell
+            Afegir castell
           </Link>
 
           {detalls.castells[0] !== null ? (

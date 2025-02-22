@@ -27,9 +27,8 @@ const pool = new Pool({
 const CODI_ACTIVACIO = process.env.CODI_ACTIVACIO;
 const JWT_SECRET="tecnicapp-secret"
 
-
 function generateToken(email) {
-    return jwt.sign({ email }, JWT_SECRET, { expiresIn: '24h' });
+    return jwt.sign({ email }, JWT_SECRET/*, { expiresIn: '24h' }*/);
 }
 
 function authenticateToken(req, res, next) {
@@ -69,13 +68,20 @@ function formatTime(timeString) {
     return `${hours}:${minutes}`;
 }
 
+app.use((req, res, next) => {
+    if (!req.url.includes('/verify-token')) {
+        console.log(`${req.method} ${req.url}`);
+    }
+    next();
+});
+
 
 app.get('/verify-token', authenticateToken, (req, res) => {
     res.status(200).json({ msg: 'Token verificat correctament', status: true });
 });
 
 
-app.post('/login', async (req, res) => {
+app.post('/inicisessio', async (req, res) => {
     const { email, password } = req.body;
     let client;
     try {
@@ -107,7 +113,7 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.post('/register', async (req, res) => {
+app.post('/registre', async (req, res) => {
     const { nom, cognoms, email, password, rol } = req.body;
     let client;
     try {
@@ -349,7 +355,11 @@ app.get('/membres', async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT id, mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris FROM membres`;
+        const query = `
+            SELECT id, mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris
+            FROM membres
+        `;
+
         const result = await client.query(query);
         res.status(200).json({ membres: result.rows, status: true });
     } 
@@ -357,6 +367,54 @@ app.get('/membres', async (req, res) => {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
     }
+    finally {
+        client.release();
+    }
+});
+
+
+app.get('/membres-no-tronc/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT id, mote, alcada_hombro
+            FROM membres
+            WHERE id NOT IN (SELECT membre_id FROM membres_posicions WHERE esdeveniment_castell_id = $1)
+        `;
+
+        const result = await client.query(query, [id]);
+        res.status(200).json({ membres: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
+    }
+});
+
+
+app.get('/membres-tronc/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT m.id AS id_membre, m.mote, mp.posicio, m.alcada_hombro
+            FROM membres_posicions mp
+            JOIN membres m ON mp.membre_id = m.id
+            WHERE mp.esdeveniment_castell_id = $1
+        `;
+        const result = await client.query(query, [id]);
+        res.status(200).json({ tronc: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
     finally {
         client.release();
     }
@@ -516,29 +574,6 @@ app.post('/perfil', async (req, res) => {
     }
 });
 
-
-app.get('/tronc/:id', async (req, res) => {
-    const id = req.params.id;
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `
-            SELECT m.id AS id_membre, m.mote, mp.posicio
-            FROM membres_posicions mp
-            JOIN membres m ON mp.membre_id = m.id
-            WHERE mp.esdeveniment_castell_id = $1
-        `;
-        const result = await client.query(query, [id]);
-        res.status(200).json({ castellers: result.rows, status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    } 
-    finally {
-        client.release();
-    }
-});
 
 
 app.listen(port, () => {
