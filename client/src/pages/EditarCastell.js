@@ -123,8 +123,6 @@ function EditarCastell({assaig}) {
     };
 
     const handleGuardar = () => {
-        console.log("membresTronc", membresTronc);
-    
         fetch(`${BACKEND_URL}/actualitzar-tronc/${id}`, {
             method: 'PUT',
             headers: {

@@ -15,11 +15,11 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
       return mote;
   }, [castellersTronc]);
 
-  const handleCellClick = (key) => {
+  const handleCellClick = useCallback((key) => {
       if (onCellClick) {
           onCellClick(key);
       }
-  };
+  }, [onCellClick]);
 
   const crearCanalla = useCallback((taula) => {
       const enxanetaRow = [];
@@ -120,7 +120,7 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
           default:
               break;
       }
-  }, [columnes, getCastellerPosicio]);
+  }, [columnes, getCastellerPosicio, handleCellClick]);
 
   const crearTronc = useCallback((taula) => {
       let novesFiles = files;
@@ -142,7 +142,7 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
 
           taula.push(<tr key={`tronc-row-${i}`}>{row}</tr>);
       }
-  }, [files, columnes, agulla, getCastellerPosicio]);
+  }, [files, columnes, agulla, getCastellerPosicio, handleCellClick]);
 
   const crearBaixos = useCallback((taula) => {
       const baixos = [];
@@ -153,7 +153,7 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
           baixos.push(<td className='cela baix' key={key_baixos} onClick={() => handleCellClick(key_baixos)}>{getCastellerPosicio(key_baixos)}</td>);
       }
       taula.push(<tr key='baixos-row'>{baixos}</tr>);
-  }, [columnes, agulla, getCastellerPosicio]);
+  }, [columnes, agulla, getCastellerPosicio, handleCellClick]);
 
   const crearTaula = useCallback(() => {
       const taula = [];
