@@ -37,11 +37,11 @@ function EditarCastell() {
     };
 
     const handleMemberSelect = (membreSeleccionat) => {
-        //Creem una còpia de les llistes actuals
+        // Creem una còpia de les llistes actuals
         const membresTroncActuals = [...membresTronc];
         const membresNoTroncActuals = [...membresNoTronc];
 
-        //Busquem si la cel·la seleccionada ja té un membre assignat
+        // Busquem si la cel·la seleccionada ja té un membre assignat
         let membreAnterior = null;
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio === selectedCell) {
@@ -50,12 +50,12 @@ function EditarCastell() {
             }
         }
     
-        //Si hi havia un membre anterior, l'afegim a membresNoTronc
+        // Si hi havia un membre anterior, l'afegim a membresNoTronc
         if (membreAnterior) {
             membresNoTroncActuals.push({ mote: membreAnterior.mote });
         }
     
-        //Eliminem el membre anterior del tronc (si n'hi havia)
+        // Eliminem el membre anterior del tronc (si n'hi havia)
         const nousMembresTronc = [];
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio !== selectedCell) {
@@ -63,7 +63,7 @@ function EditarCastell() {
             }
         }
     
-        //Afegim el nou membre al tronc
+        // Afegim el nou membre al tronc
         nousMembresTronc.push({ posicio: selectedCell, mote: membreSeleccionat.mote });
     
         //Eliminem el membre seleccionat de membresNoTronc
@@ -74,11 +74,11 @@ function EditarCastell() {
             }
         }
     
-        //Actualitzem els estats amb les noves llistes
+        // Actualitzem els estats amb les noves llistes
         setMembresTronc(nousMembresTronc);
         setMembresNoTronc(nousMembresNoTronc);
     
-        //Tanquem el pop-up
+        // Tanquem el pop-up
         setSelectedCell(null);
     };
 
@@ -87,7 +87,7 @@ function EditarCastell() {
         const membresTroncActuals = [...membresTronc];
         const membresNoTroncActuals = [...membresNoTronc];
     
-        //Busquem el membre assignat a la cel·la seleccionada
+        // Busquem el membre assignat a la cel·la seleccionada
         let membreAnterior = null;
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio === selectedCell) {
@@ -96,12 +96,12 @@ function EditarCastell() {
             }
         }
     
-        //Si hi havia un membre, l'afegim a membresNoTronc
+        // Si hi havia un membre, l'afegim a membresNoTronc
         if (membreAnterior) {
             membresNoTroncActuals.push({ mote: membreAnterior.mote });
         }
     
-        //Eliminem el membre del tronc
+        // Eliminem el membre del tronc
         const nousMembresTronc = [];
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio !== selectedCell) {
@@ -109,11 +109,11 @@ function EditarCastell() {
             }
         }
     
-        //Actualitzem els estats amb les noves llistes
+        // Actualitzem els estats amb les noves llistes
         setMembresTronc(nousMembresTronc);
         setMembresNoTronc(membresNoTroncActuals);
     
-        //Tanquem el pop-up
+        // Tanquem el pop-up
         setSelectedCell(null);
     };
 
