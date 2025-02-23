@@ -50,6 +50,7 @@ function CustomNavbar() {
             icon: <LogoutIcon />, 
             onClick: (e) => {
                 e.preventDefault();
+                setOpen(false);
                 handleLogout();
             }
         }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Alert, Typography } from '@mui/material';
+import { Collapse, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -8,6 +10,7 @@ function IniciSessio() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,9 +26,11 @@ function IniciSessio() {
   const handleLogin = async (event) => {
     event.preventDefault();
     setError('');
+    setOpen(false);
 
     if (email === '' || password === '') {
       setError("Has d'omplir tots els camps");
+      setOpen(true);
       return;
     }
 
@@ -44,11 +49,13 @@ function IniciSessio() {
         } else {
           localStorage.clear();
           setError(data.msg);
+          setOpen(true);
         }
       })
       .catch(error => {
         console.error('Error:', error);
         setError('Error del servidor');
+        setOpen(true);
       });
   }
 
@@ -57,7 +64,7 @@ function IniciSessio() {
       
       <form id="login-form" onSubmit={handleLogin}>
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>
-            <h2>INICI DE SESSIÓ</h2>
+            <Typography variant="h5" mb={2} mt={2} sx={{ fontWeight: 'bold' }}>INICI DE SESSIÓ</Typography>
             <TextField 
               id="lg-email" 
               label="Correu electrònic" 
@@ -77,7 +84,30 @@ function IniciSessio() {
 
             <Button variant="contained" type="submit">Entra</Button>
             <Button variant="text" component={Link} to="/registre">No tens compte? Registra't aquí.</Button>
-            <div className="error">{error}</div>
+
+            <Box sx={{ width: '100%' }}>
+            <Collapse in={open}>
+              <Alert
+                variant="filled"
+                severity="error"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+                {error}
+              </Alert>
+            </Collapse>
+          </Box>
 
           </Box>
       </form>

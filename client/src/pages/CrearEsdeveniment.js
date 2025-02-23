@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../styles/App.css';
+import { TextField, Button, Box, Typography, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
+import '../styles/App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function CrearEsdeveniment ({ assaig }) {
-  
+function CrearEsdeveniment({ assaig }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { esdeveniment = {}, editar = false } = location.state || {};
@@ -16,23 +17,26 @@ function CrearEsdeveniment ({ assaig }) {
     const dateParts = date.split('-');
     return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
   };
-  
-  const [nom, setNom] = useState(esdeveniment.nom || assaig ? 'Assaig general' : '');
+
+  const [nom, setNom] = useState(esdeveniment.nom || (assaig ? 'Assaig general' : ''));
   const [dia, setDia] = useState(formatDate(esdeveniment.dia) || '');
-  const [lloc, setLloc] = useState(esdeveniment.lloc || assaig ? '0' : '');
+  const [lloc, setLloc] = useState(esdeveniment.lloc || (assaig ? '0' : ''));
   const [hora, setHora] = useState(esdeveniment.hora_inici || '');
   const [error, setError] = useState('');
-  
+  const [open, setOpen] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setOpen(false);
 
     if (dia === '' || lloc === '0' || hora === '' || nom === '') {
-      setError('Has d\'omplir tots els camps');
+      setError("Has d'omplir tots els camps");
+      setOpen(true);
       return;
     }
 
-    const data = { dia, lloc, hora, assaig:assaig, nom };
+    const data = { dia, lloc, hora, assaig: assaig, nom };
 
     let url = `${BACKEND_URL}`;
     if (editar) url += `/editar-esdeveniment/${esdeveniment.id}`;
@@ -45,136 +49,122 @@ function CrearEsdeveniment ({ assaig }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.status) {
-        const title = assaig ? 'Assaig guardat correctament' : 'Diada guardada correctament';
-        Swal.fire({
-          icon: 'success',
-          title: title,
-          showConfirmButton: false,
-          timer: 1000
-        })
-        .then(() => {
-          if (assaig) {
-            navigate('/assaigs');
-          } else {
-            navigate('/diades');
-          }
-        });
-      } else {
-        setError(data.msg);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      setError('Error del servidor');
-    });
-    
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          const title = assaig ? 'Assaig guardat correctament' : 'Diada guardada correctament';
+          Swal.fire({
+            icon: 'success',
+            title: title,
+            showConfirmButton: false,
+            timer: 1000
+          })
+            .then(() => {
+              if (assaig) {
+                navigate('/assaigs');
+              } else {
+                navigate('/diades');
+              }
+            });
+        } else {
+          setError(data.msg);
+          setOpen(true);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setError('Error del servidor');
+        setOpen(true);
+      });
   };
 
   return (
-  <div className='page'>
+    <Box className='page'>
 
-    {assaig ? (
-      <>
-        { editar ? <h1>Editar assaig</h1> : <h1>Crear assaig</h1> }
+      <Typography variant="h5" mb={3}  sx={{ fontWeight: 'bold' }}>
+        {assaig ? (editar ? 'EDITAR ASSAIG' : 'CREAR ASSAIG') : (editar ? 'EDITAR DIADA' : 'CREAR DIADA')}
+      </Typography>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Nom </label>
-            <input
-              type="text"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              placeholder="Nom de l'assaig"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Dia </label>
-            <input
-              type="date"
-              value={dia}
-              onChange={(e) => setDia(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Lloc </label>
-            <select value={lloc} onChange={(e) => setLloc(e.target.value)}>
-              <option value="0" disabled>
-                Selecciona un lloc
-              </option>
-              <option value="Plaça del TecnoCampus">Plaça del TecnoCampus</option>
-              <option value="Local de Capgrossos">Local de Capgrossos</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Hora </label>
-            <input
-              type="time"
-              value={hora}
-              onChange={(e) => setHora(e.target.value)}
-            />
-          </div>
-
-          <button type="submit">Guardar</button>
-          <div className="error">{error}</div>
-        </form>
-      </>
-    ) : (
-      <>
-        { editar ? <h2>Editar diada</h2> : <h2>Crear diada</h2> }
-
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Nom </label>
-            <input
-              type="text"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              placeholder="Nom de la diada"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Dia </label>
-            <input
-              type="date"
-              value={dia}
-              onChange={(e) => setDia(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Lloc </label>
-            <input
+      <form onSubmit={handleSubmit}>
+        <Box className="form-group" display="flex" flexDirection="column" gap={2}>
+          <TextField
+            label="Nom"
+            type="text"
+            value={nom}
+            onChange={(e) => setNom(e.target.value)}
+            placeholder={assaig ? "Nom de l'assaig" : "Nom de la diada"}
+            fullWidth
+          />
+          <TextField
+            label="Dia"
+            type="date"
+            value={dia}
+            onChange={(e) => setDia(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+          />
+          {assaig ? (
+            <FormControl fullWidth>
+              <InputLabel>Lloc</InputLabel>
+              <Select
+                value={lloc}
+                onChange={(e) => setLloc(e.target.value)}
+                label="Lloc"
+              >
+                <MenuItem value="0" disabled>
+                  Selecciona un lloc
+                </MenuItem>
+                <MenuItem value="Plaça del TecnoCampus">Plaça del TecnoCampus</MenuItem>
+                <MenuItem value="Local de Capgrossos">Local de Capgrossos</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            <TextField
+              label="Lloc"
               type="text"
               value={lloc}
               onChange={(e) => setLloc(e.target.value)}
               placeholder="Lloc de la diada"
+              fullWidth
             />
-          </div>
+          )}
+          <TextField
+            label="Hora"
+            type="time"
+            value={hora}
+            onChange={(e) => setHora(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+          />
+          <Button variant="contained" type="submit">Guardar</Button>
+        </Box>
+      </form>
 
-          <div className="form-group">
-            <label>Hora </label>
-            <input
-              type="time"
-              value={hora}
-              onChange={(e) => setHora(e.target.value)}
-            />
-          </div>
-
-          <button type="submit">Guardar</button>
-          <div className="error">{error}</div>
-        </form>
-      </>
-    )}
-
-  </div>
+      <Box sx={{ width: '100%', mt: 2 }}>
+        <Collapse in={open}>
+          <Alert
+            variant="filled"
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            {error}
+          </Alert>
+        </Collapse>
+      </Box>
+    </Box>
   );
-};
+}
 
 export default CrearEsdeveniment;

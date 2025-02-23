@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { CiCalendarDate, CiClock1, CiLocationOn } from "react-icons/ci";
-import '../styles/DetallsEsdeveniment.css';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EventIcon from '@mui/icons-material/Event';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PlaceIcon from '@mui/icons-material/Place';
 import Swal from 'sweetalert2';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -62,58 +65,78 @@ function DetallsEsdeveniment() {
   };
 
   if (!detalls) {
-    return <div>Carregant...</div>;
+    return <Typography variant="h6">Carregant...</Typography>;
   }
 
   return (
-    <div className="page">
-      <h1>{detalls.nom}</h1>
-      <div className="detalls">
-        <div className="detall-item"><CiCalendarDate /> {detalls.dia}</div>
-        <div className="detall-item"><CiClock1 /> {detalls.hora_inici} - {detalls.hora_fi}</div>
-        <div className="detall-item"><CiLocationOn /> {detalls.lloc}</div>
-      </div>
+    <Box className="page">
+      <Typography variant="h4" mb={2} sx={{ fontWeight: 'bold' }}>{detalls.nom}</Typography>
+
+        <Box className="detalls" mb={2}>
+          <Box display="flex" alignItems="center" mb={1} color="gray">
+            <EventIcon />
+            <Typography variant="body1" ml={1} color="gray">{detalls.dia}</Typography>
+          </Box>
+        
+          <Box display="flex" alignItems="center" mb={1} color="gray">
+            <AccessTimeIcon />
+            <Typography variant="body1" ml={1} color="gray">{detalls.hora_inici} - {detalls.hora_fi}</Typography>
+          </Box>
+
+          <Box display="flex" alignItems="center" mb={1} color="gray">
+            <PlaceIcon />
+            <Typography variant="body1" ml={1} color="gray">{detalls.lloc}</Typography>
+          </Box>
+        </Box>
 
       {detalls.assaig ? (
         <>
-          <h2>Proves</h2> 
-          <Link className='link' to={`/nova-prova/${id}`}>
+          <Typography variant="h5" mb={2} sx={{ fontWeight: 'bold' }}>Proves</Typography>
+          <Button component={RouterLink} to={`/nova-prova/${id}`} variant="contained" sx={{ mb: 2 }}>
             Afegir prova
-          </Link>
+          </Button>
 
           {detalls.castells[0] !== null ? (
             detalls.castells.map((prova, index) => (
-              <div key={index} className='prova'>
-                <Link className='link' to={`/prova/${detalls.id[index]}`}>
+              <Box key={index} className='prova' display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+                <Button component={RouterLink} to={`/prova/${detalls.id[index]}`} variant="text">
                   {prova}
-                </Link>
-                <button onClick={() => borrarCastell(detalls.id[index])}>Esborra</button>
-              </div>
+                </Button>
+                <IconButton edge="end" aria-label="delete" onClick={() => borrarCastell(detalls.id[index])}>
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
             ))
           ) : null}
-  
         </>
       ) : (
         <>
-          <h2>Castells</h2>
-          <Link className="link" to={`/nou-castell/${id}`}>
+          <Typography variant="h5" mb={2} sx={{ fontWeight: 'bold' }}>Castells</Typography>
+          <Button component={RouterLink} to={`/nou-castell/${id}`} variant="contained" sx={{ mb: 2 }}>
             Afegir castell
-          </Link>
+          </Button>
 
           {detalls.castells[0] !== null ? (
-            detalls.castells.map((castell, index) => (
-              <div key={index} className='castell'>
-                <Link className='link' to={`/castell/${detalls.id[index]}`}>
-                  {castell}
-                </Link>
-                <button onClick={() => borrarCastell(detalls.id[index])}>Esborra</button>
-              </div>
-            ))
+            <Table>
+              <TableBody>
+                {detalls.castells.map((castell, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Typography variant="body1">{castell}</Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton edge="end" aria-label="delete" onClick={() => borrarCastell(detalls.id[index])}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           ) : null}
-
         </>
       )}
-    </div>
+    </Box>
   );
 }
 

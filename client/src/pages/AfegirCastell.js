@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { TextField, Button, Box, Typography, Select, MenuItem, FormControl, InputLabel, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -78,49 +80,62 @@ function AfegirCastell({ assaig }) {
   };
 
   return (
-    <div className="page">
-      {assaig ? (
-        <>
-          <h1>Afegir proves</h1>
-          <p>Selecciona les proves que vols afegir</p>
-        </>
-      ) : (
-        <>
-          <h1>Afegir castells</h1>
-          <p>Selecciona els castells que vols afegir</p>
-        </>
-      )}
+    <Box className="page">
+      <Typography variant="h5" mb={1}  sx={{ fontWeight: 'bold' }}>
+        {assaig ? 'AFEGIR PROVES' : 'AFEGIR CASTELLS'}
+      </Typography>
+      <Typography variant="body1" mb={1}>
+        {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
+      </Typography>
 
-      <input
+      <TextField
+        label="Cerca"
         type="text"
         value={searchTerm}
         onChange={handleSearchChange}
         placeholder="Cerca..."
+        fullWidth
+        margin="normal"
       />
-      <br />
-      <select name="castell" id="castell" value={selectedCastellId} onChange={handleSelectChange}>
-        {filteredCastells.map((castell, index) => (
-          <option key={index} value={castell.id}>{castell.nom}</option>
-        ))}
-      </select>
 
-      <div>
-        <button onClick={afegirCastell}>Afegir</button>
-      </div>
+      <FormControl fullWidth margin="normal">
+        <InputLabel>Castell</InputLabel>
+        <Select
+          value={selectedCastellId}
+          onChange={handleSelectChange}
+          label="Castell"
+        >
+          {filteredCastells.map((castell) => (
+            <MenuItem key={castell.id} value={castell.id}>
+              {castell.nom}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-      <ul>
+      <Button variant="contained" onClick={afegirCastell} sx={{ mt: 2 }}>
+        Afegir
+      </Button>
+
+      <List>
         {selectedCastells.map((castell) => (
-          <li key={castell.id}>
-            {castell.nom}
-            <button onClick={() => esborrarCastell(castell.id)}>Eliminar</button>
-          </li>
+          <ListItem
+            key={castell.id}
+            secondaryAction={
+              <IconButton edge="end" aria-label="delete" onClick={() => esborrarCastell(castell.id)}>
+                <DeleteIcon />
+              </IconButton>
+            }
+          >
+            <ListItemText primary={castell.nom} />
+          </ListItem>
         ))}
-      </ul>
+      </List>
 
-      <div>
-        <button onClick={guardarCanvis}>Guardar canvis</button>
-      </div>
-    </div>
+      <Button variant="contained" onClick={guardarCanvis}>
+        Guardar canvis
+      </Button>
+    </Box>
   );
 }
 

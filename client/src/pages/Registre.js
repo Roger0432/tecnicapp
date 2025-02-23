@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, InputLabel, MenuItem, Select, FormControl } from '@mui/material';
+import { TextField, Button, Box, InputLabel, MenuItem, Select, FormControl, Alert, Collapse, IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -13,6 +14,7 @@ function Registre() {
   const [rol, setRol] = useState('');
   const [codiactivacio, setCodiactivacio] = useState('');
   const [error, setError] = useState('');
+  const [open, setOpen] = useState(false); // Inicialment ocult
   const [rols, setRols] = useState([]);
   const navigate = useNavigate();
 
@@ -50,17 +52,21 @@ function Registre() {
   const handleRegister = async (event) => {
     event.preventDefault();
     setError('');
+    setOpen(false);
 
     if (nom === '' || cognoms === '' || email === '' || password === '' || repetirpassword === '' || rol === '0' || codiactivacio === '') {
       setError("Has d'omplir tots els camps");
+      setOpen(true);
       return;
     }
     if (password !== repetirpassword) {
       setError('Les contrasenyes no coincideixen');
+      setOpen(true);
       return;
     }
     if (password.length < 6) {
       setError('La contrasenya ha de tenir com a mínim 6 caràcters');
+      setOpen(true);
       return;
     }
 
@@ -81,11 +87,13 @@ function Registre() {
         } else {
           localStorage.clear();
           setError(data.msg || 'Error del servidor');
+          setOpen(true);
         }
       })
       .catch(error => {
         console.error('Error:', error);
         setError('Error del servidor');
+        setOpen(true);
       });     
   }
 
@@ -93,7 +101,7 @@ function Registre() {
     <div className='page'>
       <form id="register-form" onSubmit={handleRegister}>
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>
-          <h2>REGISTRE</h2>
+          <Typography variant="h5" mb={2} mt={2} sx={{ fontWeight: 'bold' }}><b>REGISTRE</b></Typography>
           <TextField 
             id="nom" 
             label="Nom" 
@@ -161,8 +169,30 @@ function Registre() {
           />
           <Button variant="contained" type="submit">Registra't</Button>
           <Button variant="text" component={Link} to="/inicisessio">Ja tens compte? Inicia sessió aquí.</Button>
-          <div className="error">{error}</div>
 
+          <Box sx={{ width: '100%' }}>
+            <Collapse in={open}>
+              <Alert
+                variant="filled"
+                severity="error"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+                {error}
+              </Alert>
+            </Collapse>
+          </Box>
         </Box>
       </form>
     </div>
