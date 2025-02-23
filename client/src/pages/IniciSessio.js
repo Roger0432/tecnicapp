@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Box } from '@mui/material';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -54,34 +54,33 @@ function IniciSessio() {
 
   return (
     <div className='page'>
-      <h2>INICI DE SESSIÓ</h2>
+      
       <form id="login-form" onSubmit={handleLogin}>
-        <div className="form-group">
-          <TextField 
-            id="lg-email" 
-            label="Correu electrònic" 
-            type="email" 
-            autoComplete="username" 
-            value={email}
-            onChange={handleEmailChange}
-          />
-          <br />
-          <TextField
-            id="lg-password" 
-            label="Contrasenya" 
-            type="password" 
-            autoComplete="current-password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        
-        <Button variant="contained" type="submit">Entra</Button>
+        <Box className="form-group" display="flex" flexDirection="column" gap={2}>
+            <h2>INICI DE SESSIÓ</h2>
+            <TextField 
+              id="lg-email" 
+              label="Correu electrònic" 
+              type="email" 
+              autoComplete="username" 
+              value={email}
+              onChange={handleEmailChange}
+            />
+            <TextField
+              id="lg-password" 
+              label="Contrasenya" 
+              type="password" 
+              autoComplete="current-password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
 
+            <Button variant="contained" type="submit">Entra</Button>
+            <Button variant="text" component={Link} to="/registre">No tens compte? Registra't aquí.</Button>
+            <div className="error">{error}</div>
+
+          </Box>
       </form>
-      {/*<Link to="/registre">No tens compte? Registra't aquí.</Link>*/}
-      <Button variant="text" component={Link} to="/registre">No tens compte? Registra't aquí.</Button>
-      <div className="error">{error}</div>
     </div>
   );
 }

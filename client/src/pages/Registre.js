@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Form, Link, useNavigate } from 'react-router-dom';
+import { TextField, Button, Box, InputLabel, MenuItem, Select, FormControl } from '@mui/material';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -90,100 +91,80 @@ function Registre() {
 
   return (
     <div className='page'>
-      <h2>REGISTRE</h2>
       <form id="register-form" onSubmit={handleRegister}>
-        <div className="form-group">
-          <label htmlFor="nom">Nom</label>
-          <input 
-            type="text"
-            id="nom"
-            name="nom" 
-            placeholder="Nom" 
-            autoComplete="given-name"
+        <Box className="form-group" display="flex" flexDirection="column" gap={2}>
+          <h2>REGISTRE</h2>
+          <TextField 
+            id="nom" 
+            label="Nom" 
+            type="text" 
+            autoComplete="given-name" 
             value={nom}
             onChange={handleNomChange}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="cognoms">Cognoms</label>
-          <input 
-            type="text"
+          <TextField 
             id="cognoms" 
-            name="cognoms" 
-            placeholder="Cognoms" 
+            label="Cognoms" 
+            type="text" 
             autoComplete="family-name" 
             value={cognoms}
             onChange={handleCognomsChange}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Correu electrònic</label>
-          <input 
-            type="text" 
+          <TextField 
             id="email" 
-            name="email" 
-            placeholder="Correu electrònic" 
+            label="Correu electrònic" 
+            type="email" 
             autoComplete="email" 
             value={email}
             onChange={handleEmailChange}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="roltecnica">Rol a tècnica</label>
-          <select 
-            id="roltecnica" 
-            name="roltecnica" 
-            value={rol} 
-            onChange={handleRolChange} 
-            autoComplete="off">
-            <option value='' disabled>Selecciona un rol</option>
-            {rols.map((role) => (
-              <option key={role.id} value={role.id}>
-                {role.rol}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Contrasenya</label>
-          <input 
-            type="password" 
+          <FormControl fullWidth>
+            <InputLabel id="roltecnica-label">Rol a tècnica</InputLabel>
+            <Select
+              labelId="roltecnica-label"
+              id="roltecnica"
+              value={rol}
+              onChange={handleRolChange}
+              autoWidth
+              label="Rol a tècnica"
+            >
+              {rols.map((role) => (
+                <MenuItem key={role.id} value={role.id}>
+                  {role.rol}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField 
             id="password" 
-            name="password" 
-            placeholder="Contrasenya" 
+            label="Contrasenya" 
+            type="password" 
             autoComplete="new-password" 
             value={password}
             onChange={handlePasswordChange}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="repetirpassword">Repetir contrasenya</label>
-          <input 
-            type="password" 
+          <TextField 
             id="repetirpassword" 
-            name="repetirpassword" 
-            placeholder="Repetir contrasenya" 
+            label="Repetir contrasenya" 
+            type="password" 
             autoComplete="new-password"
             value={repetirpassword}
             onChange={handleRepetirpasswordChange}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="codiactivacio">Codi d'activació</label>
-          <input 
-            type="text" 
+          <TextField 
             id="codiactivacio" 
-            name="codiactivacio"
-            placeholder="Codi d'activació" 
+            label="Codi d'activació" 
+            type="text" 
             autoComplete="one-time-code" 
             value={codiactivacio}
             onChange={handleCodiactivacioChange}
           />
-        </div>
-        <button id="register-btn" type="submit">Registra't</button>
+          <Button variant="contained" type="submit">Registra't</Button>
+          <Button variant="text" component={Link} to="/inicisessio">Ja tens compte? Inicia sessió aquí.</Button>
+          <div className="error">{error}</div>
+
+        </Box>
       </form>
-      <Link to="/inicisessio">Ja tens compte? Inicia sessió aquí.</Link>
-      <div className="error">{error}</div>
     </div>
   );
 }
