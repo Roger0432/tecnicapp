@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { TextField, Button } from '@mui/material';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -56,32 +57,30 @@ function IniciSessio() {
       <h2>INICI DE SESSIÓ</h2>
       <form id="login-form" onSubmit={handleLogin}>
         <div className="form-group">
-          <label htmlFor="lg-email">Correu electrònic</label>
-          <input 
-            type="text"
+          <TextField 
             id="lg-email" 
-            name="lg-email" 
-            placeholder="Correu electrònic" 
+            label="Correu electrònic" 
+            type="email" 
             autoComplete="username" 
             value={email}
             onChange={handleEmailChange}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lg-password">Contrasenya</label>
-          <input 
-            type="password" 
+          <br />
+          <TextField
             id="lg-password" 
-            name="lg-password" 
-            placeholder="Contrasenya" 
+            label="Contrasenya" 
+            type="password" 
             autoComplete="current-password"
             value={password}
             onChange={handlePasswordChange}
           />
         </div>
-        <button id="login-btn" type="submit">Entra</button>
+        
+        <Button variant="contained" type="submit">Entra</Button>
+
       </form>
-      <Link to="/registre">No tens compte? Registra't aquí.</Link>
+      {/*<Link to="/registre">No tens compte? Registra't aquí.</Link>*/}
+      <Button variant="text" component={Link} to="/registre">No tens compte? Registra't aquí.</Button>
       <div className="error">{error}</div>
     </div>
   );
