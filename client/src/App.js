@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
-import Navbar from './components/Navbar';
+//import Navbar from './components/Navbar';
+import CustomNavbar from './components/CustomNavbar';
 import Main from './pages/Main';
 import Esdeveniments from './pages/Esdeveniments';
 import Membres from './pages/Membres';
@@ -60,7 +61,7 @@ function App() {
 
   return (
     <div className="App">
-      {!['/inicisessio', '/registre'].includes(location.pathname) && isAuthenticated && <Navbar />}
+      {!['/inicisessio', '/registre'].includes(location.pathname) && isAuthenticated && <CustomNavbar />}
         <Routes>
           <Route path="/inicisessio" element={<IniciSessio />} />
           <Route path="/registre" element={<Registre />} />
