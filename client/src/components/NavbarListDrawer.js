@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { List, ListItemButton, ListItemText, Box, Divider, sliderClasses } from "@mui/material";
+import { List, ListItemButton, ListItemText, Box, Divider } from "@mui/material";
 
 function NavbarListDrawer({ navLinks, profileLinks }) {
 
@@ -13,7 +13,6 @@ function NavbarListDrawer({ navLinks, profileLinks }) {
                         sx={{
                             height: 64,
                             width: 64,
-                            margin: 'auto',
                             display: 'block',
                             maxWidth: '100%',
                             maxHeight: '100%',
