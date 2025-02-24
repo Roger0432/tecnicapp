@@ -38,9 +38,8 @@ function Esdeveniments({ assaig }) {
   };
 
   const columnes = [
-    { field: 'nom', headerName: 'Nom', flex: 1.3 },
+    { field: 'nom', headerName: 'Nom', flex: 1 },
     { field: 'dia', headerName: 'Dia', flex: 1 },
-    { field: 'lloc', headerName: 'Lloc', flex: 1 },
   ];
 
   return (
