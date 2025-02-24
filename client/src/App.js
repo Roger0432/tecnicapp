@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
-//import Navbar from './components/Navbar';
 import CustomNavbar from './components/CustomNavbar';
 import Main from './pages/Main';
 import Esdeveniments from './pages/Esdeveniments';

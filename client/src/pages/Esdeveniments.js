@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
-import { MdDeleteOutline, MdEdit } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, InputAdornment } from '@mui/material';
 import '../styles/Table.css';
+import { Typography, Box } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -132,49 +133,49 @@ function Esdeveniments({ assaig }) {
       {assaig ? <h1>Assaigs</h1> : <h1>Diades</h1>}
 
       <div className='table-container'>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <IoSearchOutline />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell onClick={() => requestSort('nom')} className={sortConfig.key === 'nom' ? 'active' : ''}>Nom</TableCell>
-                <TableCell onClick={() => requestSort('diaSetmana')} className={sortConfig.key === 'diaSetmana' ? 'active' : ''}>Dia</TableCell>
-                <TableCell onClick={() => requestSort('dia')} className={sortConfig.key === 'dia' ? 'active' : ''}>Data</TableCell>
-                <TableCell onClick={() => requestSort('hora')} className={sortConfig.key === 'hora' ? 'active' : ''}>Hora</TableCell>
-                <TableCell onClick={() => requestSort('lloc')} className={sortConfig.key === 'lloc' ? 'active' : ''}>Lloc</TableCell>
-                <TableCell>Accions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredEsdeveniments.map((esdeveniment, index) => (
-                <TableRow key={index}>
-                  <TableCell onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.nom}</TableCell>
-                  <TableCell onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.diaSetmana}</TableCell>
-                  <TableCell onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.dia}</TableCell>
-                  <TableCell onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.hora}</TableCell>
-                  <TableCell onClick={() => detallsEsdeveniment(esdeveniment.id)}>{esdeveniment.lloc}</TableCell>
-                  <TableCell>
-                    <MdEdit className="action-icon" onClick={() => editarEsdeveniment(esdeveniment)} />
-                    <MdDeleteOutline className="action-icon" onClick={() => borrarEsdeveniment(esdeveniment.id)} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <div className="search-bar-container">
+          <IoSearchOutline className="search-icon" />
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="search-bar"
+          />
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th 
+                onClick={() => requestSort('nom')} 
+                className={sortConfig.key === 'nom' ? 'active' : ''}
+              >Nom</th>
+              <th 
+                onClick={() => requestSort('dia')} 
+                className={sortConfig.key === 'dia' ? 'active' : ''}
+              >Data</th>
+              <th>Accions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredEsdeveniments.map((esdeveniment, index) => (
+              <tr key={index}>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>
+                  <Typography variant="body2" color="textPrimary">{esdeveniment.nom}</Typography>
+                </td>
+                <td onClick={() => detallsEsdeveniment(esdeveniment.id)}>
+                  <Typography variant="body2" color="textPrimary">{esdeveniment.dia}</Typography>
+                </td>
+                <td>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <EditIcon className="action-icon" onClick={() => editarEsdeveniment(esdeveniment)} style={{ color: 'gray' }} />
+                  <DeleteIcon className="action-icon" onClick={() => borrarEsdeveniment(esdeveniment.id)} style={{ color: 'gray' }} />
+                </Box>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
