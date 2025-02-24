@@ -154,7 +154,7 @@ function Esdeveniments({ assaig }) {
                 onClick={() => requestSort('dia')} 
                 className={sortConfig.key === 'dia' ? 'active' : ''}
               >Data</th>
-              <th>Accions</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

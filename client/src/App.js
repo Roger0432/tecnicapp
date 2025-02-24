@@ -4,8 +4,8 @@ import IniciSessio from './pages/IniciSessio';
 import Registre from './pages/Registre';
 import CustomNavbar from './components/CustomNavbar';
 import Main from './pages/Main';
-import Esdeveniments from './pages/Esdeveniments';
-import Membres from './pages/Membres';
+import Esdeveniments from './pages/EsdevenimentsMUI';
+import Membres from './pages/MembresMUI';
 import Perfil from './pages/Perfil';
 import Configuracio from './pages/Configuracio';
 import CrearEsdeveniment from './pages/CrearEsdeveniment';
@@ -84,8 +84,8 @@ function App() {
           <Route path="/editar-assaig" element={<CrearEsdeveniment assaig={true} />} />
           <Route path="/editar-diada" element={<CrearEsdeveniment assaig={false} />} />
           
-          <Route path="/assaig/:id" element={<DetallsEsdeveniment />} />
-          <Route path="/diada/:id" element={<DetallsEsdeveniment />} />
+          <Route path="/assaig/:id" element={<DetallsEsdeveniment assaig={true} />} />
+          <Route path="/diada/:id" element={<DetallsEsdeveniment assaig={false} />} />
 
           <Route path="prova/:id" element={<EditarCastell assaig={true} />} />
           <Route path="castell/:id" element={<EditarCastell assaig={false} />} />
