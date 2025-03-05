@@ -33,6 +33,10 @@ function Membres() {
     { field: 'alcada_hombro', headerName: 'Alçada hombro', flex: 1 },
   ];
 
+  const handleRowClick = (params) => {
+    navigate('/crear-membre', { state: { membre: params.row, editar: true } });
+  };
+
   return (
     <div className='page'>
       
@@ -50,7 +54,7 @@ function Membres() {
           pageSize={5}
           rowsPerPageOptions={[5, 10, 100]}
           disableSelectionOnClick
-          //onRowClick={(row) => detallsEsdeveniment(row.row.id)}
+          onRowClick={handleRowClick}
         />
       </Box>
       

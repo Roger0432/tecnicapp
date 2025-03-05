@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EventIcon from '@mui/icons-material/Event';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -115,7 +115,11 @@ function DetallsEsdeveniment({assaig}) {
   };
 
   if (!detalls) {
-    return <Typography variant="h6">Carregant...</Typography>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress color='primary' />
+      </Box>
+    );
   }
 
   return (
