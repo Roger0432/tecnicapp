@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
-import '../styles/App.css';
+import '../../styles/App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 

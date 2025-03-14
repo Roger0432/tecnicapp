@@ -14,7 +14,7 @@ function Registre() {
   const [rol, setRol] = useState('');
   const [codiactivacio, setCodiactivacio] = useState('');
   const [error, setError] = useState('');
-  const [open, setOpen] = useState(false); // Inicialment ocult
+  const [open, setOpen] = useState(false);
   const [rols, setRols] = useState([]);
   const navigate = useNavigate();
 

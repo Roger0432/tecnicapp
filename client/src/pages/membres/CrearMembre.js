@@ -4,8 +4,7 @@ import Swal from 'sweetalert2';
 import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import TaulaDetallsMembre from '../components/DetallsMembres';
+import TaulaDetallsMembre from '../../components/DetallsMembres';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -109,7 +108,7 @@ function CrearMembre() {
       
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
         <Typography variant="h5" fontWeight={700}>
-          {editar ? (modeEdicio ? 'Editar Membre' : 'Detalls del Membre') : 'Crear Membre'}
+          {editar ? (modeEdicio ? 'Editar Membre' : 'Detalls') : 'Crear Membre'}
         </Typography>
       </Box>
 

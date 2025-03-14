@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import IniciSessio from './pages/IniciSessio';
-import Registre from './pages/Registre';
+import IniciSessio from './pages/autenticacio/IniciSessio';
+import Registre from './pages/autenticacio/Registre';
+
+import Esdeveniments from './pages/esdeveniments/EsdevenimentsMUI';
+import CrearEsdeveniment from './pages/esdeveniments/CrearEsdeveniment';
+import DetallsEsdeveniment from './pages/esdeveniments/DetallsEsdeveniment';
+
+import EditarCastell from './pages/castells/EditarCastell';
+import AfegirCastell from './pages/castells/AfegirCastell';
+
+import CrearMembre from './pages/membres/CrearMembre';
+import Membres from './pages/membres/MembresMUI';
+
 import CustomNavbar from './components/CustomNavbar';
 import Main from './pages/Main';
-import Esdeveniments from './pages/EsdevenimentsMUI';
-import Membres from './pages/MembresMUI';
-import Perfil from './pages/Perfil';
-import Configuracio from './pages/Configuracio';
-import CrearEsdeveniment from './pages/CrearEsdeveniment';
-import DetallsEsdeveniment from './pages/DetallsEsdeveniment';
-import EditarCastell from './pages/EditarCastell';
-import AfegirCastell from './pages/AfegirCastell';
-import CrearMembre from './pages/CrearMembre';
+import Perfil from './pages/altres/Perfil';
+import Configuracio from './pages/altres/Configuracio';
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 

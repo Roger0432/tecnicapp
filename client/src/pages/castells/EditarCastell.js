@@ -1,8 +1,8 @@
 import React, { useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import PlantillaTronc from '../components/PlantillaTronc';
-import '../styles/EditarCastell.css';
-import '../styles/Tronc.css';
+import PlantillaTronc from '../../components/PlantillaTronc';
+import '../../styles/EditarCastell.css';
+import '../../styles/Tronc.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
