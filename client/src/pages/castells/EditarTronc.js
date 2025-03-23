@@ -1,10 +1,21 @@
 import React, { useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PlantillaTronc from '../../components/PlantillaTronc';
-import { Button, Typography } from '@mui/material';
+import { 
+    Button, 
+    Typography, 
+    Modal,
+    Box, 
+    List, 
+    ListItemText, 
+    ListItemButton,
+    Paper,
+    TextField,
+    InputAdornment
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
-
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function EditarTronc({ assaig}) {
@@ -13,6 +24,7 @@ function EditarTronc({ assaig}) {
     const [membresNoTronc, setMembresNoTronc] = useState([]);
     const [castellData, setCastellData] = useState([]);
     const [selectedCell, setSelectedCell] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,86 +48,82 @@ function EditarTronc({ assaig}) {
 
     const handleCellClick = (posicio) => {
         setSelectedCell(posicio);
+        setSearchTerm('');
     };
 
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value.toLowerCase());
+    };
+
+    const filteredMembers = membresNoTronc.filter(membre => 
+        membre.mote.toLowerCase().includes(searchTerm) || 
+        `${membre.nom} ${membre.cognoms}`.toLowerCase().includes(searchTerm)
+    );
+
     const handleMemberSelect = (membreSeleccionat) => {
-        // 1. Creem una còpia de les llistes actuals per evitar mutacions directes
         const membresTroncActuals = [...membresTronc];
         const membresNoTroncActuals = [...membresNoTronc];
     
-        // 2. Busquem si la cel·la seleccionada ja té un membre assignat
         let membreAnterior = null;
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio === selectedCell) {
-                membreAnterior = membresTroncActuals[i]; // Guardem el membre anterior
+                membreAnterior = membresTroncActuals[i];
                 break;
             }
         }
     
-        // 3. Si hi havia un membre anterior, l'afegim a membresNoTronc
         if (membreAnterior) {
-            membresNoTroncActuals.push(membreAnterior); // Afegim tot l'objecte del membre
+            membresNoTroncActuals.push(membreAnterior);
         }
     
-        // 4. Eliminem el membre anterior del tronc (si n'hi havia)
         const nousMembresTronc = [];
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio !== selectedCell) {
-                nousMembresTronc.push(membresTroncActuals[i]); // Conservem els membres que no són de la cel·la seleccionada
+                nousMembresTronc.push(membresTroncActuals[i]);
             }
         }
     
-        // 5. Afegim el nou membre al tronc
-        nousMembresTronc.push({ ...membreSeleccionat, posicio: selectedCell }); // Copiem tot l'objecte i afegim la posició
+        nousMembresTronc.push({ ...membreSeleccionat, posicio: selectedCell });
     
-        // 6. Eliminem el membre seleccionat de membresNoTronc
         const nousMembresNoTronc = [];
         for (let i = 0; i < membresNoTroncActuals.length; i++) {
-            if (membresNoTroncActuals[i].id !== membreSeleccionat.id) { // Comparem per id
-                nousMembresNoTronc.push(membresNoTroncActuals[i]); // Conservem els membres que no són el seleccionat
+            if (membresNoTroncActuals[i].id !== membreSeleccionat.id) {
+                nousMembresNoTronc.push(membresNoTroncActuals[i]);
             }
         }
     
-        // 7. Actualitzem els estats amb les noves llistes
         setMembresTronc(nousMembresTronc);
         setMembresNoTronc(nousMembresNoTronc);
     
-        // 8. Tanquem el pop-up
         setSelectedCell(null);
     };
 
     const handleEliminarMembre = () => {
-        // 1. Creem una còpia de les llistes actuals per evitar mutacions directes
         const membresTroncActuals = [...membresTronc];
         const membresNoTroncActuals = [...membresNoTronc];
     
-        // 2. Busquem el membre assignat a la cel·la seleccionada
         let membreAnterior = null;
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio === selectedCell) {
-                membreAnterior = membresTroncActuals[i]; // Guardem el membre anterior
+                membreAnterior = membresTroncActuals[i];
                 break;
             }
         }
     
-        // 3. Si hi havia un membre, l'afegim a membresNoTronc
         if (membreAnterior) {
-            membresNoTroncActuals.push(membreAnterior); // Afegim tot l'objecte del membre
+            membresNoTroncActuals.push(membreAnterior);
         }
     
-        // 4. Eliminem el membre del tronc
         const nousMembresTronc = [];
         for (let i = 0; i < membresTroncActuals.length; i++) {
             if (membresTroncActuals[i].posicio !== selectedCell) {
-                nousMembresTronc.push(membresTroncActuals[i]); // Conservem els membres que no són de la cel·la seleccionada
+                nousMembresTronc.push(membresTroncActuals[i]);
             }
         }
     
-        // 5. Actualitzem els estats amb les noves llistes
         setMembresTronc(nousMembresTronc);
         setMembresNoTronc(membresNoTroncActuals);
     
-        // 6. Tanquem el pop-up
         setSelectedCell(null);
     };
 
@@ -145,10 +153,15 @@ function EditarTronc({ assaig}) {
 
     return (
         <div className="page">
-
-            <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }} >{castellData.nom}</Typography>
         
-            <Button variant="contained" color="primary" mb={2} onClick={handleGuardar}>Guardar</Button>
+            <Button 
+                variant="contained" 
+                color="primary" 
+                sx={{ mb: 2, mt: 2 }} 
+                onClick={handleGuardar}
+            >
+                Guardar
+            </Button>
             
             <div className="content">
                 <div>
@@ -161,19 +174,82 @@ function EditarTronc({ assaig}) {
                     />
                 </div>
 
-                {selectedCell && (
-                    <div>
-                        <ul>
-                            {membresNoTronc.map(membre => (
-                                <li key={membre.mote} onClick={() => handleMemberSelect(membre)}>
-                                    {membre.mote}
-                                </li>
-                            ))}
-                        </ul>
-                        <button onClick={handleEliminarMembre}>Eliminar membre del tronc</button>
-                        <button onClick={handleCancelar}>Cancel·lar</button>
-                    </div>
-                )}
+                <Modal
+                    open={selectedCell !== null}
+                    onClose={handleCancelar}
+                    aria-labelledby="modal-seleccionar-membre"
+                    aria-describedby="seleccionar-membre-per-posicio"
+                >
+                    <Paper 
+                        sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                            borderRadius: 2
+                        }}
+                    >
+                        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+                            Selecciona membre
+                        </Typography>
+                        
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            placeholder="Cercar membres..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            sx={{ mb: 2 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        
+                        <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
+                            {filteredMembers.length > 0 ? (
+                                filteredMembers.map((membre) => (
+                                    <ListItemButton 
+                                        onClick={() => handleMemberSelect(membre)} 
+                                        key={membre.id}
+                                    >
+                                        <ListItemText 
+                                            primary={membre.mote} 
+                                        />
+                                    </ListItemButton>
+                                ))
+                            ) : (
+                                <Typography color="text.secondary" align="center" sx={{ py: 2 }}>
+                                    No s'han trobat membres
+                                </Typography>
+                            )}
+                        </List>
+                        
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                            <Button 
+                                onClick={handleEliminarMembre} 
+                                color="error" 
+                                variant="contained"
+                            >
+                                Eliminar membre
+                            </Button>
+                            <Button 
+                                onClick={handleCancelar} 
+                                color="primary" 
+                                variant="outlined"
+                            >
+                                Cancel·lar
+                            </Button>
+                        </Box>
+                    </Paper>
+                </Modal>
             </div>
         </div>
     );

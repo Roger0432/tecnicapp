@@ -9,11 +9,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
 import '../styles/Navbar.css';
+import { useTitol } from "../context/TitolNavbar";
 
 function CustomNavbar() {
     const [open, setOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const { titol } = useTitol();
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -57,68 +59,71 @@ function CustomNavbar() {
     ];
 
     return (
-        <AppBar position="static">
-            <Toolbar>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    onClick={() => setOpen(true)}
+        <>
+            <AppBar position="fixed">
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={() => setOpen(true)}
+                        sx={{ display: { xs: 'flex', sm: 'none' } }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+
+                    <Typography variant="h6">{titol}</Typography>
+
+                    <Box sx={{ display: { xs: 'none', sm: 'flex' }, ml: 'auto' }}>
+                        <List component="nav" sx={{ display: 'flex', flexDirection: 'row' }}>
+                            {
+                                navLinks.map((item) => (
+                                    <ListItemButton key={item.title} component={Link} to={item.path}>
+                                        <ListItemText primary={item.title} />
+                                    </ListItemButton>
+                                ))
+                            }
+                            <Divider orientation="vertical" flexItem />
+
+                            <ListItemButton>
+                                <div className="dropdown">
+                                    <AccountCircleIcon onClick={toggleDropdown} aria-expanded={dropdownOpen} />
+                                    {dropdownOpen && (
+                                        <div className="dropdown-content" inert={!dropdownOpen ? "" : undefined}>
+                                            {
+                                                profileLinks.map((item) => (
+                                                    <ListItemButton 
+                                                        key={item.title} 
+                                                        component={Link} 
+                                                        to={item.path} 
+                                                        sx={{ color: 'black' }}
+                                                        onClick={item.onClick}
+                                                    >
+                                                        {item.icon}
+                                                        <ListItemText primary={item.title} />
+                                                    </ListItemButton>
+                                                ))
+                                            }
+                                        </div>
+                                    )}
+                                </div>
+                            </ListItemButton>
+                        </List>
+                    </Box>
+
+                </Toolbar>
+
+                <Drawer
+                    open={open}
+                    anchor="left"
+                    onClose={() => setOpen(false)}
                     sx={{ display: { xs: 'flex', sm: 'none' } }}
                 >
-                    <MenuIcon />
-                </IconButton>
-
-                <Typography variant="h6">Passerells</Typography>
-
-                <Box sx={{ display: { xs: 'none', sm: 'flex' }, ml: 'auto' }}>
-                    <List component="nav" sx={{ display: 'flex', flexDirection: 'row' }}>
-                        {
-                            navLinks.map((item) => (
-                                <ListItemButton key={item.title} component={Link} to={item.path}>
-                                    <ListItemText primary={item.title} />
-                                </ListItemButton>
-                            ))
-                        }
-                        <Divider orientation="vertical" flexItem />
-
-                        <ListItemButton>
-                            <div className="dropdown">
-                                <AccountCircleIcon onClick={toggleDropdown} aria-expanded={dropdownOpen} />
-                                {dropdownOpen && (
-                                    <div className="dropdown-content" inert={!dropdownOpen ? "" : undefined}>
-                                        {
-                                            profileLinks.map((item) => (
-                                                <ListItemButton 
-                                                    key={item.title} 
-                                                    component={Link} 
-                                                    to={item.path} 
-                                                    sx={{ color: 'black' }}
-                                                    onClick={item.onClick}
-                                                >
-                                                    {item.icon}
-                                                    <ListItemText primary={item.title} />
-                                                </ListItemButton>
-                                            ))
-                                        }
-                                    </div>
-                                )}
-                            </div>
-                        </ListItemButton>
-                    </List>
-                </Box>
-
-            </Toolbar>
-
-            <Drawer
-                open={open}
-                anchor="left"
-                onClose={() => setOpen(false)}
-                sx={{ display: { xs: 'flex', sm: 'none' } }}
-            >
-                <NavbarListDrawer navLinks={navLinks} profileLinks={profileLinks} />
-            </Drawer>
-        </AppBar>
+                    <NavbarListDrawer navLinks={navLinks} profileLinks={profileLinks} />
+                </Drawer>
+            </AppBar>
+            <Toolbar />
+        </>
     );
 }
 

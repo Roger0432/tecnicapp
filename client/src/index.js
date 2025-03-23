@@ -4,6 +4,7 @@ import './styles/index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { TitolProvider } from './context/TitolNavbar';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -39,7 +40,9 @@ root.render(
     <BrowserRouter>
         <ThemeProvider theme={lightTheme}>
             <CssBaseline />
-            <App />
+            <TitolProvider>
+                <App />
+            </TitolProvider>
         </ThemeProvider>
     </BrowserRouter>
 );

@@ -1,12 +1,31 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Tab, Tabs, Box } from '@mui/material';
 import EditarTronc from './EditarTronc';
 import EditarPinya from './EditarPinya';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
+import { useTitol } from '../../context/TitolNavbar';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function EditarCastell({assaig}) {
+    const { id } = useParams();
     const [value, setValue] = useState('tronc');
+    const { setTitol } = useTitol();
+
+    useEffect(() => {
+
+        fetch(`${BACKEND_URL}/castell/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                setTitol(`${data.castell.nom}`);
+            } else {
+                console.error(data.msg);
+            }
+        })
+    }, [setTitol]);
 
     const handleChangeTab = (event, newValue) => {
         setValue(newValue);
