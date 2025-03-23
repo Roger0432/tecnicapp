@@ -254,7 +254,7 @@ function DetallsEsdeveniment({ assaig }) {
                 {detalls.castells.map((castell, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                    <Button component={RouterLink} to={`/prova/${detalls.id[index]}`} variant="text" sx={{ textTransform: 'none' }}>
+                    <Button component={RouterLink} to={`/prova/${detalls.id[index]}`} variant="outlined" sx={{ textTransform: 'none' }}>
                         {castell}
                       </Button>
                     </TableCell>
