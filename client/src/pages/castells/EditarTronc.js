@@ -11,11 +11,15 @@ import {
     ListItemButton,
     Paper,
     TextField,
-    InputAdornment
+    InputAdornment,
+    Fab,
+    Tooltip
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import SaveIcon from '@mui/icons-material/Save';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function EditarTronc({ assaig}) {
@@ -152,106 +156,108 @@ function EditarTronc({ assaig}) {
     };
 
     return (
-        <div className="page">
-        
-            <Button 
-                variant="contained" 
-                color="primary" 
-                sx={{ mb: 2, mt: 2 }} 
-                onClick={handleGuardar}
-            >
-                Guardar
-            </Button>
-            
-            <div className="content">
-                <div>
-                   <PlantillaTronc 
-                        files={parseInt(castellData.alcada - 4, 10)} 
-                        columnes={parseInt(castellData.amplada, 10)} 
-                        agulla={castellData.agulla}
-                        castellersTronc={membresTronc}
-                        onCellClick={handleCellClick}
-                    />
-                </div>
+        <Box>
+            <PlantillaTronc 
+                    files={parseInt(castellData.alcada - 4, 10)} 
+                    columnes={parseInt(castellData.amplada, 10)} 
+                    agulla={castellData.agulla}
+                    castellersTronc={membresTronc}
+                    onCellClick={handleCellClick}
+                />
 
-                <Modal
-                    open={selectedCell !== null}
-                    onClose={handleCancelar}
-                    aria-labelledby="modal-seleccionar-membre"
-                    aria-describedby="seleccionar-membre-per-posicio"
+            <Tooltip title="Guardar" placement="left">
+                <Fab 
+                    color="primary" 
+                    aria-label="guardar"
+                    onClick={handleGuardar}
+                    sx={{
+                        position: 'fixed',
+                        bottom: 24,
+                        right: 24,
+                        boxShadow: 3
+                    }}
                 >
-                    <Paper 
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 400,
-                            bgcolor: 'background.paper',
-                            boxShadow: 24,
-                            p: 4,
-                            borderRadius: 2
+                    <SaveIcon />
+                </Fab>
+            </Tooltip>
+
+            <Modal
+                open={selectedCell !== null}
+                onClose={handleCancelar}
+                aria-labelledby="modal-seleccionar-membre"
+            >
+                <Paper 
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4,
+                        borderRadius: 2
+                    }}
+                >
+                    <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+                        Selecciona membre
+                    </Typography>
+                    
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        placeholder="Cercar membres..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        sx={{ mb: 2 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
                         }}
-                    >
-                        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
-                            Selecciona membre
-                        </Typography>
-                        
-                        <TextField
-                            fullWidth
+                    />
+                    
+                    <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
+                        {filteredMembers.length > 0 ? (
+                            filteredMembers.map((membre) => (
+                                <ListItemButton 
+                                    onClick={() => handleMemberSelect(membre)} 
+                                    key={membre.id}
+                                >
+                                    <ListItemText 
+                                        primary={membre.mote} 
+                                        secondary={`${membre.nom} ${membre.cognoms}`}
+                                    />
+                                </ListItemButton>
+                            ))
+                        ) : (
+                            <Typography color="text.secondary" align="center" sx={{ py: 2 }}>
+                                No s'han trobat membres
+                            </Typography>
+                        )}
+                    </List>
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                        <Button 
+                            onClick={handleEliminarMembre} 
+                            color="error" 
+                            variant="contained"
+                        >
+                            Eliminar membre
+                        </Button>
+                        <Button 
+                            onClick={handleCancelar} 
+                            color="primary" 
                             variant="outlined"
-                            placeholder="Cercar membres..."
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            sx={{ mb: 2 }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        
-                        <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
-                            {filteredMembers.length > 0 ? (
-                                filteredMembers.map((membre) => (
-                                    <ListItemButton 
-                                        onClick={() => handleMemberSelect(membre)} 
-                                        key={membre.id}
-                                    >
-                                        <ListItemText 
-                                            primary={membre.mote} 
-                                        />
-                                    </ListItemButton>
-                                ))
-                            ) : (
-                                <Typography color="text.secondary" align="center" sx={{ py: 2 }}>
-                                    No s'han trobat membres
-                                </Typography>
-                            )}
-                        </List>
-                        
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                            <Button 
-                                onClick={handleEliminarMembre} 
-                                color="error" 
-                                variant="contained"
-                            >
-                                Eliminar membre
-                            </Button>
-                            <Button 
-                                onClick={handleCancelar} 
-                                color="primary" 
-                                variant="outlined"
-                            >
-                                Cancel·lar
-                            </Button>
-                        </Box>
-                    </Paper>
-                </Modal>
-            </div>
-        </div>
+                        >
+                            Cancel·lar
+                        </Button>
+                    </Box>
+                </Paper>
+            </Modal>
+        </Box>
     );
 }
 
