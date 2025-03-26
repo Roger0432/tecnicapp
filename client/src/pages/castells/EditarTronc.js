@@ -32,6 +32,8 @@ function EditarTronc({ assaig, castell }) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (castell) setCastellData(castell);
+        else console.error('Castell no trobat');
 
         Promise.all([
             fetch(`${BACKEND_URL}/membres-no-tronc/${id}`).then(response => response.json()),
@@ -44,9 +46,6 @@ function EditarTronc({ assaig, castell }) {
 
             if (troncData.status) setMembresTronc(troncData.tronc);
             else console.error(troncData.msg);
-
-            if (castell) setCastellData(castell);
-            else console.error('Castell no trobat');
         })
         .catch(error => console.error('Error:', error));
     }, [id, castell]);
@@ -229,7 +228,6 @@ function EditarTronc({ assaig, castell }) {
                                 >
                                     <ListItemText 
                                         primary={membre.mote} 
-                                        secondary={`${membre.nom} ${membre.cognoms}`}
                                     />
                                 </ListItemButton>
                             ))
