@@ -22,7 +22,7 @@ import '../../styles/Tronc.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function EditarTronc({ assaig}) {
+function EditarTronc({ assaig, castell }) {
     const { id } = useParams();
     const [membresTronc, setMembresTronc] = useState([]);
     const [membresNoTronc, setMembresNoTronc] = useState([]);
@@ -32,23 +32,24 @@ function EditarTronc({ assaig}) {
     const navigate = useNavigate();
 
     useEffect(() => {
+
         Promise.all([
-            fetch(`${BACKEND_URL}/castell/${id}`).then(response => response.json()),
             fetch(`${BACKEND_URL}/membres-no-tronc/${id}`).then(response => response.json()),
             fetch(`${BACKEND_URL}/membres-tronc/${id}`).then(response => response.json())
         ])
-        .then(([castellData, membresNoTroncData, troncData]) => {
-            if (castellData.status) setCastellData(castellData.castell);
-            else console.error(castellData.msg);
+        .then(([membresNoTroncData, troncData]) => {
 
             if (membresNoTroncData.status) setMembresNoTronc(membresNoTroncData.membres);
             else console.error(membresNoTroncData.msg);
 
             if (troncData.status) setMembresTronc(troncData.tronc);
             else console.error(troncData.msg);
+
+            if (castell) setCastellData(castell);
+            else console.error('Castell no trobat');
         })
         .catch(error => console.error('Error:', error));
-    }, [id]);
+    }, [id, castell]);
 
     const handleCellClick = (posicio) => {
         setSelectedCell(posicio);

@@ -1,28 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
 import { Box } from '@mui/material';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const EditarPinya = ({assaig}) => {
+const EditarPinya = ({ assaig, castell }) => {
 
-    const { id } = useParams();
     const [castellData, setCastellData] = useState(null);
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/castell/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status) {
-                setCastellData(data.castell);
-            } else {
-                console.error(data.msg);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+        if (castell) setCastellData(castell);
+        else console.error('Castell no trobat');
     }
-    , [id]);
+    , [castell]);
 
     let pinya_svg = null;
     if (castellData) {
@@ -58,7 +47,7 @@ const EditarPinya = ({assaig}) => {
     }
 
     return (
-        <div className="page">
+        <Box m={1}>
             
             <Box
                 display="flex"
@@ -69,7 +58,7 @@ const EditarPinya = ({assaig}) => {
                 {pinya_svg}
             </Box>
 
-        </div>
+        </Box>
     );
 };
 

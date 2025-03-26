@@ -76,6 +76,9 @@ app.use((req, res, next) => {
 });
 
 
+// autenticacio
+
+
 app.get('/verify-token', authenticateToken, (req, res) => {
     res.status(200).json({ msg: 'Token verificat correctament', status: true });
 });
@@ -168,6 +171,9 @@ app.get('/rols', async (req, res) => {
         client.release();
     }
 });
+
+
+// esdeveniments
 
 
 app.post('/crear-esdeveniment', async (req, res) => {
@@ -322,55 +328,7 @@ app.put('/editar-esdeveniment/:id', async (req, res) => {
 });
 
 
-app.get('/castell/:id', async (req, res) => {
-    const id = req.params.id;   
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `
-            SELECT c.nom, c.amplada, c.alcada, c.agulla
-            FROM castells c
-            JOIN esdeveniments_castells ec ON c.id = ec.castell_id
-            WHERE ec.id = $1
-        `;
-        const result = await client.query(query, [id]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ msg: 'Castell no trobat', status: false });
-        }
-
-        res.status(200).json({ castell: result.rows[0], status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    } 
-    finally {
-        client.release();
-    }
-});
-
-
-app.get('/membres', async (req, res) => {
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `
-            SELECT id, mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris
-            FROM membres
-        `;
-
-        const result = await client.query(query);
-        res.status(200).json({ membres: result.rows, status: true });
-    } 
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    }
-    finally {
-        client.release();
-    }
-});
+// tronc
 
 
 app.get('/membres-no-tronc/:id', async (req, res) => {
@@ -456,6 +414,37 @@ app.put('/actualitzar-tronc/:id', async (req, res) => {
 });
 
 
+// pinya
+
+
+
+
+
+// membres
+
+
+app.get('/membres', async (req, res) => {
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT id, mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris
+            FROM membres
+        `;
+
+        const result = await client.query(query);
+        res.status(200).json({ membres: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
+    }
+});
+
+
 app.post('/crear-membre', async (req, res) => {
     const { mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris } = req.body;
     let client;
@@ -513,6 +502,38 @@ app.put('/editar-membre/:id', async (req, res) => {
         const values = [mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris, id];
         await client.query(query, values);
         res.status(200).json({ msg: 'Membre actualitzat correctament', status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+// castells
+
+
+app.get('/castell/:id', async (req, res) => {
+    const id = req.params.id;   
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT c.nom, c.amplada, c.alcada, c.agulla
+            FROM castells c
+            JOIN esdeveniments_castells ec ON c.id = ec.castell_id
+            WHERE ec.id = $1
+        `;
+        const result = await client.query(query, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ msg: 'Castell no trobat', status: false });
+        }
+
+        res.status(200).json({ castell: result.rows[0], status: true });
     } 
     catch (error) {
         console.error("Error: ", error);
@@ -585,6 +606,9 @@ app.delete('/borrar-castell/:id', async (req, res) => {
         client.release();
     }
 });
+
+
+// altres
 
 
 app.post('/perfil', async (req, res) => {

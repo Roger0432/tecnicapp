@@ -12,6 +12,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function EditarCastell({assaig}) {
     const { id } = useParams();
     const [value, setValue] = useState('tronc');
+    const [castellData, setCastellData] = useState([]);
     const { setTitol } = useTitol();
 
     useEffect(() => {
@@ -20,7 +21,8 @@ function EditarCastell({assaig}) {
         .then(response => response.json())
         .then(data => {
             if (data.status) {
-                setTitol(`${data.castell.nom}`);
+                setCastellData(data.castell);
+                setTitol(data.castell.nom);
             } else {
                 console.error(data.msg);
             }
@@ -46,9 +48,9 @@ function EditarCastell({assaig}) {
             </Box>
 
             {value === 'tronc' ? (
-                <EditarTronc assaig={assaig} />
+                <EditarTronc assaig={assaig} castell={castellData} />
             ) : (
-                <EditarPinya assaig={assaig} />
+                <EditarPinya assaig={assaig} castell={castellData} />
             )}
 
         </div>
