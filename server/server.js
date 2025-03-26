@@ -381,18 +381,16 @@ app.get('/membres-tronc/:id', async (req, res) => {
 
 app.put('/actualitzar-tronc/:id', async (req, res) => {
     const id = req.params.id;
-    const { membresTronc } = req.body; // Desestructuració per obtenir membresTronc
+    const { membresTronc } = req.body;
     let client;
 
     try {
         client = await pool.connect();
         await client.query('BEGIN');
 
-        // Eliminem les posicions existents per a aquest esdeveniment
         const queryDelete = `DELETE FROM membres_posicions WHERE esdeveniment_castell_id = $1`;
         await client.query(queryDelete, [id]);
 
-        // Inserim les noves posicions
         const queryInsert = `INSERT INTO membres_posicions (esdeveniment_castell_id, membre_id, posicio) VALUES ($1, $2, $3)`;
         for (const membre of membresTronc) {
             await client.query(queryInsert, [id, membre.id, membre.posicio]);
@@ -417,7 +415,83 @@ app.put('/actualitzar-tronc/:id', async (req, res) => {
 // pinya
 
 
+app.get('/membres-no-pinya/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT id, mote, alcada_mans
+            FROM membres
+            WHERE id NOT IN (SELECT membre_id FROM membres_posicions WHERE esdeveniment_castell_id = $1)
+        `;
+        const result = await client.query(query, [id]);
+        res.status(200).json({ membres: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    }
+    finally {
+        client.release();
+    }
+});
 
+
+app.get('/membres-pinya/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_mans
+            FROM membres_posicions mp
+            JOIN membres m ON mp.membre_id = m.id
+            WHERE mp.esdeveniment_castell_id = $1
+        `;
+        const result = await client.query(query, [id]);
+        res.status(200).json({ pinya: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+app.put('/actualitzar-pinya/:id', async (req, res) => {
+    const id = req.params.id;
+    const { membresPinya } = req.body;
+    let client;
+    try {
+        client = await pool.connect();
+        await client.query('BEGIN');
+
+        const queryDelete = `DELETE FROM membres_posicions WHERE esdeveniment_castell_id = $1`;
+        await client.query(queryDelete, [id]);
+
+        const queryInsert = `INSERT INTO membres_posicions (esdeveniment_castell_id, membre_id, posicio) VALUES ($1, $2, $3)`;
+        for (const membre of membresPinya) {
+            await client.query(queryInsert, [id, membre.id, membre.posicio]);
+        }
+
+        await client.query('COMMIT');
+        res.status(200).json({ msg: 'Dades guardades correctament', status: true });
+    } 
+    catch (error) {
+        await client.query('ROLLBACK');
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        if (client) {
+            client.release();
+        }
+    }
+});
 
 
 // membres
