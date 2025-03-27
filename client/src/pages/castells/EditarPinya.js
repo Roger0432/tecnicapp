@@ -1,20 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
-import { 
-    Box, 
-    Modal, 
-    Paper, 
-    Typography, 
-    TextField, 
-    InputAdornment, 
-    List, 
-    ListItemButton, 
-    ListItemText, 
-    Button,
-    Fab,
-    Tooltip
-} from '@mui/material';
+import { Box, Modal, Paper, Typography, TextField, InputAdornment, List, ListItemButton, ListItemText, Button, Fab, Tooltip } from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 
@@ -48,8 +36,6 @@ const EditarPinya = ({ assaig, castell }) => {
         .catch(error => console.error('Error:', error));
     }, [id, castell]);
 
-    // Aquest efecte s'executarà cada vegada que membresPinya canvia
-    // o quan l'SVG es carrega inicialment
     useEffect(() => {
         if (svgRef.current) {
             // Primer, actualitzar textos
@@ -219,10 +205,7 @@ const EditarPinya = ({ assaig, castell }) => {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status) {
-                if (assaig) navigate(`/assaigs`);
-                else navigate(`/diades`);
-            } else {
+            if (!data.status) {
                 console.error(data.msg);
             }
         })
@@ -271,7 +254,7 @@ const EditarPinya = ({ assaig, castell }) => {
                 console.error('Pinya no trobada');
                 break;
         }
-    }
+    }     
 
     return (
         <Box m={1}>
@@ -279,26 +262,53 @@ const EditarPinya = ({ assaig, castell }) => {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                height="100%"
+                sx={{
+                    maxWidth: '650px',
+                    maxHeight: '650px',
+                    width: '100%',
+                    height: 'auto',
+                    marginLeft: { xs: 0, sm: 'calc((100vw - 650px) / 2)' },
+                }}
             >
                 {pinya_svg}
             </Box>
 
-            <Tooltip title="Guardar" placement="left">
-                <Fab 
-                    color="primary" 
-                    aria-label="guardar"
-                    onClick={handleGuardar}
-                    sx={{
-                        position: 'fixed',
-                        bottom: 24,
-                        right: 24,
-                        boxShadow: 3
-                    }}
-                >
-                    <SaveIcon />
-                </Fab>
-            </Tooltip>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    bottom: 24,
+                    left: 24,
+                    right: 24,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <Tooltip title="Back" placement="top">
+                    <Fab 
+                        color="primary" 
+                        aria-label="back"
+                        onClick={() => navigate(-1)}
+                        sx={{
+                            boxShadow: 3
+                        }}
+                    >
+                        <ArrowBackIosNewIcon />
+                    </Fab>
+                </Tooltip>
+
+                <Tooltip title="Guardar" placement="top">
+                    <Fab 
+                        color="primary" 
+                        aria-label="guardar"
+                        onClick={handleGuardar}
+                        sx={{
+                            boxShadow: 3
+                        }}
+                    >
+                        <SaveIcon />
+                    </Fab>
+                </Tooltip>
+            </Box>
 
             <Modal
                 open={selectedCell !== null}

@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
 
@@ -145,10 +146,7 @@ function EditarTronc({ assaig, castell }) {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.status) {
-                if (assaig) navigate(`/assaigs`);
-                else navigate(`/diades`);
-            } else {
+            if (!data.status) {
                 console.error(data.msg);
             }
         })
@@ -165,21 +163,42 @@ function EditarTronc({ assaig, castell }) {
                     onCellClick={handleCellClick}
                 />
 
-            <Tooltip title="Guardar" placement="left">
-                <Fab 
-                    color="primary" 
-                    aria-label="guardar"
-                    onClick={handleGuardar}
-                    sx={{
-                        position: 'fixed',
-                        bottom: 24,
-                        right: 24,
-                        boxShadow: 3
-                    }}
-                >
-                    <SaveIcon />
-                </Fab>
-            </Tooltip>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    bottom: 24,
+                    left: 24,
+                    right: 24,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <Tooltip title="Back" placement="top">
+                    <Fab 
+                        color="primary" 
+                        aria-label="back"
+                        onClick={() => navigate(-1)}
+                        sx={{
+                            boxShadow: 3
+                        }}
+                    >
+                        <ArrowBackIosNewIcon />
+                    </Fab>
+                </Tooltip>
+
+                <Tooltip title="Guardar" placement="top">
+                    <Fab 
+                        color="primary" 
+                        aria-label="guardar"
+                        onClick={handleGuardar}
+                        sx={{
+                            boxShadow: 3
+                        }}
+                    >
+                        <SaveIcon />
+                    </Fab>
+                </Tooltip>
+            </Box>
 
             <Modal
                 open={selectedCell !== null}

@@ -27,7 +27,7 @@ function EditarCastell({assaig}) {
                 console.error(data.msg);
             }
         })
-    }, [setTitol]);
+    }, [setTitol, id]);
 
     const handleChangeTab = (event, newValue) => {
         setValue(newValue);
