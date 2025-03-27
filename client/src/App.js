@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import IniciSessio from './pages/autenticacio/IniciSessio';
 import Registre from './pages/autenticacio/Registre';
 
-import Esdeveniments from './pages/esdeveniments/EsdevenimentsMUI';
+import Esdeveniments from './pages/esdeveniments/Esdeveniments';
 import CrearEsdeveniment from './pages/esdeveniments/CrearEsdeveniment';
 import DetallsEsdeveniment from './pages/esdeveniments/DetallsEsdeveniment';
 
@@ -11,7 +11,7 @@ import EditarCastell from './pages/castells/EditarCastell';
 import AfegirCastell from './pages/castells/AfegirCastell';
 
 import CrearMembre from './pages/membres/CrearMembre';
-import Membres from './pages/membres/MembresMUI';
+import Membres from './pages/membres/Membres';
 
 import CustomNavbar from './components/CustomNavbar';
 import Main from './pages/Main';

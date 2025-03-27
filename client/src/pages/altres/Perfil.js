@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
+import { useTitol } from '../../context/TitolNavbar'; // Importa el context
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Perfil() {
-
   const [dades, setDades] = useState({
     nom: '',
     cognoms: '',
@@ -11,7 +12,12 @@ function Perfil() {
     rol: ''
   });
 
+  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
+
   useEffect(() => {
+    // Actualitza el títol de la Navbar
+    setTitol('Perfil');
+
     const token = localStorage.getItem('authtoken');
     const email = localStorage.getItem('email');
 
@@ -34,20 +40,40 @@ function Perfil() {
     .catch(error => {
       console.error('Error:', error);
     });
-  }, []);
+  }, [setTitol]);
 
   return (
     <div className='page'>
-
-      <h1>Perfil</h1>
-
-      <div>
-        <p><strong>Nom:</strong> {dades.nom}</p>
-        <p><strong>Cognoms:</strong> {dades.cognoms}</p>
-        <p><strong>Correu electrònic:</strong> {dades.email}</p>
-        <p><strong>Rol:</strong> {dades.rol}</p>
-      </div>
-
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                <strong>Nom</strong>
+              </TableCell>
+              <TableCell>{dades.nom}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                <strong>Cognoms</strong>
+              </TableCell>
+              <TableCell>{dades.cognoms}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                <strong>Correu electrònic</strong>
+              </TableCell>
+              <TableCell>{dades.email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                <strong>Rol</strong>
+              </TableCell>
+              <TableCell>{dades.rol}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

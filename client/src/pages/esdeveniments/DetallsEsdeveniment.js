@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress } from "@mui/material";
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
 import Swal from "sweetalert2";
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+import { useTitol } from "../../context/TitolNavbar"; // Importa el context
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -16,8 +17,7 @@ function DetallsEsdeveniment({ assaig }) {
   const [detalls, setDetalls] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-
-
+  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/esdeveniment/${id}`)
@@ -25,12 +25,13 @@ function DetallsEsdeveniment({ assaig }) {
       .then((data) => {
         if (data.status) {
           setDetalls(data.esdeveniment);
+          setTitol(data.esdeveniment.nom); // Actualitza el títol de la Navbar amb el nom de l'esdeveniment
         } else {
           console.error(data.msg);
         }
       })
       .catch((error) => console.error("Error:", error));
-  }, [id]);
+  }, [id, setTitol]); // Afegeix `setTitol` com a dependència
 
   const borrarEsdeveniment = (id) => {
     Swal.fire({
@@ -135,16 +136,6 @@ function DetallsEsdeveniment({ assaig }) {
 
   return (
     <Box className="page" sx={{ position: "relative" }}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h5" sx={{ fontWeight: "bold", maxWidth: "75%" }}>
-          {detalls.nom}
-        </Typography>
-      </Box>
 
       <Box
         display="flex"
@@ -153,9 +144,8 @@ function DetallsEsdeveniment({ assaig }) {
       >
         <SpeedDial
           ariaLabel="SpeedDial basic example"
-          icon={<SpeedDialIcon sx={{ width: 28, height: 28 }} />}
-          direction="down"
-          sx={{ "& .MuiFab-primary": { width: 40, height: 40 } }}
+          icon={<SpeedDialIcon />}
+          direction="left"
         >
           <SpeedDialAction
             icon={<EditIcon sx={{ width: 20, height: 20 }} />}
@@ -193,48 +183,50 @@ function DetallsEsdeveniment({ assaig }) {
         </Box>
       </Box>
 
+      <Divider sx={{ mb:2 }} />
+
       <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
-      {tipusTitol}
-    </Typography>
-    
-    <Button
-      component={RouterLink}
-      to={routeAfegir}
-      variant="contained"
-      sx={{ mb: 2 }}
-    >
-      {`Afegir ${tipusElement}`}
-    </Button>
-    
-    {detalls.castells[0] !== null && (
-      <Table>
-        <TableBody>
-          {detalls.castells.map((element, index) => (
-            <TableRow key={index}>
-              <TableCell sx={{ paddingLeft: detalls.assaig ? 0 : undefined }}>
-                <Button 
-                  component={RouterLink} 
-                  to={`/${tipusElement}/${detalls.id[index]}`}
-                  variant="outlined" 
-                  sx={{ textTransform: 'none' }}
-                >
-                  {element}
-                </Button>
-              </TableCell>
-              <TableCell align="right">
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => borrarCastell(detalls.id[index])}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    )}
+        {tipusTitol}
+      </Typography>
+      
+      <Button
+        component={RouterLink}
+        to={routeAfegir}
+        variant="contained"
+        sx={{ mb: 2 }}
+      >
+        {`Afegir ${tipusElement}`}
+      </Button>
+      
+      {detalls.castells[0] !== null && (
+        <Table>
+          <TableBody>
+            {detalls.castells.map((element, index) => (
+              <TableRow key={index}>
+                <TableCell sx={{ paddingLeft: detalls.assaig ? 0 : undefined }}>
+                  <Button 
+                    component={RouterLink} 
+                    to={`/${tipusElement}/${detalls.id[index]}`}
+                    variant="outlined" 
+                    sx={{ textTransform: 'none' }}
+                  >
+                    {element}
+                  </Button>
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => borrarCastell(detalls.id[index])}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </Box>
   );
 }

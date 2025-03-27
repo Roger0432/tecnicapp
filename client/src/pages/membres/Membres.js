@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Box, Fab } from '@mui/material';
+import { Box, Fab } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Membres() {
   const [membres, setMembres] = useState([]);
   const navigate = useNavigate();
+  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
 
   useEffect(() => {
+    // Actualitza el títol de la Navbar
+    setTitol('Membres');
+
     fetch(`${BACKEND_URL}/membres`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -26,7 +31,7 @@ function Membres() {
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []);
+  }, [setTitol]); // Afegeix `setTitol` com a dependència
 
   const columnes = [
     { field: 'mote', headerName: 'Mote', flex: 0.75 },
@@ -39,25 +44,28 @@ function Membres() {
 
   return (
     <div className='page'>
-      
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant='h5' fontWeight={700}>Membres</Typography>
-        <Fab size='small' color="primary" aria-label="add" onClick={() => navigate('/crear-membre')}>
-          <PersonAddIcon fontSize='small'/>
-        </Fab>
-      </Box>
+      <Box sx={{ position: 'relative', height: '100%' }}>
+        <Box mt={3}>
+          <DataGrid
+            rows={membres}
+            columns={columnes}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 100]}
+            disableSelectionOnClick
+            onRowClick={handleRowClick}
+          />
+        </Box>
 
-      <Box mt={3}>
-        <DataGrid
-          rows={membres}
-          columns={columnes}
-          pageSize={5}
-          rowsPerPageOptions={[5, 10, 100]}
-          disableSelectionOnClick
-          onRowClick={handleRowClick}
-        />
+        <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1 }}>
+          <Fab
+            color="primary"
+            aria-label="add"
+            onClick={() => navigate('/crear-membre')}
+          >
+            <PersonAddIcon />
+          </Fab>
+        </Box>
       </Box>
-      
     </div>
   );
 }

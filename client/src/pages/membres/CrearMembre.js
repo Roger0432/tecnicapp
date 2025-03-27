@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TaulaDetallsMembre from '../../components/DetallsMembres';
+import { useTitol } from '../../context/TitolNavbar';
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -21,6 +23,12 @@ function CrearMembre() {
   const [alcadaMans, setAlcadaMans] = useState(membre.alcada_mans || '');
   const [comentaris, setComentaris] = useState(membre.comentaris || '');
   const [error, setError] = useState('');
+  const { setTitol } = useTitol();
+
+  useEffect(() => {
+    const titol = editar ? (modeEdicio ? 'Editar Membre' : 'Detalls') : 'Crear Membre';
+    setTitol(titol);
+  }, [editar, modeEdicio, setTitol]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -105,20 +113,13 @@ function CrearMembre() {
 
   return (
     <Box className="page" sx={{ position: 'relative' }}>
-      
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
-        <Typography variant="h5" fontWeight={700}>
-          {editar ? (modeEdicio ? 'Editar Membre' : 'Detalls') : 'Crear Membre'}
-        </Typography>
-      </Box>
 
       {!modeEdicio && editar && (
-        <Box display="flex" alignItems="center" sx={{ position: 'absolute', top: 0, right: 0 }}>
+        <Box display="flex" alignItems="center" sx={{ position: 'fixed', bottom: 24, right: 24 }}>
           <SpeedDial
             ariaLabel="SpeedDial basic example"
             icon={<SpeedDialIcon />}
-            direction="left"
-            sx={{ '& .MuiFab-primary': { width: 40, height: 40 } }}
+            direction="up"
           >
             <SpeedDialAction
               icon={<EditIcon />}

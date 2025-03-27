@@ -2,13 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { List, ListItemButton, ListItemText, Box, Divider } from "@mui/material";
 
-function NavbarListDrawer({ navLinks, profileLinks }) {
+function NavbarListDrawer({ navLinks, profileLinks, setOpen }) {
+
+    const handleClick = () => {
+        setOpen(false);
+    };
 
     return (
         <Box sx={{ width: 250 }} role="presentation">
             <List>
-                <ListItemButton component={Link} to="/main">
-                <Box
+                <ListItemButton 
+                    component={Link} 
+                    to="/main"
+                    onClick={handleClick}  // Afegim onClick
+                >
+                    <Box
                         component="img"
                         sx={{
                             height: 64,
@@ -25,7 +33,12 @@ function NavbarListDrawer({ navLinks, profileLinks }) {
                 <Divider />
                 {
                     navLinks.map((item) => (
-                        <ListItemButton key={item.title} component={Link} to={item.path}>
+                        <ListItemButton 
+                            key={item.title} 
+                            component={Link} 
+                            to={item.path}
+                            onClick={handleClick}
+                        >
                             <ListItemText primary={item.title} />
                         </ListItemButton>
                     ))
@@ -37,7 +50,10 @@ function NavbarListDrawer({ navLinks, profileLinks }) {
                             key={item.title} 
                             component={Link} 
                             to={item.path}
-                            onClick={item.onClick}
+                            onClick={(e) => {
+                                handleClick();
+                                if (item.onClick) item.onClick(e);
+                            }}
                         >
                             {item.icon}
                             <ListItemText primary={item.title} />

@@ -119,7 +119,11 @@ function CustomNavbar() {
                     onClose={() => setOpen(false)}
                     sx={{ display: { xs: 'flex', sm: 'none' } }}
                 >
-                    <NavbarListDrawer navLinks={navLinks} profileLinks={profileLinks} />
+                    <NavbarListDrawer 
+                        navLinks={navLinks} 
+                        profileLinks={profileLinks} 
+                        setOpen={setOpen}
+                    />
                 </Drawer>
             </AppBar>
             <Toolbar />
