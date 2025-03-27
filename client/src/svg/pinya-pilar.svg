@@ -13,6 +13,11 @@
         text-anchor: middle;
         dominant-baseline: text-bottom;
       }
+
+      .cls-2:hover {
+        fill: #f0f0f0;
+        transition: fill 0.2s ease;
+      }
     </style>
   </defs>
 

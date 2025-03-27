@@ -1,21 +1,22 @@
 .tronc {
     border-collapse: separate;
-    border-spacing: 20px;
+    border-spacing: 10px;
 }
 
 .cela {
     width: 100px;
-    height: 25px;
-    padding: 15px 30px 15px 30px;
-    background-color: #ffffff;
-    border: 2px solid black;
+    height: 40px;
+    background-color: var(--secondary-main);
+    border: 1px solid var(--primary-main);
     border-radius: 10px;
     text-align: center;
     vertical-align: middle;
+    font-size: 12px;
 }
 
 .cela:hover {
-    background-color: #f0f0f0;
+    background-color: var(--primary-main);
+    color: var(--secondary-main);
     cursor: pointer;
 }
 
@@ -23,6 +24,6 @@
     background-color: #d9d9d9;
 }
 
-.agulla:hover {
-    background-color: #ffffff;
+.baix {
+    border: 2px solid var(--primary-main);
 }

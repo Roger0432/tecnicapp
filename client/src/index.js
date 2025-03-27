@@ -18,9 +18,19 @@ const lightTheme = createTheme({
             main: '#363636',
         },
         secondary: {
-            main: '#474747',
+            main: '#ffffff',
         },
     },
+    components: {
+        MuiCssBaseline: {
+            styleOverrides: (theme) => `
+                :root {
+                    --primary-main: ${theme.palette.primary.main};
+                    --secondary-main: ${theme.palette.secondary.main};
+                }
+            `,
+        },
+    }
 });
 /*
 const darkTheme = createTheme({

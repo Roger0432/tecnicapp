@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import '../styles/Tronc.css';
+import { Box } from '@mui/material';
 
 const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick }) => {
   const [taulaTronc, setTaulaTronc] = useState([]);
@@ -168,13 +169,13 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
   }, [crearTaula]);
   
   return (
-      <div>
+      <Box m={1} mt={4} sx={{ display: 'flex', justifyContent: 'center' }}>
           <table className='tronc'>
               <tbody>
                   {taulaTronc}
               </tbody>
           </table>
-      </div>
+      </Box>
   );
 };
 

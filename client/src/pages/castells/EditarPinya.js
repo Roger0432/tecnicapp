@@ -229,16 +229,6 @@ const EditarPinya = ({ assaig, castell }) => {
         .catch(error => console.error('Error:', error));
     };
 
-    // funcio per obtenir el membre actual en una posicio
-    /*const getCastellerPosicio = (posicio) => {
-        for (let i = 0; i < membresPinya.length; i++) {
-            if (membresPinya[i].posicio === posicio) {
-                return membresPinya[i].mote;
-            }
-        }
-        return '';
-    };*/
-
     // actualitza el text de l'SVG amb els noms dels membres
     useEffect(() => {
         if (svgRef.current && membresPinya.length > 0) {

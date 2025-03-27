@@ -79,7 +79,7 @@ function CrearMembre() {
       confirmButtonText: 'Sí, eliminar!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`${BACKEND_URL}/eliminar-membre/${membre.id}`, {
+        fetch(`${BACKEND_URL}/borrar-membre/${membre.id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
         })

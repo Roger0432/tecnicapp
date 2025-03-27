@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Button,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -26,6 +16,8 @@ function DetallsEsdeveniment({ assaig }) {
   const [detalls, setDetalls] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/esdeveniment/${id}`)
@@ -65,6 +57,8 @@ function DetallsEsdeveniment({ assaig }) {
                 timer: 1000,
                 showConfirmButton: false,
               });
+              if (assaig) navigate("/assaigs");
+              else navigate("/diades");
             } else {
               console.error("Failed to delete esdeveniment");
             }
@@ -135,6 +129,10 @@ function DetallsEsdeveniment({ assaig }) {
     );
   }
 
+  const tipusElement = detalls.assaig ? "prova" : "castell";
+  const tipusTitol = detalls.assaig ? "Proves" : "Castells";
+  const routeAfegir = detalls.assaig ? `/nova-prova/${id}` : `/nou-castell/${id}`;
+
   return (
     <Box className="page" sx={{ position: "relative" }}>
       <Box
@@ -195,85 +193,48 @@ function DetallsEsdeveniment({ assaig }) {
         </Box>
       </Box>
 
-      {detalls.assaig ? (
-        <>
-          <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
-            Proves
-          </Typography>
-          <Button
-            component={RouterLink}
-            to={`/nova-prova/${id}`}
-            variant="contained"
-            sx={{ mb: 2 }}
-          >
-            Afegir prova
-          </Button>
-
-          {detalls.castells[0] !== null ? (
-            <Table>
-              <TableBody>
-                {detalls.castells.map((prova, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={{ paddingLeft: 0 }}>
-                      <Button component={RouterLink} to={`/prova/${detalls.id[index]}`} variant="outlined" sx={{ textTransform: 'none' }}>
-                        {prova}
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => borrarCastell(detalls.id[index])}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : null}
-        </>
-      ) : (
-        <>
-          <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
-            Castells
-          </Typography>
-          <Button
-            component={RouterLink}
-            to={`/nou-castell/${id}`}
-            variant="contained"
-            sx={{ mb: 2 }}
-          >
-            Afegir castell
-          </Button>
-          
-          {detalls.castells[0] !== null ? (
-            <Table>
-              <TableBody>
-                {detalls.castells.map((castell, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                    <Button component={RouterLink} to={`/prova/${detalls.id[index]}`} variant="outlined" sx={{ textTransform: 'none' }}>
-                        {castell}
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => borrarCastell(detalls.id[index])}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : null}
-        </>
-      )}
+      <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
+      {tipusTitol}
+    </Typography>
+    
+    <Button
+      component={RouterLink}
+      to={routeAfegir}
+      variant="contained"
+      sx={{ mb: 2 }}
+    >
+      {`Afegir ${tipusElement}`}
+    </Button>
+    
+    {detalls.castells[0] !== null && (
+      <Table>
+        <TableBody>
+          {detalls.castells.map((element, index) => (
+            <TableRow key={index}>
+              <TableCell sx={{ paddingLeft: detalls.assaig ? 0 : undefined }}>
+                <Button 
+                  component={RouterLink} 
+                  to={`/${tipusElement}/${detalls.id[index]}`}
+                  variant="outlined" 
+                  sx={{ textTransform: 'none' }}
+                >
+                  {element}
+                </Button>
+              </TableCell>
+              <TableCell align="right">
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => borrarCastell(detalls.id[index])}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    )}
     </Box>
   );
 }
