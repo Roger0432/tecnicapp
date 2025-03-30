@@ -12,10 +12,9 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function Esdeveniments({ assaig }) {
   const [esdeveniments, setEsdeveniments] = useState([]);
   const navigate = useNavigate();
-  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
+  const { setTitol } = useTitol();
 
   useEffect(() => {
-    // Actualitza el títol segons si és un assaig o una diada
     setTitol(assaig ? 'Assaigs' : 'Diades');
 
     fetch(`${BACKEND_URL}/esdeveniments`, {
@@ -34,7 +33,7 @@ function Esdeveniments({ assaig }) {
       .catch(error => {
         console.error('Error:', error);
       });
-  }, [assaig, setTitol]); // Afegeix `setTitol` com a dependència
+  }, [assaig, setTitol]);
 
   const detallsEsdeveniment = (id) => {
     if (assaig) {

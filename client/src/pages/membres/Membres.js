@@ -31,7 +31,7 @@ function Membres() {
       .catch(error => {
         console.error('Error:', error);
       });
-  }, [setTitol]); // Afegeix `setTitol` com a dependència
+  }, [setTitol]);
 
   const columnes = [
     { field: 'mote', headerName: 'Mote', flex: 0.75 },

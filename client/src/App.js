@@ -86,8 +86,8 @@ function App() {
           <Route path="/crear-assaig" element={<CrearEsdeveniment assaig={true} />} /> 
           <Route path="/crear-diada" element={<CrearEsdeveniment assaig={false} />} />
           
-          <Route path="/editar-assaig" element={<CrearEsdeveniment assaig={true} />} />
-          <Route path="/editar-diada" element={<CrearEsdeveniment assaig={false} />} />
+          <Route path="/editar-assaig/:id" element={<CrearEsdeveniment assaig={true} />} />
+          <Route path="/editar-diada/:id" element={<CrearEsdeveniment assaig={false} />} />
           
           <Route path="/assaig/:id" element={<DetallsEsdeveniment assaig={true} />} />
           <Route path="/diada/:id" element={<DetallsEsdeveniment assaig={false} />} />

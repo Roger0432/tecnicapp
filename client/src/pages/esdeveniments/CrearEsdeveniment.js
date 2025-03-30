@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { TextField, Button, Box, Typography, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { TextField, Button, Box, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
 import '../../styles/App.css';
+import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function CrearEsdeveniment({ assaig }) {
+  const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { esdeveniment = {}, editar = false } = location.state || {};
+  const { setTitol } = useTitol();
+
+  useEffect(() => {
+    if (editar) {
+      setTitol(assaig ? 'Editar Assaig' : 'Editar Diada');
+    } else {
+      setTitol(assaig ? 'Crear Assaig' : 'Crear Diada');
+    }
+  }, [assaig, editar, setTitol]);
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -39,7 +50,7 @@ function CrearEsdeveniment({ assaig }) {
     const data = { dia, lloc, hora, assaig: assaig, nom };
 
     let url = `${BACKEND_URL}`;
-    if (editar) url += `/editar-esdeveniment/${esdeveniment.id}`;
+    if (editar) url += `/editar-esdeveniment/${id}`;
     else url += '/crear-esdeveniment';
 
     const method = editar ? 'PUT' : 'POST';
@@ -80,10 +91,6 @@ function CrearEsdeveniment({ assaig }) {
 
   return (
     <Box className='page'>
-
-      <Typography variant="h5" mb={3}  sx={{ fontWeight: 'bold' }}>
-        {assaig ? (editar ? 'EDITAR ASSAIG' : 'CREAR ASSAIG') : (editar ? 'EDITAR DIADA' : 'CREAR DIADA')}
-      </Typography>
 
       <form onSubmit={handleSubmit}>
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>

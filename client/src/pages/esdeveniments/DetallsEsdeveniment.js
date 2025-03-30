@@ -31,7 +31,7 @@ function DetallsEsdeveniment({ assaig }) {
         }
       })
       .catch((error) => console.error("Error:", error));
-  }, [id, setTitol]); // Afegeix `setTitol` com a dependència
+  }, [id, setTitol]);
 
   const borrarEsdeveniment = (id) => {
     Swal.fire({
@@ -73,9 +73,9 @@ function DetallsEsdeveniment({ assaig }) {
 
   const editarEsdeveniment = (esdeveniment) => {
     if (assaig) {
-      navigate("/editar-assaig", { state: { esdeveniment, editar: true } });
+      navigate(`/editar-assaig/${id}`, { state: { esdeveniment, editar: true } });
     } else {
-      navigate("/editar-diada", { state: { esdeveniment, editar: true } });
+      navigate(`/editar-diada/${id}`, { state: { esdeveniment, editar: true } });
     }
   };
 
