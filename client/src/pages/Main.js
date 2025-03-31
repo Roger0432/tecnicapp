@@ -3,15 +3,14 @@ import '../styles/App.css';
 import '../styles/Tronc.css';
 import { Link } from 'react-router-dom';
 import { Button, Box } from '@mui/material';
-import { useTitol } from '../context/TitolNavbar'; // Importa el context
+import { useTitol } from '../context/TitolNavbar';
 
 function Main() {
-  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
+  const { setTitol } = useTitol();
 
   useEffect(() => {
-    // Actualitza el títol de la Navbar
     setTitol('Menú');
-  }, [setTitol]); // Afegeix `setTitol` com a dependència
+  }, [setTitol]);
 
   return (
     <div className='page'>
@@ -19,7 +18,7 @@ function Main() {
         <Button variant="contained" component={Link} to="/crear-assaig">Crear assaig</Button>
         <Button variant="contained" component={Link} to="/crear-diada">Crear diada</Button>
       </Box>
-
+      
       {/* 
       <h1>CALENDARI</h1>
       <iframe 
