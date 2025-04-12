@@ -26,11 +26,10 @@ function CustomNavbar() {
         '/configuracio'
     ];
 
-    // Check if the current path is exactly one of the menu paths
     const showMenuIcon = menuPaths.includes(location.pathname);
 
     const handleBackClick = () => {
-        navigate(-1); // Go back to the previous page
+        navigate(-1);
     };
 
     const toggleDropdown = () => {
@@ -81,10 +80,10 @@ function CustomNavbar() {
                         edge="start"
                         color="inherit"
                         aria-label={showMenuIcon ? "menu" : "back"}
-                        onClick={showMenuIcon ? () => setOpen(true) : handleBackClick} // Conditional onClick
-                        // sx={{ display: { xs: 'flex', sm: 'none' } }} // Keep this if you only want the icon on small screens
+                        onClick={showMenuIcon ? () => setOpen(true) : handleBackClick}
+                        sx={{ display: { xs: 'flex', sm: 'none' } }}
                     >
-                        {showMenuIcon ? <MenuIcon /> : <ArrowBackIosNewIcon />} {/* Conditional Icon */}
+                        {showMenuIcon ? <MenuIcon /> : <ArrowBackIosNewIcon />}
                     </IconButton>
 
                     <Typography variant="h6">{titol}</Typography>
@@ -128,7 +127,6 @@ function CustomNavbar() {
 
                 </Toolbar>
 
-                {/* Drawer remains the same, controlled by 'open' state */}
                 <Drawer
                     open={open}
                     anchor="left"

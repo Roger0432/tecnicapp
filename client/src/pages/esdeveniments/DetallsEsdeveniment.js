@@ -8,8 +8,9 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
 import Swal from "sweetalert2";
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
-import { useTitol } from "../../context/TitolNavbar"; // Importa el context
+import { Fab } from "@mui/material";
+import { useTitol } from "../../context/TitolNavbar";
+import AddIcon from '@mui/icons-material/Add';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -17,7 +18,7 @@ function DetallsEsdeveniment({ assaig }) {
   const [detalls, setDetalls] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
+  const { setTitol } = useTitol();
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/esdeveniment/${id}`)
@@ -25,7 +26,7 @@ function DetallsEsdeveniment({ assaig }) {
       .then((data) => {
         if (data.status) {
           setDetalls(data.esdeveniment);
-          setTitol(data.esdeveniment.nom); // Actualitza el títol de la Navbar amb el nom de l'esdeveniment
+          setTitol(data.esdeveniment.nom);
         } else {
           console.error(data.msg);
         }
@@ -140,24 +141,24 @@ function DetallsEsdeveniment({ assaig }) {
       <Box
         display="flex"
         alignItems="center"
-        sx={{ position: "absolute", top: 0, right: 0 }}
+        sx={{ position: "absolute", top: 16, right: 0, gap: 1 }} 
       >
-        <SpeedDial
-          ariaLabel="SpeedDial basic example"
-          icon={<SpeedDialIcon />}
-          direction="left"
+        <Fab 
+          color="primary" 
+          aria-label="edit" 
+          size="small"
+          onClick={() => editarEsdeveniment(detalls)}
         >
-          <SpeedDialAction
-            icon={<EditIcon sx={{ width: 20, height: 20 }} />}
-            tooltipTitle="Edit"
-            onClick={() => editarEsdeveniment(detalls)}
-          />
-          <SpeedDialAction
-            icon={<DeleteIcon sx={{ width: 20, height: 20 }} />}
-            tooltipTitle="Delete"
-            onClick={() => borrarEsdeveniment(id)}
-          />
-        </SpeedDial>
+          <EditIcon fontSize="small" />
+        </Fab>
+        <Fab 
+          color="primary" 
+          aria-label="delete" 
+          size="small"
+          onClick={() => borrarEsdeveniment(id)}
+        >
+          <DeleteIcon fontSize="small" />
+        </Fab>
       </Box>
 
       <Box className="detalls" mb={2}>
@@ -185,19 +186,24 @@ function DetallsEsdeveniment({ assaig }) {
 
       <Divider sx={{ mb:2 }} />
 
-      <Typography variant="h5" mb={2} sx={{ fontWeight: "bold" }}>
-        {tipusTitol}
-      </Typography>
-      
-      <Button
-        component={RouterLink}
-        to={routeAfegir}
-        variant="contained"
-        sx={{ mb: 2 }}
-      >
-        {`Afegir ${tipusElement}`}
-      </Button>
-      
+      <Box display="flex" alignItems="center" justifyContent="space-between">
+
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          {tipusTitol}
+        </Typography>
+        
+        <Fab
+          color="primary"
+          aria-label="add"
+          size="small"
+          component={RouterLink}
+          to={routeAfegir}
+        >
+          <AddIcon fontSize="small" />
+        </Fab>
+
+      </Box>
+
       {detalls.castells[0] !== null && (
         <Table>
           <TableBody>

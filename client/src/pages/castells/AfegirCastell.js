@@ -86,7 +86,7 @@ function AfegirCastell({ assaig }) {
   };
 
   return (
-    <Box className="page">
+    <Box className="page"> 
       <Typography variant="body1" mb={1}>
         {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
       </Typography>
@@ -120,8 +120,8 @@ function AfegirCastell({ assaig }) {
         Afegir
       </Button>
 
-      <List>
-        {selectedCastells.map((castell) => (
+      <List> 
+        {selectedCastells.map((castell) => (  
           <ListItem
             key={castell.id}
             secondaryAction={
