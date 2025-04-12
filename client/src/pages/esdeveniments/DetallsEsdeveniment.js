@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider } from "@mui/material";
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, ButtonGroup } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -134,32 +134,37 @@ function DetallsEsdeveniment({ assaig }) {
   const tipusElement = detalls.assaig ? "prova" : "castell";
   const tipusTitol = detalls.assaig ? "Proves" : "Castells";
   const routeAfegir = detalls.assaig ? `/nova-prova/${id}` : `/nou-castell/${id}`;
+  const borderRadius = '16px';
 
   return (
     <Box className="page" sx={{ position: "relative" }}>
 
-      <Box
-        display="flex"
-        alignItems="center"
-        sx={{ position: "absolute", top: 16, right: 0, gap: 1 }} 
+      <ButtonGroup
+        variant="contained"
+        aria-label="outlined primary button group"
+        sx={{ 
+          position: "absolute", 
+          top: 16, 
+          right: 0,
+          borderRadius: borderRadius,
+        }}
       >
-        <Fab 
-          color="primary" 
-          aria-label="edit" 
-          size="small"
+        <Button
+          aria-label="edit"
           onClick={() => editarEsdeveniment(detalls)}
+          sx={{ borderTopLeftRadius: borderRadius, borderBottomLeftRadius: borderRadius }}
         >
           <EditIcon fontSize="small" />
-        </Fab>
-        <Fab 
-          color="primary" 
-          aria-label="delete" 
-          size="small"
+        </Button>
+        <Button
+          aria-label="delete"
           onClick={() => borrarEsdeveniment(id)}
+          color="error" 
+          sx={{ borderTopRightRadius: borderRadius, borderBottomRightRadius: borderRadius }}
         >
           <DeleteIcon fontSize="small" />
-        </Fab>
-      </Box>
+        </Button>
+      </ButtonGroup>
 
       <Box className="detalls" mb={2}>
         <Box display="flex" alignItems="center" mb={1} color="gray">
@@ -186,7 +191,7 @@ function DetallsEsdeveniment({ assaig }) {
 
       <Divider sx={{ mb:2 }} />
 
-      <Box display="flex" alignItems="center" justifyContent="space-between">
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
 
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {tipusTitol}
