@@ -49,7 +49,7 @@ function Esdeveniments({ assaig }) {
   ];
 
   return (
-    <div className='page'>
+    <Box m={1}>
 
       <Box sx={{ position: 'relative', height: '100%' }}>
         
@@ -77,7 +77,7 @@ function Esdeveniments({ assaig }) {
         </Box>
         
       </Box>
-    </div>
+    </Box>
   );
 }
 

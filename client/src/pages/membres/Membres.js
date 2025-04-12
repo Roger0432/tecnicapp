@@ -47,9 +47,9 @@ function Membres() {
   };
 
   return (
-    <div className='page'>
+    <Box m={1}>
       <Box sx={{ position: 'relative', height: '100%' }}>
-        <Box mt={3}>
+        <Box>
           <DataGrid
             rows={membres}
             columns={columnes}
@@ -70,7 +70,7 @@ function Membres() {
           </Fab>
         </Box>
       </Box>
-    </div>
+    </Box>
   );
 }
 
