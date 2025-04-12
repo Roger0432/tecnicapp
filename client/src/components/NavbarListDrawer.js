@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { List, ListItemButton, ListItemText, Box, Divider } from "@mui/material";
 
-function NavbarListDrawer({ navLinks, profileLinks, setOpen }) {
+function NavbarListDrawer({ navLinks, setOpen }) {
 
     const handleClick = () => {
         setOpen(false);
@@ -14,7 +14,7 @@ function NavbarListDrawer({ navLinks, profileLinks, setOpen }) {
                 <ListItemButton 
                     component={Link} 
                     to="/main"
-                    onClick={handleClick}  // Afegim onClick
+                    onClick={handleClick}
                 >
                     <Box
                         component="img"
@@ -42,24 +42,7 @@ function NavbarListDrawer({ navLinks, profileLinks, setOpen }) {
                             <ListItemText primary={item.title} />
                         </ListItemButton>
                     ))
-                }
-                <Divider />
-                {
-                    profileLinks.map((item) => (
-                        <ListItemButton 
-                            key={item.title} 
-                            component={Link} 
-                            to={item.path}
-                            onClick={(e) => {
-                                handleClick();
-                                if (item.onClick) item.onClick(e);
-                            }}
-                        >
-                            {item.icon}
-                            <ListItemText primary={item.title} />
-                        </ListItemButton>
-                    ))
-                }
+                }                
             </List>
         </Box>
     );

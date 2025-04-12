@@ -23,6 +23,11 @@ function Membres() {
       .then(data => {
         if (data.status) {
           setMembres(data.membres);
+          const membresAmbNomComplet = data.membres.map(membre => ({
+          ...membre,
+          nomComplet: `${membre.nom} ${membre.cognoms}`,
+          }));
+          setMembres(membresAmbNomComplet);
         } else {
           console.error('Error:', data.msg);
         }
@@ -33,8 +38,8 @@ function Membres() {
   }, [setTitol]);
 
   const columnes = [
-    { field: 'mote', headerName: 'Mote', flex: 0.75 },
-    { field: 'alcada_hombro', headerName: 'Alçada hombro', flex: 1 },
+    { field: 'mote', headerName: 'Mote', flex: 0.6 },
+    { field: 'nomComplet', headerName: 'Nom', flex: 1 },
   ];
 
   const handleRowClick = (params) => {

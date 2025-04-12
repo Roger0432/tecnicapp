@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // Import useLocation
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import NavbarListDrawer from "./NavbarListDrawer";
 import { AppBar, Drawer, IconButton, Toolbar, Typography, Box, List, ListItemButton, ListItemText, Divider } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'; // Import ArrowBackIosNewIcon
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Swal from 'sweetalert2';
 import '../styles/Navbar.css';
@@ -13,17 +13,15 @@ function CustomNavbar() {
     const [open, setOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation(); // Get location object
+    const location = useLocation();
     const { titol } = useTitol();
 
-    // Define paths where the MenuIcon should be shown
     const menuPaths = [
         '/main',
         '/assaigs',
         '/diades',
         '/membres',
         '/perfil',
-        '/configuracio'
     ];
 
     const showMenuIcon = menuPaths.includes(location.pathname);
@@ -40,7 +38,8 @@ function CustomNavbar() {
         { title: "Menú", path: "/main" },
         { title: "Assaigs", path: "/assaigs" },
         { title: "Diades", path: "/diades" },
-        { title: "Membres", path: "/membres" }
+        { title: "Membres", path: "/membres" },
+        { title: "Perfil", path: "/perfil" },
     ];
 
     const handleLogout = () => {
@@ -97,31 +96,6 @@ function CustomNavbar() {
                                     </ListItemButton>
                                 ))
                             }
-                            <Divider orientation="vertical" flexItem />
-
-                            <ListItemButton>
-                                <div className="dropdown">
-                                    <AccountCircleIcon onClick={toggleDropdown} aria-expanded={dropdownOpen} />
-                                    {dropdownOpen && (
-                                        <div className="dropdown-content" inert={!dropdownOpen ? "" : undefined}>
-                                            {
-                                                profileLinks.map((item) => (
-                                                    <ListItemButton
-                                                        key={item.title}
-                                                        component={Link}
-                                                        to={item.path}
-                                                        sx={{ color: 'black' }}
-                                                        onClick={item.onClick}
-                                                    >
-                                                        {item.icon}
-                                                        <ListItemText primary={item.title} />
-                                                    </ListItemButton>
-                                                ))
-                                            }
-                                        </div>
-                                    )}
-                                </div>
-                            </ListItemButton>
                         </List>
                     </Box>
 
@@ -135,7 +109,6 @@ function CustomNavbar() {
                 >
                     <NavbarListDrawer
                         navLinks={navLinks}
-                        profileLinks={profileLinks}
                         setOpen={setOpen}
                     />
                 </Drawer>

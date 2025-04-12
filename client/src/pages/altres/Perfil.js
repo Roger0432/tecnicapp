@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Fab } from '@mui/material';
 import { useTitol } from '../../context/TitolNavbar';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Perfil() {
+  
   const [dades, setDades] = useState({
     nom: '',
     cognoms: '',
@@ -13,9 +17,9 @@ function Perfil() {
   });
 
   const { setTitol } = useTitol();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Actualitza el títol de la Navbar
     setTitol('Perfil');
 
     const token = localStorage.getItem('authtoken');
@@ -42,38 +46,56 @@ function Perfil() {
     });
   }, [setTitol]);
 
+  const handleLogout = () => {
+    Swal.fire({
+        title: 'Tancar sessió?',
+        showDenyButton: true,
+        confirmButtonText: 'Sí',
+        denyButtonText: 'Cancel·la',
+        confirmButtonColor: '#dc3545',
+        denyButtonColor: '#6c757d',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.clear();
+            navigate('/inicisessio');
+        }
+    });
+  };
+
   return (
     <div className='page'>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell component="th" scope="row">
-                <strong>Nom</strong>
-              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: 'bold' }}>Nom</TableCell>
               <TableCell>{dades.nom}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row">
-                <strong>Cognoms</strong>
-              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: 'bold' }}>Cognoms</TableCell>
               <TableCell>{dades.cognoms}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row">
-                <strong>Correu electrònic</strong>
-              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: 'bold' }}>Correu electrònic</TableCell>
               <TableCell>{dades.email}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row">
-                <strong>Rol</strong>
-              </TableCell>
+              <TableCell component="th" scope="row" sx={{ fontWeight: 'bold' }}>Rol</TableCell>
               <TableCell>{dades.rol}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Fab
+        color="error"
+        aria-label="logout"
+        onClick={handleLogout}
+        sx={{ position: 'fixed', bottom: 16, right: 16 }}
+      >
+        <LogoutIcon />
+      </Fab>
+
     </div>
   );
 }

@@ -16,7 +16,6 @@ import Membres from './pages/membres/Membres';
 import CustomNavbar from './components/CustomNavbar';
 import Main from './pages/Main';
 import Perfil from './pages/altres/Perfil';
-import Configuracio from './pages/altres/Configuracio';
 
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -72,13 +71,11 @@ function App() {
 
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
+          <Route path="/perfil" element={<Perfil />} />
 
           <Route path="/membres" element={<Membres />} />
           <Route path="/crear-membre" element={<CrearMembre />} />
           <Route path="/editar-membre" element={<CrearMembre />} />
-
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/configuracio" element={<Configuracio />} />
 
           <Route path="/assaigs" element={<Esdeveniments assaig={true} />} />
           <Route path="/diades" element={<Esdeveniments assaig={false} />} />

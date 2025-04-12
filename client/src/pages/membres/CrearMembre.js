@@ -4,6 +4,9 @@ import Swal from 'sweetalert2';
 import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import Tooltip from '@mui/material/Tooltip';
+import Fab from '@mui/material/Fab';
 import TaulaDetallsMembre from '../../components/DetallsMembres';
 import { useTitol } from '../../context/TitolNavbar';
 
@@ -207,13 +210,30 @@ function CrearMembre() {
           </Box>
 
           {modeEdicio && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Guardar
-          </Button>
+
+            <Box
+              sx={{
+                  position: 'fixed',
+                  bottom: 24,
+                  right: 24,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+              }}
+              >
+              <Tooltip title="Guardar" placement="top">
+                  <Fab 
+                      color="primary" 
+                      aria-label="guardar"
+                      onClick={handleSubmit}
+                      sx={{
+                          boxShadow: 3
+                      }}
+                  >
+                      <SaveIcon />
+                  </Fab>
+              </Tooltip>
+            </Box>
+
         )}
 
           {!editar && (
