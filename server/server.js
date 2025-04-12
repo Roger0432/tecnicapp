@@ -337,7 +337,7 @@ app.get('/membres-no-tronc/:id', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT id, mote, alcada_hombro
+            SELECT id, mote, nom, cognoms, alcada_hombro
             FROM membres
             WHERE id NOT IN (SELECT membre_id FROM membres_posicions WHERE esdeveniment_castell_id = $1)
         `;
@@ -361,7 +361,7 @@ app.get('/membres-tronc/:id', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_hombro
+            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_hombro, m.nom, m.cognoms
             FROM membres_posicions mp
             JOIN membres m ON mp.membre_id = m.id
             WHERE mp.esdeveniment_castell_id = $1
@@ -421,7 +421,7 @@ app.get('/membres-no-pinya/:id', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT id, mote, alcada_mans
+            SELECT id, mote, nom, cognoms, alcada_mans
             FROM membres
             WHERE id NOT IN (SELECT membre_id FROM membres_posicions WHERE esdeveniment_castell_id = $1)
         `;
@@ -444,7 +444,7 @@ app.get('/membres-pinya/:id', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_mans
+            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_mans, m.nom, m.cognoms
             FROM membres_posicions mp
             JOIN membres m ON mp.membre_id = m.id
             WHERE mp.esdeveniment_castell_id = $1

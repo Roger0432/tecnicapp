@@ -1,20 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PlantillaTronc from '../../components/PlantillaTronc';
-import { 
-    Button, 
-    Typography, 
-    Modal,
-    Box, 
-    List, 
-    ListItemText, 
-    ListItemButton,
-    Paper,
-    TextField,
-    InputAdornment,
-    Fab,
-    Tooltip
-} from '@mui/material';
+import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -23,7 +10,7 @@ import '../../styles/Tronc.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-function EditarTronc({ assaig, castell }) {
+function EditarTronc({ castell }) {
     const { id } = useParams();
     const [membresTronc, setMembresTronc] = useState([]);
     const [membresNoTronc, setMembresNoTronc] = useState([]);
@@ -247,6 +234,7 @@ function EditarTronc({ assaig, castell }) {
                                 >
                                     <ListItemText 
                                         primary={membre.mote} 
+                                        secondary={`${membre.nom} ${membre.cognoms}`}
                                     />
                                 </ListItemButton>
                             ))

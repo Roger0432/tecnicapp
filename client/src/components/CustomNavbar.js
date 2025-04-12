@@ -4,9 +4,6 @@ import NavbarListDrawer from "./NavbarListDrawer";
 import { AppBar, Drawer, IconButton, Toolbar, Typography, Box, List, ListItemButton, ListItemText, Divider } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
 import '../styles/Navbar.css';
 import { useTitol } from "../context/TitolNavbar";
@@ -45,11 +42,10 @@ function CustomNavbar() {
     };
 
     const profileLinks = [
-        { title: "Perfil", path: "/perfil", icon: <PersonIcon /> },
-        { title: "Configuració", path: "/configuracio", icon: <SettingsIcon /> },
+        { title: "Perfil", path: "/perfil" },
+        { title: "Configuració", path: "/configuracio" },
         { 
             title: "Tanca sessió", 
-            icon: <LogoutIcon />, 
             onClick: (e) => {
                 e.preventDefault();
                 setOpen(false);
@@ -72,7 +68,7 @@ function CustomNavbar() {
                         <MenuIcon />
                     </IconButton>
 
-                    <Typography variant="h6">{titol}</Typography>
+                    <Typography>{titol}</Typography>
 
                     <Box sx={{ display: { xs: 'none', sm: 'flex' }, ml: 'auto' }}>
                         <List component="nav" sx={{ display: 'flex', flexDirection: 'row' }}>

@@ -48,9 +48,9 @@ function EditarCastell({assaig}) {
             </Box>
 
             {value === 'tronc' ? (
-                <EditarTronc assaig={assaig} castell={castellData} />
+                <EditarTronc castell={castellData} />
             ) : (
-                <EditarPinya assaig={assaig} castell={castellData} />
+                <EditarPinya castell={castellData} />
             )}
 
         </div>

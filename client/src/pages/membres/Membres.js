@@ -10,10 +10,9 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function Membres() {
   const [membres, setMembres] = useState([]);
   const navigate = useNavigate();
-  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
+  const { setTitol } = useTitol();
 
   useEffect(() => {
-    // Actualitza el títol de la Navbar
     setTitol('Membres');
 
     fetch(`${BACKEND_URL}/membres`, {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
+import { ReactComponent as PinyaTorre } from '../../svg/pinya-torre.svg';
 import { Box, Modal, Paper, Typography, TextField, InputAdornment, List, ListItemButton, ListItemText, Button, Fab, Tooltip } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,7 +9,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const EditarPinya = ({ assaig, castell }) => {
+const EditarPinya = ({ castell }) => {
     const { id } = useParams();
     const [castellData, setCastellData] = useState(null);
     const [membresPinya, setMembresPinya] = useState([]);
@@ -231,7 +232,7 @@ const EditarPinya = ({ assaig, castell }) => {
                 pinya_svg = <PinyaPilar ref={svgRef} />;
                 break;
             case 2:
-                //pinya_svg = <PinyaTorre ref={svgRef} />;
+                pinya_svg = <PinyaTorre ref={svgRef} />;
                 break;
             case 3:
                 //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} />;
@@ -357,6 +358,7 @@ const EditarPinya = ({ assaig, castell }) => {
                                 >
                                     <ListItemText 
                                         primary={membre.mote} 
+                                        secondary={`${membre.nom} ${membre.cognoms}`}
                                     />
                                 </ListItemButton>
                             ))
