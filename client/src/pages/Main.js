@@ -13,8 +13,8 @@ function Main() {
   }, [setTitol]);
 
   return (
-    <div className='page'>
-      <Box className="form-group" display="flex" flexDirection="column" gap={2}>
+    <div className='page' style={{ display: 'flex', justifyContent: 'center' }}>
+      <Box className="form-group" display="flex" flexDirection="column" gap={2} style={{ width: '100%', maxWidth: '400px' }}>
         <Button variant="contained" component={Link} to="/crear-assaig">Crear assaig</Button>
         <Button variant="contained" component={Link} to="/crear-diada">Crear diada</Button>
       </Box>

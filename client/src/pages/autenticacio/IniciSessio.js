@@ -11,6 +11,7 @@ function IniciSessio() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [open, setOpen] = useState(false);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,9 +61,8 @@ function IniciSessio() {
   }
 
   return (
-    <div className='page'>
-      
-      <form id="login-form" onSubmit={handleLogin}>
+    <Box className='page' display="flex" justifyContent="center">
+      <Box component="form" id="login-form" onSubmit={handleLogin} sx={{ width: '100%', maxWidth: '400px' }}>
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>
             <Typography variant="h5" mb={2} mt={2} sx={{ fontWeight: 'bold' }}>INICI DE SESSIÓ</Typography>
             <TextField 
@@ -110,8 +110,8 @@ function IniciSessio() {
           </Box>
 
           </Box>
-      </form>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

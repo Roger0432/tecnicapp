@@ -98,8 +98,8 @@ function Registre() {
   }
 
   return (
-    <div className='page'>
-      <form id="register-form" onSubmit={handleRegister}>
+    <Box className='page' display="flex" justifyContent="center">
+      <Box component="form" id="register-form" onSubmit={handleRegister} sx={{ width: '100%', maxWidth: '400px' }}>
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>
           <Typography variant="h5" mb={2} mt={2} sx={{ fontWeight: 'bold' }}><b>REGISTRE</b></Typography>
           <TextField 
@@ -194,8 +194,8 @@ function Registre() {
             </Collapse>
           </Box>
         </Box>
-      </form>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

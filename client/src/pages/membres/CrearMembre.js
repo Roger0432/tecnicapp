@@ -115,8 +115,7 @@ function CrearMembre() {
   };
 
   return (
-    <Box className="page" sx={{ position: 'relative' }}>
-
+    <Box className='page' display="flex" justifyContent="center">
       {!modeEdicio && editar && (
         <Box display="flex" alignItems="center" sx={{ position: 'fixed', bottom: 24, right: 24 }}>
           <SpeedDial
@@ -141,106 +140,106 @@ function CrearMembre() {
       {!modeEdicio && editar ? (
         <TaulaDetallsMembre membre={{ mote, nom, cognoms, alcada_hombro: alcadaHombro, alcada_mans: alcadaMans, comentaris }} />
       ) : (
-        <form onSubmit={handleSubmit}>
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Mote"
-              value={mote}
-              onChange={(e) => setMote(e.target.value)}
-              variant="outlined"
-              autoComplete="nickname"
-            />
-          </Box>
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
+          <Box className="form-group" display="flex" flexDirection="column">
+            <Box mb={2}>
+              <TextField
+                fullWidth
+                label="Mote"
+                value={mote}
+                onChange={(e) => setMote(e.target.value)}
+                variant="outlined"
+                autoComplete="nickname"
+              />
+            </Box>
 
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Nom"
-              value={nom}
-              onChange={(e) => setNom(e.target.value)}
-              variant="outlined"
-              autoComplete="given-name"
-            />
-          </Box>
+            <Box mb={2}>
+              <TextField
+                fullWidth
+                label="Nom"
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
+                variant="outlined"
+                autoComplete="given-name"
+              />
+            </Box>
 
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Cognoms"
-              value={cognoms}
-              onChange={(e) => setCognoms(e.target.value)}
-              variant="outlined"
-              autoComplete="family-name"
-            />
-          </Box>
+            <Box mb={2}>
+              <TextField
+                fullWidth
+                label="Cognoms"
+                value={cognoms}
+                onChange={(e) => setCognoms(e.target.value)}
+                variant="outlined"
+                autoComplete="family-name"
+              />
+            </Box>
 
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Alçada de l'hombro"
-              value={alcadaHombro}
-              onChange={(e) => setAlcadaHombro(e.target.value)}
-              variant="outlined"
-              type="number"
-            />
-          </Box>
+            <Box mb={2}>
+              <TextField
+                fullWidth
+                label="Alçada de l'hombro (cm)"
+                value={alcadaHombro}
+                onChange={(e) => setAlcadaHombro(e.target.value)}
+                variant="outlined"
+                type="number"
+              />
+            </Box>
 
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Alçada de les mans"
-              value={alcadaMans}
-              onChange={(e) => setAlcadaMans(e.target.value)}
-              variant="outlined"
-              type="number"
-            />
-          </Box>
+            <Box mb={2}>
+              <TextField
+                fullWidth
+                label="Alçada de les mans (cm)"
+                value={alcadaMans}
+                onChange={(e) => setAlcadaMans(e.target.value)}
+                variant="outlined"
+                type="number"
+              />
+            </Box>
 
-          <Box mb={2}>
-            <TextField
-              fullWidth
-              label="Comentaris"
-              value={comentaris}
-              onChange={(e) => setComentaris(e.target.value)}
-              variant="outlined"
-              multiline
-              rows={4}
-            />
+            <Box mb={2}>
+              <TextField
+                fullWidth
+                label="Comentaris"
+                value={comentaris}
+                onChange={(e) => setComentaris(e.target.value)}
+                variant="outlined"
+                multiline
+                rows={4}
+              />
+            </Box>
           </Box>
 
           {modeEdicio && (
-
             <Box
               sx={{
-                  position: 'fixed',
-                  bottom: 24,
-                  right: 24,
-                  display: 'flex',
-                  justifyContent: 'space-between',
+                position: 'fixed',
+                bottom: 24,
+                right: 24,
+                display: 'flex',
+                justifyContent: 'space-between',
               }}
-              >
+            >
               <Tooltip title="Guardar" placement="top">
-                  <Fab 
-                      color="primary" 
-                      aria-label="guardar"
-                      onClick={handleSubmit}
-                      sx={{
-                          boxShadow: 3
-                      }}
-                  >
-                      <SaveIcon />
-                  </Fab>
+                <Fab 
+                  color="primary" 
+                  aria-label="guardar"
+                  onClick={handleSubmit}
+                  sx={{
+                    boxShadow: 3
+                  }}
+                >
+                  <SaveIcon />
+                </Fab>
               </Tooltip>
             </Box>
-
-        )}
+          )}
 
           {!editar && (
-            <Button type="submit" variant="contained" color="primary">Crear</Button>
+            <Button type="submit" variant="contained" color="primary" fullWidth>Crear</Button>
           )}
           {error && <Typography color="error" mt={2}>{error}</Typography>}
-        </form>
+        </Box>
       )}
     </Box>
   );

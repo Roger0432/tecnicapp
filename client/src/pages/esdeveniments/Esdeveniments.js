@@ -49,7 +49,7 @@ function Esdeveniments({ assaig }) {
   ];
 
   return (
-    <Box m={1}>
+    <Box m={4}>
 
       <Box sx={{ position: 'relative', height: '100%' }}>
         

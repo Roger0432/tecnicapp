@@ -90,9 +90,8 @@ function CrearEsdeveniment({ assaig }) {
   };
 
   return (
-    <Box className='page'>
-
-      <form onSubmit={handleSubmit}>
+    <Box className='page' display="flex" justifyContent="center">
+      <Box component="form" onSubmit={handleSubmit} maxWidth={400} width="100%">
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>
           <TextField
             label="Nom"
@@ -143,32 +142,34 @@ function CrearEsdeveniment({ assaig }) {
             InputLabelProps={{ shrink: true }}
             fullWidth
           />
-          <Button variant="contained" type="submit">Guardar</Button>
+          <Button variant="contained" type="submit" color="primary" fullWidth>
+            {editar ? 'Editar' : 'Crear'}
+          </Button>
         </Box>
-      </form>
 
-      <Box sx={{ width: '100%', mt: 2 }}>
-        <Collapse in={open}>
-          <Alert
-            variant="filled"
-            severity="error"
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-            sx={{ mb: 2 }}
-          >
-            {error}
-          </Alert>
-        </Collapse>
+        <Box sx={{ width: '100%', mt: 2 }}>
+          <Collapse in={open}>
+            <Alert
+              variant="filled"
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              {error}
+            </Alert>
+          </Collapse>
+        </Box>
       </Box>
     </Box>
   );
