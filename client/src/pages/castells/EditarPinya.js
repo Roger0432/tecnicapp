@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
 import { ReactComponent as PinyaTorre } from '../../svg/pinya-torre.svg';
 import { Box, Modal, Paper, Typography, TextField, InputAdornment, List, ListItemButton, ListItemText, Button, Fab, Tooltip } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 
@@ -17,7 +16,6 @@ const EditarPinya = ({ castell }) => {
     const [selectedCell, setSelectedCell] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const svgRef = useRef(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (castell) setCastellData(castell);
@@ -278,25 +276,11 @@ const EditarPinya = ({ castell }) => {
                 sx={{
                     position: 'fixed',
                     bottom: 24,
-                    left: 24,
                     right: 24,
                     display: 'flex',
                     justifyContent: 'space-between',
                 }}
             >
-                <Tooltip title="Back" placement="top">
-                    <Fab 
-                        color="primary" 
-                        aria-label="back"
-                        onClick={() => navigate(-1)}
-                        sx={{
-                            boxShadow: 3
-                        }}
-                    >
-                        <ArrowBackIosNewIcon />
-                    </Fab>
-                </Tooltip>
-
                 <Tooltip title="Guardar" placement="top">
                     <Fab 
                         color="primary" 

@@ -1,10 +1,9 @@
-import React, { useEffect, useState} from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import PlantillaTronc from '../../components/PlantillaTronc';
 import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
 
@@ -17,7 +16,6 @@ function EditarTronc({ castell }) {
     const [castellData, setCastellData] = useState([]);
     const [selectedCell, setSelectedCell] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (castell) setCastellData(castell);
@@ -154,26 +152,13 @@ function EditarTronc({ castell }) {
                 sx={{
                     position: 'fixed',
                     bottom: 24,
-                    left: 24,
                     right: 24,
                     display: 'flex',
                     justifyContent: 'space-between',
                 }}
             >
-                <Tooltip title="Back" placement="top">
-                    <Fab 
-                        color="primary" 
-                        aria-label="back"
-                        onClick={() => navigate(-1)}
-                        sx={{
-                            boxShadow: 3
-                        }}
-                    >
-                        <ArrowBackIosNewIcon />
-                    </Fab>
-                </Tooltip>
-
-                <Tooltip title="Guardar" placement="top">
+            
+                <Tooltip title="Guardar" placement="right">
                     <Fab 
                         color="primary" 
                         aria-label="guardar"

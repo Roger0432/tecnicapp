@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
-import { useTitol } from '../../context/TitolNavbar'; // Importa el context
+import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -12,7 +12,7 @@ function Perfil() {
     rol: ''
   });
 
-  const { setTitol } = useTitol(); // Obté la funció per actualitzar el títol
+  const { setTitol } = useTitol();
 
   useEffect(() => {
     // Actualitza el títol de la Navbar

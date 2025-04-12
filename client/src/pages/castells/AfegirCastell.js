@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Typography, Select, MenuItem, FormControl, InputLabel, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -13,6 +14,11 @@ function AfegirCastell({ assaig }) {
   const [selectedCastellId, setSelectedCastellId] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
+  const { setTitol } = useTitol();
+
+  useEffect(() => {
+    setTitol(assaig ? 'Afegir proves' : 'Afegir castells');
+  }, [assaig, setTitol]);
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/castells`)
@@ -81,9 +87,6 @@ function AfegirCastell({ assaig }) {
 
   return (
     <Box className="page">
-      <Typography variant="h5" mb={1}  sx={{ fontWeight: 'bold' }}>
-        {assaig ? 'AFEGIR PROVES' : 'AFEGIR CASTELLS'}
-      </Typography>
       <Typography variant="body1" mb={1}>
         {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
       </Typography>
