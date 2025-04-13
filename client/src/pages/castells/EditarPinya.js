@@ -6,6 +6,8 @@ import { ReactComponent as PinyaTorre } from '../../svg/pinya-torre.svg';
 import { Box, Modal, Paper, Typography, TextField, InputAdornment, List, ListItemButton, ListItemText, Button, Fab, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // Definim la URL del backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -338,9 +340,16 @@ const EditarPinya = ({ castell }) => {
                         borderRadius: 2
                     }}
                 >
+                  
                     <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
                         Selecciona membre
                     </Typography>
+
+                    <Box sx={{ position: 'absolute', top: 32, right: 16 }}>
+                        <Button onClick={handleCancelar} color="primary" size="small">
+                            <CloseIcon />
+                        </Button>
+                    </Box>
                     
                     {/* Camp de cerca */}
                     <TextField
@@ -359,7 +368,11 @@ const EditarPinya = ({ castell }) => {
                         }}
                     />
                     
-                    {/* Llista de membres filtrats */}
+                    <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'space-between', ml: 2, mr: 2, mb: 1 }}>
+                        <span><strong>Nom</strong></span>
+                        <span><strong>Alçada mans</strong></span>
+                    </Typography>
+
                     <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
                         {filteredMembers.length > 0 ? (
                             filteredMembers.map((membre) => (
@@ -369,8 +382,11 @@ const EditarPinya = ({ castell }) => {
                                 >
                                     <ListItemText 
                                         primary={membre.mote} 
-                                        secondary={`${membre.nom} ${membre.cognoms}`}
+                                        secondary={`${membre.nom} ${membre.cognoms}`} 
                                     />
+                                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+                                        {membre.alcada_mans} cm
+                                    </Typography>
                                 </ListItemButton>
                             ))
                         ) : (
@@ -386,15 +402,10 @@ const EditarPinya = ({ castell }) => {
                             onClick={handleEliminarMembre} 
                             color="error" 
                             variant="contained"
+                            sx={{ mt:2 }}
+                            startIcon={<DeleteIcon />}
                         >
                             Eliminar membre
-                        </Button>
-                        <Button 
-                            onClick={handleCancelar} 
-                            color="primary" 
-                            variant="outlined"
-                        >
-                            Cancel·lar
                         </Button>
                     </Box>
                 </Paper>

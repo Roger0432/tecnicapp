@@ -135,6 +135,22 @@ function Registre() {
               onChange={handleRolChange}
               autoWidth
               label="Rol a tècnica"
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 400,
+                    overflow: 'auto',
+                  },
+                },
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left',
+                },
+              }}
             >
               {rols.map((role) => (
                 <MenuItem key={role.id} value={role.id}>

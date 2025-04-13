@@ -4,6 +4,8 @@ import PlantillaTronc from '../../components/PlantillaTronc';
 import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
 
@@ -193,6 +195,12 @@ function EditarTronc({ castell }) {
                     <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
                         Selecciona membre
                     </Typography>
+
+                    <Box sx={{ position: 'absolute', top: 32, right: 16 }}>
+                        <Button onClick={handleCancelar} color="primary" size="small">
+                            <CloseIcon />
+                        </Button>
+                    </Box>
                     
                     <TextField
                         fullWidth
@@ -209,6 +217,11 @@ function EditarTronc({ castell }) {
                             ),
                         }}
                     />
+
+                    <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'space-between', ml: 2, mr: 2, mb: 1 }}>
+                        <span><strong>Nom</strong></span>
+                        <span><strong>Alçada hombro</strong></span>
+                    </Typography>
                     
                     <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
                         {filteredMembers.length > 0 ? (
@@ -219,8 +232,11 @@ function EditarTronc({ castell }) {
                                 >
                                     <ListItemText 
                                         primary={membre.mote} 
-                                        secondary={`${membre.nom} ${membre.cognoms}`}
+                                        secondary={`${membre.nom} ${membre.cognoms}`} 
                                     />
+                                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+                                        {membre.alcada_hombro} cm
+                                    </Typography>
                                 </ListItemButton>
                             ))
                         ) : (
@@ -235,15 +251,10 @@ function EditarTronc({ castell }) {
                             onClick={handleEliminarMembre} 
                             color="error" 
                             variant="contained"
+                            sx={{ mt:2 }}
+                            startIcon={<DeleteIcon />}
                         >
                             Eliminar membre
-                        </Button>
-                        <Button 
-                            onClick={handleCancelar} 
-                            color="primary" 
-                            variant="outlined"
-                        >
-                            Cancel·lar
                         </Button>
                     </Box>
                 </Paper>

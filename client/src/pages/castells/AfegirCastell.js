@@ -107,6 +107,22 @@ function AfegirCastell({ assaig }) {
           value={selectedCastellId}
           onChange={handleSelectChange}
           label="Castell"
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 400,
+                overflow: 'auto',
+              },
+            },
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'left',
+            },
+            transformOrigin: {
+              vertical: 'top',
+              horizontal: 'left',
+            },
+          }}
         >
           {filteredCastells.map((castell) => (
             <MenuItem key={castell.id} value={castell.id}>

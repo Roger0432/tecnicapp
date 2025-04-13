@@ -111,7 +111,7 @@ function Perfil() {
           <Button onClick={cancelLogout} color="primary">
             Cancel·la
           </Button>
-          <Button onClick={confirmLogout} color="primary" autoFocus>
+          <Button onClick={confirmLogout} color="error" autoFocus>
             Sí
           </Button>
         </DialogActions>

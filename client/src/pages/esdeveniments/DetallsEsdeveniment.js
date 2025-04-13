@@ -205,7 +205,9 @@ function DetallsEsdeveniment({ assaig }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Estàs segur?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          Eliminar {detalls.assaig ? "prova" : "castell"}?
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             No podràs recuperar {detalls.assaig ? "aquesta prova" : "aquest castell"}
@@ -215,8 +217,8 @@ function DetallsEsdeveniment({ assaig }) {
           <Button onClick={() => setOpenDeleteCastell(false)} color="primary">
             Cancel·la
           </Button>
-          <Button onClick={handleDeleteCastell} color="primary" autoFocus>
-            Sí, esborra
+          <Button onClick={handleDeleteCastell} color="error" autoFocus>
+            Sí, eliminar
           </Button>
         </DialogActions>
       </Dialog>
