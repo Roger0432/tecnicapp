@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Fab, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Fab, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Box } from '@mui/material';
 import { useTitol } from '../../context/TitolNavbar';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
+import SwitchTheme from '../../components/SwitchTheme';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -86,14 +87,26 @@ function Perfil() {
         </Table>
       </TableContainer>
 
-      <Fab
-        color="error"
-        aria-label="logout"
-        onClick={handleLogout}
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 16,
+          left: 16,
+          right: 16,
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
       >
-        <LogoutIcon />
-      </Fab>
+        <SwitchTheme />
+        
+        <Fab
+          color="error"
+          aria-label="logout"
+          onClick={handleLogout}
+        >
+          <LogoutIcon />
+        </Fab>
+      </Box>
 
       <Dialog
         open={openLogoutDialog}
