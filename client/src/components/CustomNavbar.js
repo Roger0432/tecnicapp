@@ -47,7 +47,7 @@ function CustomNavbar() {
                         onClick={showMenuIcon ? () => setOpen(true) : handleBackClick}
                         sx={{ display: { xs: 'flex', sm: 'none' } }}
                     >
-                        {showMenuIcon ? <MenuIcon /> : <ArrowBackIosNewIcon />}
+                        {showMenuIcon ? <MenuIcon /> : <ArrowBackIosNewIcon fontSize="small" />}
                     </IconButton>
 
                     <Typography variant="h6">{titol}</Typography>
