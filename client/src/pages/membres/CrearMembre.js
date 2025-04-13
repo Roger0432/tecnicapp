@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
+import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon, Dialog, DialogActions, DialogTitle, DialogContentText, DialogContent, Tooltip, Fab } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-import Tooltip from '@mui/material/Tooltip';
-import Fab from '@mui/material/Fab';
 import TaulaDetallsMembre from '../../components/DetallsMembres';
 import { useTitol } from '../../context/TitolNavbar';
-
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -27,6 +23,48 @@ function CrearMembre() {
   const [comentaris, setComentaris] = useState(membre.comentaris || '');
   const [error, setError] = useState('');
   const { setTitol } = useTitol();
+
+  const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
+  const [successDialogTitle, setSuccessDialogTitle] = useState("");
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleSuccessDialogClose = () => {
+    setOpenSuccessDialog(false);
+    navigate('/membres');
+  };
+
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleDeleteConfirm = () => {
+    fetch(`${BACKEND_URL}/borrar-membre/${membre.id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status) {
+          setSuccessDialogTitle("El membre ha estat eliminat correctament");
+          setOpenSuccessDialog(true);
+        } else {
+          console.error('Error:', data.msg);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    setOpenDeleteDialog(false);
+  };
+
+  const borrarMembre = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleSaveSuccess = () => {
+    setSuccessDialogTitle(editar ? "Membre editat correctament" : "Membre creat correctament");
+    setOpenSuccessDialog(true);
+  };
 
   useEffect(() => {
     const titol = editar ? (modeEdicio ? 'Editar Membre' : 'Detalls') : 'Crear Membre';
@@ -64,12 +102,7 @@ function CrearMembre() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status) {
-          Swal.fire({
-            title: editar ? 'Membre actualitzat' : 'Membre creat',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1000,
-          }).then(() => navigate('/membres'));
+          handleSaveSuccess();
         } else {
           console.error('Error:', data.msg);
         }
@@ -77,41 +110,6 @@ function CrearMembre() {
       .catch((error) => {
         console.error('Error:', error);
       });
-  };
-
-  const borrarMembre = () => {
-    Swal.fire({
-      title: 'Estàs segur?',
-      text: 'Aquesta acció no es pot desfer!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`${BACKEND_URL}/borrar-membre/${membre.id}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status) {
-              Swal.fire({
-                title: 'Membre eliminat',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1000,
-              }).then(() => navigate('/membres'));
-            } else {
-              console.error('Error:', data.msg);
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-      }
-    });
   };
 
   return (
@@ -241,6 +239,40 @@ function CrearMembre() {
           {error && <Typography color="error" mt={2}>{error}</Typography>}
         </Box>
       )}
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleDeleteDialogClose}
+        aria-labelledby="delete-dialog-title"
+      >
+        <DialogTitle id="delete-dialog-title">Eliminar membre?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Estàs segur que vols eliminar aquest membre? No podràs recuperar-lo.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="primary">
+            Cancel·la
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+            Sí, eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openSuccessDialog}
+        onClose={handleSuccessDialogClose}
+        aria-labelledby="success-dialog-title"
+      >
+        <DialogTitle id="success-dialog-title">{successDialogTitle}</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleSuccessDialogClose} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

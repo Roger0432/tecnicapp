@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Fab } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Fab, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import { useTitol } from '../../context/TitolNavbar';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -15,6 +14,8 @@ function Perfil() {
     email: '',
     rol: ''
   });
+
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   const { setTitol } = useTitol();
   const navigate = useNavigate();
@@ -47,19 +48,17 @@ function Perfil() {
   }, [setTitol]);
 
   const handleLogout = () => {
-    Swal.fire({
-        title: 'Tancar sessió?',
-        showDenyButton: true,
-        confirmButtonText: 'Sí',
-        denyButtonText: 'Cancel·la',
-        confirmButtonColor: '#dc3545',
-        denyButtonColor: '#6c757d',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            localStorage.clear();
-            navigate('/inicisessio');
-        }
-    });
+    setOpenLogoutDialog(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.clear();
+    navigate('/inicisessio');
+    setOpenLogoutDialog(false);
+  };
+
+  const cancelLogout = () => {
+    setOpenLogoutDialog(false);
   };
 
   return (
@@ -95,6 +94,28 @@ function Perfil() {
       >
         <LogoutIcon />
       </Fab>
+
+      <Dialog
+        open={openLogoutDialog}
+        onClose={cancelLogout}
+        aria-labelledby="logout-dialog-title"
+        aria-describedby="logout-dialog-description"
+      >
+        <DialogTitle id="logout-dialog-title">Tancar sessió?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="logout-dialog-description">
+            Estàs segur que vols tancar la sessió?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelLogout} color="primary">
+            Cancel·la
+          </Button>
+          <Button onClick={confirmLogout} color="primary" autoFocus>
+            Sí
+          </Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
   );

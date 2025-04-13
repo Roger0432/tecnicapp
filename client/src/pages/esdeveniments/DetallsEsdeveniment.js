@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, Fab } from "@mui/material";
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, Fab, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
-import Swal from "sweetalert2";
-import { useTitol } from "../../context/TitolNavbar";
 import AddIcon from '@mui/icons-material/Add';
 import ShareIcon from '@mui/icons-material/Share';
+import { useTitol } from "../../context/TitolNavbar";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -19,6 +18,9 @@ function DetallsEsdeveniment({ assaig }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setTitol } = useTitol();
+  const [open, setOpen] = useState(false);
+  const [openDeleteCastell, setOpenDeleteCastell] = useState(false);
+  const [selectedCastellId, setSelectedCastellId] = useState(null);
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/esdeveniment/${id}`)
@@ -34,42 +36,31 @@ function DetallsEsdeveniment({ assaig }) {
       .catch((error) => console.error("Error:", error));
   }, [id, setTitol]);
 
-  const borrarEsdeveniment = (id) => {
-    Swal.fire({
-      title: "Estàs segur?",
-      text: "No podràs recuperar aquest esdeveniment!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, esborra!",
-      cancelButtonText: "Cancel·la",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`${BACKEND_URL}/borrar-esdeveniment/${id}`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status) {
-              Swal.fire({
-                title: "Esborrat!",
-                icon: "success",
-                timer: 1000,
-                showConfirmButton: false,
-              });
-              if (assaig) navigate("/assaigs");
-              else navigate("/diades");
-            } else {
-              console.error("Failed to delete esdeveniment");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
-    });
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const borrarEsdeveniment = () => {
+    fetch(`${BACKEND_URL}/borrar-esdeveniment/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status) {
+          if (assaig) navigate("/assaigs");
+          else navigate("/diades");
+        } else {
+          console.error("Error en esborrar l'esdeveniment");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const editarEsdeveniment = (esdeveniment) => {
@@ -81,41 +72,27 @@ function DetallsEsdeveniment({ assaig }) {
   };
 
   const borrarCastell = (id) => {
-    Swal.fire({
-      title: "Estàs segur?",
-      text: `No podràs recuperar ${
-        detalls.assaig ? "aquesta prova!" : "aquest castell!"
-      }`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, esborra!",
-      cancelButtonText: "Cancel·la",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(`${BACKEND_URL}/borrar-castell/${id}`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status) {
-              Swal.fire({
-                title: "Esborrat!",
-                icon: "success",
-                timer: 1000,
-                showConfirmButton: false,
-              }).then(() => window.location.reload());
-            } else {
-              console.error("Failed to delete castell");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
-    });
+    setSelectedCastellId(id);
+    setOpenDeleteCastell(true);
+  };
+
+  const handleDeleteCastell = () => {
+    fetch(`${BACKEND_URL}/borrar-castell/${selectedCastellId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status) {
+          window.location.reload();
+        } else {
+          console.error("Error en esborrar el castell");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setOpenDeleteCastell(false);
   };
 
   if (!detalls) {
@@ -143,7 +120,6 @@ function DetallsEsdeveniment({ assaig }) {
       window.location.href;
     const titolCompartir = detalls.nom;
     
-    // Comprovar si el navegador suporta l'API Web Share
     if (navigator.share) {
       navigator.share({
         title: titolCompartir,
@@ -153,15 +129,9 @@ function DetallsEsdeveniment({ assaig }) {
         console.error('Error al compartir:', error);
       });
     } else {
-      // Per a navegadors que no suporten l'API Web Share
       navigator.clipboard.writeText(textCompartir)
         .then(() => {
-          Swal.fire({
-            title: "Enllaç copiat!",
-            icon: "success",
-            timer: 1000,
-            showConfirmButton: false,
-          });
+          console.log("Enllaç copiat!");
         })
         .catch(() => {
           console.error('Error al copiar al porta-retalls');
@@ -175,8 +145,6 @@ function DetallsEsdeveniment({ assaig }) {
 
   return (
     <Box className="page" sx={{ position: "relative" }}>
-
-      {/* Botons edit, delete i share */}
 
       <Box
         display="flex"
@@ -202,15 +170,57 @@ function DetallsEsdeveniment({ assaig }) {
         <Fab
           color="primary"
           aria-label="delete"
-          onClick={() => borrarEsdeveniment(id)}
+          onClick={handleOpen}
           size="small"
         >
           <DeleteIcon fontSize="small" />
         </Fab>
       </Box>
 
-      {/* Detalls de l'esdeveniment */}
-      
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Eliminar esdeveniment?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            No podràs recuperar aquest esdeveniment
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel·la
+          </Button>
+          <Button onClick={() => { handleClose(); borrarEsdeveniment(); }} color="error" autoFocus>
+            Sí, eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDeleteCastell}
+        onClose={() => setOpenDeleteCastell(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Estàs segur?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            No podràs recuperar {detalls.assaig ? "aquesta prova" : "aquest castell"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteCastell(false)} color="primary">
+            Cancel·la
+          </Button>
+          <Button onClick={handleDeleteCastell} color="primary" autoFocus>
+            Sí, esborra
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Box className="detalls" mb={2} sx={{ maxWidth: 200, width: "100%" }}>
         <Box display="flex" alignItems="center" mb={1} color="gray">
           <EventIcon />
@@ -241,16 +251,17 @@ function DetallsEsdeveniment({ assaig }) {
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           {tipusTitol}
         </Typography>
-        
-        <Fab
+
+        <Button
+          variant="contained"
           color="primary"
-          aria-label="add"
-          size="small"
           component={RouterLink}
           to={routeAfegir}
+          startIcon={<AddIcon />}
+          sx={{ textTransform: 'none', borderRadius: 10 }}
         >
-          <AddIcon fontSize="small" />
-        </Fab>
+          Afegir {tipusTitol}
+        </Button>
 
       </Box>
 

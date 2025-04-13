@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { TextField, Button, Box, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton } from '@mui/material';
+import { TextField, Button, Box, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Swal from 'sweetalert2';
 import '../../styles/App.css';
 import { useTitol } from '../../context/TitolNavbar';
 
@@ -35,6 +34,16 @@ function CrearEsdeveniment({ assaig }) {
   const [hora, setHora] = useState(esdeveniment.hora_inici || '');
   const [error, setError] = useState('');
   const [open, setOpen] = useState(false);
+  const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
+
+  const handleSuccessDialogClose = () => {
+    setOpenSuccessDialog(false);
+    if (assaig) {
+      navigate('/assaigs');
+    } else {
+      navigate('/diades');
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,20 +72,7 @@ function CrearEsdeveniment({ assaig }) {
       .then(response => response.json())
       .then(data => {
         if (data.status) {
-          const title = assaig ? 'Assaig guardat correctament' : 'Diada guardada correctament';
-          Swal.fire({
-            icon: 'success',
-            title: title,
-            showConfirmButton: false,
-            timer: 1000
-          })
-            .then(() => {
-              if (assaig) {
-                navigate('/assaigs');
-              } else {
-                navigate('/diades');
-              }
-            });
+          setOpenSuccessDialog(true);
         } else {
           setError(data.msg);
           setOpen(true);
@@ -90,88 +86,105 @@ function CrearEsdeveniment({ assaig }) {
   };
 
   return (
-    <Box className='page' display="flex" justifyContent="center">
-      <Box component="form" onSubmit={handleSubmit} maxWidth={400} width="100%">
-        <Box className="form-group" display="flex" flexDirection="column" gap={2}>
-          <TextField
-            label="Nom"
-            type="text"
-            value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            placeholder={assaig ? "Nom de l'assaig" : "Nom de la diada"}
-            fullWidth
-          />
-          <TextField
-            label="Dia"
-            type="date"
-            value={dia}
-            onChange={(e) => setDia(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            fullWidth
-          />
-          {assaig ? (
-            <FormControl fullWidth>
-              <InputLabel>Lloc</InputLabel>
-              <Select
-                value={lloc}
-                onChange={(e) => setLloc(e.target.value)}
-                label="Lloc"
-              >
-                <MenuItem value="0" disabled>
-                  Selecciona un lloc
-                </MenuItem>
-                <MenuItem value="Plaça del TecnoCampus">Plaça del TecnoCampus</MenuItem>
-                <MenuItem value="Local de Capgrossos">Local de Capgrossos</MenuItem>
-              </Select>
-            </FormControl>
-          ) : (
+    <>
+      <Box className='page' display="flex" justifyContent="center">
+        <Box component="form" onSubmit={handleSubmit} maxWidth={400} width="100%">
+          <Box className="form-group" display="flex" flexDirection="column" gap={2}>
             <TextField
-              label="Lloc"
+              label="Nom"
               type="text"
-              value={lloc}
-              onChange={(e) => setLloc(e.target.value)}
-              placeholder="Lloc de la diada"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+              placeholder={assaig ? "Nom de l'assaig" : "Nom de la diada"}
               fullWidth
             />
-          )}
-          <TextField
-            label="Hora"
-            type="time"
-            value={hora}
-            onChange={(e) => setHora(e.target.value)}
-            InputLabelProps={{ shrink: true }}
-            fullWidth
-          />
-          <Button variant="contained" type="submit" color="primary" fullWidth>
-            {editar ? 'Editar' : 'Crear'}
-          </Button>
-        </Box>
-
-        <Box sx={{ width: '100%', mt: 2 }}>
-          <Collapse in={open}>
-            <Alert
-              variant="filled"
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setOpen(false);
-                  }}
+            <TextField
+              label="Dia"
+              type="date"
+              value={dia}
+              onChange={(e) => setDia(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            {assaig ? (
+              <FormControl fullWidth>
+                <InputLabel>Lloc</InputLabel>
+                <Select
+                  value={lloc}
+                  onChange={(e) => setLloc(e.target.value)}
+                  label="Lloc"
                 >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mb: 2 }}
-            >
-              {error}
-            </Alert>
-          </Collapse>
+                  <MenuItem value="0" disabled>
+                    Selecciona un lloc
+                  </MenuItem>
+                  <MenuItem value="Plaça del TecnoCampus">Plaça del TecnoCampus</MenuItem>
+                  <MenuItem value="Local de Capgrossos">Local de Capgrossos</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              <TextField
+                label="Lloc"
+                type="text"
+                value={lloc}
+                onChange={(e) => setLloc(e.target.value)}
+                placeholder="Lloc de la diada"
+                fullWidth
+              />
+            )}
+            <TextField
+              label="Hora"
+              type="time"
+              value={hora}
+              onChange={(e) => setHora(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            <Button variant="contained" type="submit" color="primary" fullWidth>
+              {editar ? 'Editar' : 'Crear'}
+            </Button>
+          </Box>
+
+          <Box sx={{ width: '100%', mt: 2 }}>
+            <Collapse in={open}>
+              <Alert
+                variant="filled"
+                severity="error"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
+              >
+                {error}
+              </Alert>
+            </Collapse>
+          </Box>
         </Box>
       </Box>
-    </Box>
+
+      <Dialog
+        open={openSuccessDialog}
+        onClose={handleSuccessDialogClose}
+        aria-labelledby="success-dialog-title"
+      >
+        <DialogTitle id="success-dialog-title">
+          {assaig ? (editar ? 'Assaig guardat correctament' : 'Assaig creat correctament') : (editar ? 'Diada guardada correctament' : 'Diada creada correctament')}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleSuccessDialogClose} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
