@@ -1,3 +1,4 @@
+// Importem les llibreries necessàries
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
@@ -6,38 +7,48 @@ import { Box, Modal, Paper, Typography, TextField, InputAdornment, List, ListIte
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 
+// Definim la URL del backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Component principal per editar la pinya d'un castell
 const EditarPinya = ({ castell }) => {
+    // Obtenim l'ID del castell des de la URL
     const { id } = useParams();
-    const [castellData, setCastellData] = useState(null);
-    const [membresPinya, setMembresPinya] = useState([]);
-    const [membresNoPinya, setMembresNoPinya] = useState([]);
-    const [selectedCell, setSelectedCell] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const svgRef = useRef(null);
 
+    // Definim els estats del component
+    const [castellData, setCastellData] = useState(null); // Dades del castell
+    const [membresPinya, setMembresPinya] = useState([]); // Membres assignats a la pinya
+    const [membresNoPinya, setMembresNoPinya] = useState([]); // Membres no assignats a la pinya
+    const [selectedCell, setSelectedCell] = useState(null); // Cel·la seleccionada a l'SVG
+    const [searchTerm, setSearchTerm] = useState(''); // Terme de cerca per filtrar membres
+    const svgRef = useRef(null); // Referència a l'SVG
+
+    // Efecte per carregar les dades inicials del castell i els membres
     useEffect(() => {
-        if (castell) setCastellData(castell);
+        if (castell) setCastellData(castell); // Assignem les dades del castell si existeixen
         else console.error('Castell no trobat');
 
+        // Fem dues crides al backend per obtenir els membres assignats i no assignats
         Promise.all([
             fetch(`${BACKEND_URL}/membres-no-pinya/${id}`).then(response => response.json()),
             fetch(`${BACKEND_URL}/membres-pinya/${id}`).then(response => response.json())
         ])
         .then(([membresNoPinyaData, pinyaData]) => {
+            // Assignem els membres no assignats si la resposta és correcta
             if (membresNoPinyaData.status) setMembresNoPinya(membresNoPinyaData.membres);
             else console.error(membresNoPinyaData.msg);
 
+            // Assignem els membres de la pinya si la resposta és correcta
             if (pinyaData.status) setMembresPinya(pinyaData.pinya);
             else console.error(pinyaData.msg);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error:', error)); // Gestionem errors
     }, [id, castell]);
 
+    // Efecte per actualitzar l'SVG amb els membres de la pinya
     useEffect(() => {
         if (svgRef.current) {
-            // Primer, actualitzar textos
+            // Actualitzem els textos de l'SVG amb els noms dels membres
             membresPinya.forEach(membre => {
                 const textElement = svgRef.current.querySelector(`#text-${membre.posicio}`);
                 if (textElement) {
@@ -45,13 +56,13 @@ const EditarPinya = ({ castell }) => {
                 }
             });
 
-            // PRIMER: Fer clicables totes les formes 
+            // Fem clicables totes les formes de l'SVG
             const formElements = svgRef.current.querySelectorAll(
                 '[id^="baix-"], [id^="contrafort-"], [id^="agulla-"], [id^="rengla-"], [id^="lateral-"], [id^="crossa-"]'
             );
             
             formElements.forEach(element => {
-                element.style.cursor = 'pointer';
+                element.style.cursor = 'pointer'; // Canviem el cursor per indicar que és clicable
                 
                 // Netegem l'event listener anterior si n'hi ha
                 const newElement = element.cloneNode(true);
@@ -59,18 +70,19 @@ const EditarPinya = ({ castell }) => {
                     element.parentNode.replaceChild(newElement, element);
                 }
                 
+                // Afegim un event listener per gestionar el clic
                 newElement.addEventListener('click', () => {
                     handleCellClick(newElement.id);
                 });
             });
 
-            // SEGON: També fer clicables els texts
+            // Fem clicables també els textos de l'SVG
             const textElements = svgRef.current.querySelectorAll(
                 '[id^="text-baix-"], [id^="text-contrafort-"], [id^="text-agulla-"], [id^="text-rengla-"], [id^="text-lateral-"], [id^="text-crossa-"]'
             );
             
             textElements.forEach(element => {
-                element.style.cursor = 'pointer';
+                element.style.cursor = 'pointer'; // Canviem el cursor per indicar que és clicable
                 
                 // Netegem l'event listener anterior si n'hi ha
                 const newElement = element.cloneNode(true);
@@ -78,6 +90,7 @@ const EditarPinya = ({ castell }) => {
                     element.parentNode.replaceChild(newElement, element);
                 }
                 
+                // Afegim un event listener per gestionar el clic
                 newElement.addEventListener('click', () => {
                     // Eliminem el prefix "text-" per obtenir l'ID real de posició
                     const posicioId = newElement.id.replace('text-', '');
@@ -88,20 +101,24 @@ const EditarPinya = ({ castell }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [membresPinya, castellData]);
 
+    // Funció per gestionar el clic en una cel·la de l'SVG
     const handleCellClick = (posicio) => {
-        setSelectedCell(posicio);
-        setSearchTerm('');
+        setSelectedCell(posicio); // Assignem la cel·la seleccionada
+        setSearchTerm(''); // Reiniciem el terme de cerca
     };
 
+    // Funció per gestionar el canvi en el camp de cerca
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value.toLowerCase());
+        setSearchTerm(event.target.value.toLowerCase()); // Actualitzem el terme de cerca
     };
 
+    // Filtrar els membres no assignats segons el terme de cerca
     const filteredMembers = membresNoPinya.filter(membre => 
         membre.mote.toLowerCase().includes(searchTerm) || 
         `${membre.nom} ${membre.cognoms}`.toLowerCase().includes(searchTerm)
     );
 
+    // Funció per assignar un membre a una cel·la seleccionada
     const handleMemberSelect = (membreSeleccionat) => {
         const membresPinyaActuals = [...membresPinya];
         const membresNoPinyaActuals = [...membresNoPinya];
@@ -153,6 +170,7 @@ const EditarPinya = ({ castell }) => {
         }
     };
 
+    // Funció per eliminar un membre d'una cel·la seleccionada
     const handleEliminarMembre = () => {
         const membresPinyaActuals = [...membresPinya];
         const membresNoPinyaActuals = [...membresNoPinya];
@@ -181,7 +199,7 @@ const EditarPinya = ({ castell }) => {
     
         setSelectedCell(null);
 
-        // neteja el contingut de text de l'SVG
+        // Neteja el contingut de text de l'SVG
         if (svgRef.current) {
             const textElement = svgRef.current.querySelector(`#text-${selectedCell}`);
             if (textElement) {
@@ -190,10 +208,12 @@ const EditarPinya = ({ castell }) => {
         }
     };
 
+    // Funció per cancel·lar la selecció d'una cel·la
     const handleCancelar = () => {
         setSelectedCell(null);
     };
 
+    // Funció per guardar els canvis al backend
     const handleGuardar = () => {
         fetch(`${BACKEND_URL}/actualitzar-pinya/${id}`, {
             method: 'PUT',
@@ -211,7 +231,7 @@ const EditarPinya = ({ castell }) => {
         .catch(error => console.error('Error:', error));
     };
 
-    // actualitza el text de l'SVG amb els noms dels membres
+    // Actualitza el text de l'SVG amb els noms dels membres
     useEffect(() => {
         if (svgRef.current && membresPinya.length > 0) {
             membresPinya.forEach(membre => {
@@ -223,6 +243,7 @@ const EditarPinya = ({ castell }) => {
         }
     }, [membresPinya]);
 
+    // Seleccionem l'SVG adequat segons l'amplada del castell
     let pinya_svg = null;
     if (castellData) {
         switch (parseInt(castellData.amplada)) {
@@ -255,8 +276,10 @@ const EditarPinya = ({ castell }) => {
         }
     }     
 
+    // Renderitzem el component
     return (
         <Box m={1}>
+            {/* Contenidor per a l'SVG */}
             <Box
                 display="flex"
                 justifyContent="center"
@@ -272,6 +295,7 @@ const EditarPinya = ({ castell }) => {
                 {pinya_svg}
             </Box>
 
+            {/* Botó per guardar els canvis */}
             <Box
                 sx={{
                     position: 'fixed',
@@ -295,6 +319,7 @@ const EditarPinya = ({ castell }) => {
                 </Tooltip>
             </Box>
 
+            {/* Modal per seleccionar un membre */}
             <Modal
                 open={selectedCell !== null}
                 onClose={handleCancelar}
@@ -317,6 +342,7 @@ const EditarPinya = ({ castell }) => {
                         Selecciona membre
                     </Typography>
                     
+                    {/* Camp de cerca */}
                     <TextField
                         fullWidth
                         variant="outlined"
@@ -333,6 +359,7 @@ const EditarPinya = ({ castell }) => {
                         }}
                     />
                     
+                    {/* Llista de membres filtrats */}
                     <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
                         {filteredMembers.length > 0 ? (
                             filteredMembers.map((membre) => (
@@ -353,6 +380,7 @@ const EditarPinya = ({ castell }) => {
                         )}
                     </List>
                     
+                    {/* Botons per eliminar o cancel·lar */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                         <Button 
                             onClick={handleEliminarMembre} 

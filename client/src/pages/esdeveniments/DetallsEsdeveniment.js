@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, ButtonGroup } from "@mui/material";
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, Fab } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import EditIcon from "@mui/icons-material/Edit";
 import PlaceIcon from "@mui/icons-material/Place";
 import Swal from "sweetalert2";
-import { Fab } from "@mui/material";
 import { useTitol } from "../../context/TitolNavbar";
 import AddIcon from '@mui/icons-material/Add';
+import ShareIcon from '@mui/icons-material/Share';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -131,42 +131,88 @@ function DetallsEsdeveniment({ assaig }) {
     );
   }
 
+  const compartirEsdeveniment = () => {
+    if (!detalls) return;
+    
+    const textCompartir = 
+    `🔔 ${detalls.nom}\n
+    📅 ${detalls.dia}\n
+    🕒 ${detalls.hora_inici} - ${detalls.hora_fi}\n
+    📍 ${detalls.lloc}\n\n
+    Més informació: ${window.location.href}`;
+    const urlCompartir = window.location.href;
+    const titolCompartir = detalls.nom;
+    
+    // Comprovar si el navegador suporta l'API Web Share
+    if (navigator.share) {
+      navigator.share({
+        title: titolCompartir,
+        text: textCompartir,
+        url: urlCompartir,
+      })
+      .catch((error) => {
+        console.error('Error al compartir:', error);
+      });
+    } else {
+      // Per a navegadors que no suporten l'API Web Share
+      navigator.clipboard.writeText(textCompartir)
+        .then(() => {
+          Swal.fire({
+            title: "Enllaç copiat!",
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+          });
+        })
+        .catch(() => {
+          console.error('Error al copiar al porta-retalls');
+        });
+    }
+  };
+
   const tipusElement = detalls.assaig ? "prova" : "castell";
   const tipusTitol = detalls.assaig ? "Proves" : "Castells";
   const routeAfegir = detalls.assaig ? `/nova-prova/${id}` : `/nou-castell/${id}`;
-  const borderRadius = '16px';
 
   return (
     <Box className="page" sx={{ position: "relative" }}>
 
-      <ButtonGroup
-        variant="contained"
-        aria-label="outlined primary button group"
-        sx={{ 
-          position: "absolute", 
-          top: 16, 
-          right: 0,
-          borderRadius: borderRadius,
-        }}
+      {/* Botons edit, delete i share */}
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        gap={1}
+        sx={{ position: "absolute", top: 0, right: 0 }}
       >
-        <Button
+        <Fab
+          color="primary"
+          aria-label="share"
+          onClick={compartirEsdeveniment}
+          size="small">
+          <ShareIcon fontSize="small" />
+        </Fab>
+        <Fab
+          color="primary"
           aria-label="edit"
           onClick={() => editarEsdeveniment(detalls)}
-          sx={{ borderTopLeftRadius: borderRadius, borderBottomLeftRadius: borderRadius }}
+          size="small"
         >
           <EditIcon fontSize="small" />
-        </Button>
-        <Button
+        </Fab>
+        <Fab
+          color="primary"
           aria-label="delete"
           onClick={() => borrarEsdeveniment(id)}
-          color="error" 
-          sx={{ borderTopRightRadius: borderRadius, borderBottomRightRadius: borderRadius }}
+          size="small"
         >
           <DeleteIcon fontSize="small" />
-        </Button>
-      </ButtonGroup>
+        </Fab>
+      </Box>
 
-      <Box className="detalls" mb={2}>
+      {/* Detalls de l'esdeveniment */}
+      
+      <Box className="detalls" mb={2} sx={{ maxWidth: 200, width: "100%" }}>
         <Box display="flex" alignItems="center" mb={1} color="gray">
           <EventIcon />
           <Typography variant="body1" ml={1} color="gray">

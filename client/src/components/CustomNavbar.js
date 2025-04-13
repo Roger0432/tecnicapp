@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NavbarListDrawer from "./NavbarListDrawer";
-import { AppBar, Drawer, IconButton, Toolbar, Typography, Box, List, ListItemButton, ListItemText, Divider } from "@mui/material";
+import { AppBar, Drawer, IconButton, Toolbar, Typography, Box, List, ListItemButton, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Swal from 'sweetalert2';
 import '../styles/Navbar.css';
 import { useTitol } from "../context/TitolNavbar";
 
 function CustomNavbar() {
     const [open, setOpen] = useState(false);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const { titol } = useTitol();
@@ -31,45 +28,12 @@ function CustomNavbar() {
         navigate(-1);
     };
 
-    const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
-
     const navLinks = [
         { title: "Menú", path: "/main" },
         { title: "Assaigs", path: "/assaigs" },
         { title: "Diades", path: "/diades" },
         { title: "Membres", path: "/membres" },
         { title: "Perfil", path: "/perfil" },
-    ];
-
-    const handleLogout = () => {
-        Swal.fire({
-            title: 'Tancar sessió?',
-            showDenyButton: true,
-            confirmButtonText: 'Sí',
-            denyButtonText: 'Cancel·la',
-            confirmButtonColor: '#dc3545',
-            denyButtonColor: '#6c757d',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                localStorage.clear();
-                navigate('/inicisessio');
-            }
-        });
-    };
-
-    const profileLinks = [
-        { title: "Perfil", path: "/perfil" },
-        { title: "Configuració", path: "/configuracio" },
-        {
-            title: "Tanca sessió",
-            onClick: (e) => {
-                e.preventDefault();
-                setOpen(false);
-                handleLogout();
-            }
-        }
     ];
 
     return (
