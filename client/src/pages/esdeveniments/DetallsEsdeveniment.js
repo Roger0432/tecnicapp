@@ -134,13 +134,13 @@ function DetallsEsdeveniment({ assaig }) {
   const compartirEsdeveniment = () => {
     if (!detalls) return;
     
-    const textCompartir = 
-    `🔔 ${detalls.nom}\n
-    📅 ${detalls.dia}\n
-    🕒 ${detalls.hora_inici} - ${detalls.hora_fi}\n
-    📍 ${detalls.lloc}\n\n
-    Més informació: ${window.location.href}`;
-    const urlCompartir = window.location.href;
+    const textCompartir =
+      '🔔 *' + detalls.nom + '*\n' +
+      '📅 ' + detalls.dia + '\n' +
+      '🕒 ' + detalls.hora_inici + '-' + detalls.hora_fi + '\n' +
+      '📍 ' + detalls.lloc + '\n\n' +
+      'Més informació:\n' +
+      window.location.href;
     const titolCompartir = detalls.nom;
     
     // Comprovar si el navegador suporta l'API Web Share
@@ -148,7 +148,6 @@ function DetallsEsdeveniment({ assaig }) {
       navigator.share({
         title: titolCompartir,
         text: textCompartir,
-        url: urlCompartir,
       })
       .catch((error) => {
         console.error('Error al compartir:', error);
