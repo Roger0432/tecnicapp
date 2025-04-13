@@ -17,6 +17,7 @@ function CustomNavbar() {
     const { titol } = useTitol();
 
     const menuPaths = [
+        '/',
         '/main',
         '/assaigs',
         '/diades',
