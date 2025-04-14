@@ -40,27 +40,31 @@ function Main() {
   return (
     <Box className='page'>
 
-      <Typography component="h1" variant="h6" mb={3} align="center">
-        Benvingut, {(userData.nom)}!
-      </Typography>
+      
 
-      <Box display='flex' justifyContent='center'>
-        <Box className="form-group" display="flex" flexDirection="column" gap={2} style={{ width: '100%', maxWidth: '400px' }}>
-          <Button variant="contained" component={Link} to="/crear-assaig">Crear assaig</Button>
-          <Button variant="contained" component={Link} to="/crear-diada">Crear diada</Button>
-        </Box>
+        <Typography component="h1" variant="h6" mb={3} align="center">
+          Benvingut, {(userData.nom)}!
+        </Typography>
+
+        <Box display='flex' justifyContent='center'>
+          <Box className="form-group" display="flex" flexDirection="column" gap={2} style={{ width: '100%', maxWidth: '400px' }}>
+            <Button variant="contained" component={Link} to="/crear-assaig">Crear assaig</Button>
+            <Button variant="contained" component={Link} to="/crear-diada">Crear diada</Button>
+          </Box>
+          
+          {/* 
+          <h1>CALENDARI</h1>
+          <iframe 
+            src="https://calendar.google.com/calendar/embed?src=5e80ea51ac6c553da920f7c80d620cc582da641da13b6d16c54225f674348d25%40group.calendar.google.com&ctz=Europe%2FMadrid" 
+            title="Calendari Passerells"
+            style={{ border: 0 }} 
+            width="800" 
+            height="600" 
+          ></iframe>
+          */}
+        </Box>        
         
-        {/* 
-        <h1>CALENDARI</h1>
-        <iframe 
-          src="https://calendar.google.com/calendar/embed?src=5e80ea51ac6c553da920f7c80d620cc582da641da13b6d16c54225f674348d25%40group.calendar.google.com&ctz=Europe%2FMadrid" 
-          title="Calendari Passerells"
-          style={{ border: 0 }} 
-          width="800" 
-          height="600" 
-        ></iframe>
-        */}
-      </Box>
+
     </Box>
   );
 }
