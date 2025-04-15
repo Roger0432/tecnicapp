@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
 
@@ -142,13 +143,32 @@ function EditarTronc({ castell }) {
 
     return (
         <Box>
-            <PlantillaTronc 
-                    files={parseInt(castellData.alcada - 4, 10)} 
-                    columnes={parseInt(castellData.amplada, 10)} 
-                    agulla={castellData.agulla}
-                    castellersTronc={membresTronc}
-                    onCellClick={handleCellClick}
-                />
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    border: 1, 
+                    borderColor: 'red'
+                }}
+            >
+                <TransformWrapper>
+                    <TransformComponent>
+                       
+                        <PlantillaTronc 
+                            files={parseInt(castellData.alcada - 4, 10)} 
+                            columnes={parseInt(castellData.amplada, 10)} 
+                            agulla={castellData.agulla}
+                            castellersTronc={membresTronc}
+                            onCellClick={handleCellClick}
+                        />
+                       
+                    </TransformComponent>
+                </TransformWrapper>
+            </Box>
 
             <Box
                 sx={{

@@ -169,8 +169,14 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
   }, [crearTaula]);
   
   return (
-      <Box m={1} mt={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <table className='tronc'>
+    <Box m={1} mt={4} sx={{ 
+        display: 'flex', 
+        justifyContent: 'center',  border:1,  
+        width: '100vw', 
+        height: 'auto',
+        overflow: 'auto'
+    }}>
+          <table className='tronc' style={{ tableLayout: 'fixed' }}>
               <tbody>
                   {taulaTronc}
               </tbody>

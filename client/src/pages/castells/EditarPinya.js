@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 // Definim la URL del backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -250,10 +251,10 @@ const EditarPinya = ({ castell }) => {
     if (castellData) {
         switch (parseInt(castellData.amplada)) {
             case 1:
-                pinya_svg = <PinyaPilar ref={svgRef} />;
+                pinya_svg = <PinyaPilar ref={svgRef} style={{ width: '100%', height: '100%' }}/>;
                 break;
             case 2:
-                pinya_svg = <PinyaTorre ref={svgRef} />;
+                pinya_svg = <PinyaTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             case 3:
                 //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} />;
@@ -294,7 +295,11 @@ const EditarPinya = ({ castell }) => {
                     marginLeft: { xs: 0, sm: 'calc((100vw - 650px) / 2)' },
                 }}
             >
-                {pinya_svg}
+                <TransformWrapper>
+                    <TransformComponent>
+                        {pinya_svg}
+                    </TransformComponent>
+                </TransformWrapper>
             </Box>
 
             {/* Botó per guardar els canvis */}
