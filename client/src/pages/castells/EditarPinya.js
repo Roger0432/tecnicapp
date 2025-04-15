@@ -257,21 +257,21 @@ const EditarPinya = ({ castell }) => {
                 pinya_svg = <PinyaTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             case 3:
-                //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} />;
-                //else pinya_svg = <PinyaTres ref={svgRef} />;
+                //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                //else pinya_svg = <PinyaTres ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             case 4:
-                //if (castellData.agulla) pinya_svg = <PinyaQuatreAgulla ref={svgRef} />;
-                //else pinya_svg = <PinyaQuatre ref={svgRef} />;
+                //if (castellData.agulla) pinya_svg = <PinyaQuatreAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                //else pinya_svg = <PinyaQuatre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             case 5:
-                //pinya_svg = <PinyaCinc ref={svgRef} />;
+                //pinya_svg = <PinyaCinc ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             case 7:
-                //pinya_svg = <PinyaSet ref={svgRef} />;
+                //pinya_svg = <PinyaSet ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             case 9:
-                //pinya_svg = <PinyaNou ref={svgRef} />;
+                //pinya_svg = <PinyaNou ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 break;
             default:
                 console.error('Pinya no trobada');

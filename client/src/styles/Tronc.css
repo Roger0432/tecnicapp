@@ -4,20 +4,17 @@
 }
 
 .cela {
+    aspect-ratio: 0.5/1.25;
+    height: 50px;
     width: 125px;
-    height: 50px; /* Canvia de 25px a 50px */
-    min-width: 125px; /* Afegeix per assegurar mida mínima */
-    min-height: 50px; /* Afegeix per assegurar mida mínima */
+    max-height: 50px;
     background-color: var(--secondary-main);
     border: 1px solid var(--primary-main);
     border-radius: 10px;
     text-align: center;
     vertical-align: middle;
     font-size: 12px;
-    padding: 0; /* Elimina qualsevol padding per defecte */
-    box-sizing: border-box; /* Assegura que el border no afecti les dimensions */
-    overflow: hidden; /* Evita que el contingut surti de la cel·la */
-    word-wrap: break-word; /* Permet que el text es trenqui si és massa llarg */
+    padding: 0;
 }
 
 .cela:hover {

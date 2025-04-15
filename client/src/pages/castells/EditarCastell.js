@@ -34,7 +34,7 @@ function EditarCastell({assaig}) {
     }
 
     return (
-        <div>
+        <Box>
 
             <Box sx={{ width: '100%' }}>
                 <Tabs
@@ -53,7 +53,7 @@ function EditarCastell({assaig}) {
                 <EditarPinya castell={castellData} />
             )}
 
-        </div>
+        </Box>
     );
 }
 
