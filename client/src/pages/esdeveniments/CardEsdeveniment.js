@@ -3,12 +3,14 @@ import { Card, CardContent, Typography, CardActionArea, Box } from '@mui/materia
 
 function CardEsdeveniment({ nom, dia, lloc, onClick }) {
   return (
-    <Card>
+    <Card sx={{ backgroundColor: 'var(--secondary-main)' }}>
       <CardActionArea onClick={onClick}>
         <CardContent>
-          <Typography variant="body1" component="div" style={{ fontWeight: 'bold' }}>
+
+          <Typography variant="body1" component="div" color="primary" style={{ fontWeight: 'bold' }}>
             {nom}
           </Typography>
+
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="body2" color="primary">
               {lloc}
@@ -17,6 +19,7 @@ function CardEsdeveniment({ nom, dia, lloc, onClick }) {
               {dia}
             </Typography>
           </Box>
+
         </CardContent>
       </CardActionArea>
     </Card>

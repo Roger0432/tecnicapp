@@ -232,7 +232,7 @@ app.post('/esdeveniments', async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE assaig = $1`;
+        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE assaig = $1 ORDER BY dia DESC`;
         const result = await client.query(query, [assaig]);
 
         result.rows.forEach(esdeveniment => {

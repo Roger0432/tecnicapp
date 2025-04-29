@@ -11,7 +11,9 @@ import Grid from '@mui/material/Grid';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Esdeveniments({ assaig }) {
-  const [esdeveniments, setEsdeveniments] = useState([]);
+  const now = new Date();
+  const [esdevenimentsFuturs, setEsdevenimentsFuturs] = useState([]);
+  const [esdevenimentsPassats, setEsdevenimentsPassats] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
   const navigate = useNavigate();
   const { setTitol } = useTitol();
@@ -27,9 +29,23 @@ function Esdeveniments({ assaig }) {
       .then(response => response.json())
       .then(data => {
         if (data.status) {
-          const sortedEsdeveniments = data.esdeveniments.sort((a, b) => new Date(a.dia) - new Date(b.dia));
-          setEsdeveniments(sortedEsdeveniments);
-        } else {
+
+          const esdeveniments = data.esdeveniments;
+          const today = new Date(now.toDateString());
+        
+          const futurs = [];
+          const passats = [];
+
+          esdeveniments.forEach(e => {
+            if (new Date(e.dia) >= today) futurs.push(e);
+            else passats.push(e);
+          });
+
+          setEsdevenimentsFuturs(futurs);
+          setEsdevenimentsPassats(passats);
+
+        } 
+        else {
           console.error('Failed to fetch esdeveniments');
         }
       })
@@ -50,15 +66,11 @@ function Esdeveniments({ assaig }) {
     setTabIndex(newValue);
   };
 
-  const today = new Date();
-  const esdevenimentsProxims = esdeveniments.filter(e => new Date(e.dia) >= today);
-  const esdevenimentsHistorics = esdeveniments.filter(e => new Date(e.dia) < today);
-
   return (
     <Box>
       <Tabs variant="fullWidth" value={tabIndex} onChange={handleTabChange}>
-        <Tab label={'Futur'} />
-        <Tab label={'Passat'} />
+        <Tab label={ 'Futur' } />
+        <Tab label={ 'Passat' } />
       </Tabs>
 
       <Box sx={{ position: 'relative', height: '100%' }}>
@@ -76,7 +88,7 @@ function Esdeveniments({ assaig }) {
 
         <Box>
           <Grid container spacing={2} sx={{ padding: 2 }}>
-            {(tabIndex === 0 ? esdevenimentsProxims : esdevenimentsHistorics).map((esdeveniment) => (
+            {(tabIndex === 0 ? esdevenimentsFuturs : esdevenimentsPassats).map((esdeveniment) => (
               <Grid item xs={12} sm={6} md={4} key={esdeveniment.id}>
                 <CardEsdeveniment
                   nom={esdeveniment.nom}
