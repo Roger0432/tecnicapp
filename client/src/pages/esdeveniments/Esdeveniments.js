@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Esdeveniments({ assaig }) {
-  const now = new Date();
+  
   const [esdevenimentsFuturs, setEsdevenimentsFuturs] = useState([]);
   const [esdevenimentsPassats, setEsdevenimentsPassats] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
@@ -31,15 +31,29 @@ function Esdeveniments({ assaig }) {
         if (data.status) {
 
           const esdeveniments = data.esdeveniments;
-          const today = new Date(now.toDateString());
-        
-          const futurs = [];
-          const passats = [];
 
-          esdeveniments.forEach(e => {
-            if (new Date(e.dia) >= today) futurs.push(e);
-            else passats.push(e);
-          });
+          let now = new Date();
+          now = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+          console.log('now', now);
+
+          const parseDate = (dateString) => {
+            const [day, month, year] = dateString.split('-');
+            return new Date(`${year}-${month}-${day}`);
+          };
+
+          const futurs = esdeveniments
+            .filter(e => {
+              const eventDate = parseDate(e.dia);
+              return eventDate >= now;
+            })
+            .sort((a, b) => parseDate(a.dia) - parseDate(b.dia));
+
+          const passats = esdeveniments
+            .filter(e => {
+              const eventDate = parseDate(e.dia);
+              return eventDate < now;
+            })
+            .sort((a, b) => parseDate(b.dia) - parseDate(a.dia));
 
           setEsdevenimentsFuturs(futurs);
           setEsdevenimentsPassats(passats);
@@ -94,6 +108,7 @@ function Esdeveniments({ assaig }) {
                   nom={esdeveniment.nom}
                   dia={esdeveniment.dia}
                   lloc={esdeveniment.lloc}
+                  hora_inici={esdeveniment.hora_inici}
                   onClick={() => detallsEsdeveniment(esdeveniment.id)}
                 />
               </Grid>
