@@ -262,12 +262,12 @@ function DetallsEsdeveniment({ assaig }) {
           startIcon={<AddIcon />}
           sx={{ textTransform: 'none', borderRadius: 10 }}
         >
-          Afegir {tipusTitol}
+          Afegir {tipusTitol.toLowerCase()}
         </Button>
 
       </Box>
 
-      {detalls.castells[0] !== null && (
+      {detalls.castells[0] !== null ? (
         <Table>
           <TableBody>
             {detalls.castells.map((element, index) => (
@@ -295,6 +295,10 @@ function DetallsEsdeveniment({ assaig }) {
             ))}
           </TableBody>
         </Table>
+      ) : (
+        <Typography variant="body1" color="textSecondary" align="center" sx={{ mt: 4 }}>
+          No hi ha cap {detalls.assaig ? 'assaig' : 'castell'}
+        </Typography>
       )}
     </Box>
   );
