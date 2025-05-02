@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, Select, MenuItem, FormControl, InputLabel, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { TextField, Button, Box, Typography, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Autocomplete } from '@mui/material';
 import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -51,17 +52,6 @@ function AfegirCastell({ assaig }) {
     }
   };
 
-  const handleSelectChange = (e) => {
-    setSelectedCastellId(e.target.value);
-  };
-
-  const afegirCastell = () => {
-    const selectedCastell = castells.find(castell => castell.id === parseInt(selectedCastellId));
-    if (selectedCastell && !selectedCastells.includes(selectedCastell)) {
-      setSelectedCastells([...selectedCastells, selectedCastell]);
-    }
-  };
-
   const esborrarCastell = (id) => {
     setSelectedCastells(selectedCastells.filter(castell => castell.id !== id));
   };
@@ -91,50 +81,27 @@ function AfegirCastell({ assaig }) {
         {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
       </Typography>
 
-      <TextField
-        label="Cerca"
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Cerca..."
-        fullWidth
-        margin="normal"
+      <Autocomplete
+        options={filteredCastells}
+        getOptionLabel={(option) => option.nom}
+        value={null}
+        onChange={(event, newValue) => {
+          if (newValue) {
+            setSelectedCastellId(newValue.id.toString());
+            const selectedCastell = castells.find(castell => castell.id === newValue.id);
+            if (selectedCastell && !selectedCastells.includes(selectedCastell)) {
+              setSelectedCastells([...selectedCastells, selectedCastell]);
+            }
+          }
+          setSearchTerm('');
+          setFilteredCastells(castells);
+        }}
+        inputValue={searchTerm}
+        onInputChange={(event, newInputValue) => handleSearchChange({ target: { value: newInputValue } })}
+        renderInput={(params) => (
+          <TextField {...params} label="Cerca castells" placeholder="Cerca..." fullWidth margin="normal" />
+        )}
       />
-
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Castell</InputLabel>
-        <Select
-          value={selectedCastellId}
-          onChange={handleSelectChange}
-          label="Castell"
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 400,
-                overflow: 'auto',
-              },
-            },
-            anchorOrigin: {
-              vertical: 'bottom',
-              horizontal: 'left',
-            },
-            transformOrigin: {
-              vertical: 'top',
-              horizontal: 'left',
-            },
-          }}
-        >
-          {filteredCastells.map((castell) => (
-            <MenuItem key={castell.id} value={castell.id}>
-              {castell.nom}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <Button variant="contained" onClick={afegirCastell} sx={{ mt: 2 }}>
-        Afegir
-      </Button>
 
       <List> 
         {selectedCastells.map((castell) => (  
