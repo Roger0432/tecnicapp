@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, Fab, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Typography, Button, IconButton, Table, TableBody, TableCell, TableRow, CircularProgress, Divider, Fab, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Grid, Card, CardActionArea, CardContent, CardActions } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -11,30 +11,51 @@ import AddIcon from '@mui/icons-material/Add';
 import ShareIcon from '@mui/icons-material/Share';
 import { useTitol } from "../../context/TitolNavbar";
 
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function DetallsEsdeveniment({ assaig }) {
   const [detalls, setDetalls] = useState(null);
+  const [castells, setCastells] = useState([]);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { setTitol } = useTitol();
   const [open, setOpen] = useState(false);
   const [openDeleteCastell, setOpenDeleteCastell] = useState(false);
   const [selectedCastellId, setSelectedCastellId] = useState(null);
+  
+  const [openEditDescripcio, setOpenEditDescripcio] = useState(false);
+  const [descripcio, setDescripcio] = useState("");
+  const [selectedCastellInfo, setSelectedCastellInfo] = useState(null);
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/esdeveniment/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status) {
-          setDetalls(data.esdeveniment);
-          setTitol(data.esdeveniment.nom);
-        } else {
-          console.error(data.msg);
-        }
-      })
-      .catch((error) => console.error("Error:", error));
+
+      fetch(`${BACKEND_URL}/detalls-esdeveniment/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status) {
+            setDetalls(data.esdeveniment);
+          } else {
+            console.error(data.msg);
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+        
+      fetch(`${BACKEND_URL}/castells-esdeveniment/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status) {
+            setCastells(data.castells);
+          } else {
+            console.error(data.msg);
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+
   }, [id, setTitol]);
+
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -74,6 +95,35 @@ function DetallsEsdeveniment({ assaig }) {
   const borrarCastell = (id) => {
     setSelectedCastellId(id);
     setOpenDeleteCastell(true);
+  };
+
+  const editarDescripcioCastell = (castellId) => {
+    const castell = castells.find(c => c.id === castellId);
+    setSelectedCastellInfo(castell);
+    setDescripcio(castell.descripcio);
+    setOpenEditDescripcio(true);
+  }
+
+  const handleEditDescripcio = () => {
+    fetch(`${BACKEND_URL}/editar-descripcio-castell`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: selectedCastellInfo.id, descripcio }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status) {
+          setCastells(castells.map(c => 
+            c.id === selectedCastellInfo.id ? {...c, descripcio} : c
+          ));
+        } else {
+          console.error("Error en editar la descripció del castell");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setOpenEditDescripcio(false);
   };
 
   const handleDeleteCastell = () => {
@@ -139,9 +189,9 @@ function DetallsEsdeveniment({ assaig }) {
     }
   };
 
-  const tipusElement = detalls.assaig ? "prova" : "castell";
-  const tipusTitol = detalls.assaig ? "Proves" : "Castells";
-  const routeAfegir = detalls.assaig ? `/nova-prova/${id}` : `/nou-castell/${id}`;
+  const tipusElement = assaig ? "prova" : "castell";
+  const tipusTitol = assaig ? "Proves" : "Castells";
+  const routeAfegir = assaig ? `/nova-prova/${id}` : `/nou-castell/${id}`;
 
   return (
     <Box className="page" sx={{ position: "relative" }}>
@@ -177,6 +227,7 @@ function DetallsEsdeveniment({ assaig }) {
         </Fab>
       </Box>
 
+      {/* eliminar esdeveniment */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -199,6 +250,7 @@ function DetallsEsdeveniment({ assaig }) {
         </DialogActions>
       </Dialog>
 
+      {/* eliminar castell */}
       <Dialog
         open={openDeleteCastell}
         onClose={() => setOpenDeleteCastell(false)}
@@ -206,11 +258,11 @@ function DetallsEsdeveniment({ assaig }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Eliminar {detalls.assaig ? "prova" : "castell"}?
+          Eliminar {assaig ? "prova" : "castell"}?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            No podràs recuperar {detalls.assaig ? "aquesta prova" : "aquest castell"}
+            No podràs recuperar {assaig ? "aquesta prova" : "aquest castell"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -219,6 +271,35 @@ function DetallsEsdeveniment({ assaig }) {
           </Button>
           <Button onClick={handleDeleteCastell} color="error" autoFocus>
             Sí, eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* editar descripció castell */}
+      <Dialog
+        open={openEditDescripcio}
+        onClose={() => setOpenEditDescripcio(false)}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Editar descripció del {assaig ? "prova" : "castell"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="descripcio"
+            label="Descripció"
+            type="text"
+            fullWidth
+            value={descripcio}
+            onChange={(e) => setDescripcio(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenEditDescripcio(false)} color="primary">
+            Cancel·la
+          </Button>
+          <Button onClick={handleEditDescripcio} color="primary">
+            Desa
           </Button>
         </DialogActions>
       </Dialog>
@@ -267,37 +348,85 @@ function DetallsEsdeveniment({ assaig }) {
 
       </Box>
 
-      {detalls.castells[0] !== null ? (
-        <Table>
-          <TableBody>
-            {detalls.castells.map((element, index) => (
-              <TableRow key={index}>
-                <TableCell sx={{ paddingLeft: detalls.assaig ? 0 : undefined }}>
-                  <Button 
-                    component={RouterLink} 
-                    to={`/${tipusElement}/${detalls.id[index]}`}
-                    variant="outlined" 
-                    sx={{ textTransform: 'none' }}
-                  >
-                    {element}
-                  </Button>
-                </TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => borrarCastell(detalls.id[index])}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      {castells && castells.length > 0 ? (
+        <Grid container spacing={2}>
+          {castells.map((castell, index) => (
+            <Grid item xs={12} sm={6} md={3} lg={3} key={castell.id}>
+              <Card 
+                variant="outlined" 
+                sx={{ 
+                  height: '70px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'relative',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 3
+                  }
+                }}
+              >
+                <CardActionArea 
+                  component={RouterLink} 
+                  to={`/${tipusElement}/${castell.id}`}
+                  sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
+                >
+                  <CardContent sx={{ 
+                    flexGrow: 1, 
+                    py: 1.5, 
+                    px: 2,
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    '&:last-child': { paddingBottom: 1.5 }
+                  }}>
+                    <Box sx={{ flexGrow: 1, pr: 1 }}>
+                      <Typography variant="subtitle1" component="div" sx={{ fontWeight: 'medium' }}>
+                        {castell.nom}
+                      </Typography>
+                      
+                      {castell.descripcio && (
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
+                          {castell.descripcio}
+                        </Typography>
+                      )}
+                    </Box>
+                    
+                    <Box sx={{ display: 'flex', flexShrink: 0 }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          editarDescripcioCastell(castell.id);
+                        }}
+                        aria-label="editar"
+                        sx={{ padding: 0.5 }}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          borrarCastell(castell.id);
+                        }}
+                        aria-label="eliminar"
+                        sx={{ padding: 0.5 }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       ) : (
         <Typography variant="body1" color="textSecondary" align="center" sx={{ mt: 4 }}>
-          No hi ha cap {detalls.assaig ? 'assaig' : 'castell'}
+          No hi ha cap {assaig ? 'prova' : 'castell'}
         </Typography>
       )}
     </Box>

@@ -251,34 +251,15 @@ app.post('/esdeveniments', async (req, res) => {
 });
 
 
-app.get('/esdeveniment/:id', async (req, res) => {
+app.get('/detalls-esdeveniment/:id', async (req, res) => {
     const id = req.params.id;
     let client;
     try {
         client = await pool.connect();
         const query = `
-            SELECT 
-                e.dia,
-                e.lloc,
-                e.hora_inici,
-                e.hora_fi,
-                e.nom,
-                e.assaig,
-                ARRAY_AGG(ec.id) AS id,
-                ARRAY_AGG(c.nom) AS castells,
-                ARRAY_AGG(r.descripcio) AS resultats
-            FROM 
-                esdeveniments e
-            LEFT JOIN 
-                esdeveniments_castells ec ON e.id = ec.esdeveniment_id
-            LEFT JOIN 
-                castells c ON ec.castell_id = c.id
-            LEFT JOIN 
-                resultats r ON ec.resultat_id = r.id
-            WHERE 
-                e.id = $1
-            GROUP BY 
-                e.dia, e.lloc, e.hora_inici, e.hora_fi, e.nom, e.assaig;
+            SELECT id, dia, lloc, hora_inici, hora_fi, nom
+            FROM esdeveniments
+            WHERE id = $1
         `;
         const result = await client.query(query, [id]);
 
@@ -286,12 +267,55 @@ app.get('/esdeveniment/:id', async (req, res) => {
             return res.status(404).json({ msg: 'Esdeveniment no trobat', status: false });
         }
 
-        const esdeveniment = result.rows[0];
-        esdeveniment.dia = formatDate(esdeveniment.dia);
-        esdeveniment.hora_inici = formatTime(esdeveniment.hora_inici);
-        esdeveniment.hora_fi = formatTime(esdeveniment.hora_fi);
+        const detalls = result.rows[0];
+        detalls.dia = formatDate(detalls.dia);
+        detalls.hora_inici = formatTime(detalls.hora_inici);
+        detalls.hora_fi = formatTime(detalls.hora_fi);
 
-        res.status(200).json({ esdeveniment: esdeveniment, status: true });
+        res.status(200).json({ esdeveniment: detalls, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+app.get('/castells-esdeveniment/:id', async (req, res) => {
+    const id = req.params.id;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `
+            SELECT ec.id, c.nom, ec.nom AS descripcio
+            FROM esdeveniments_castells ec
+            JOIN castells c ON ec.castell_id = c.id
+            WHERE ec.esdeveniment_id = $1
+        `;
+        const result = await client.query(query, [id]);
+        res.status(200).json({ castells: result.rows, status: true });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
+app.post('/editar-descripcio-castell', async (req, res) => {
+    const { id, descripcio } = req.body;
+    let client;
+    try {
+        client = await pool.connect();
+        const query = `UPDATE esdeveniments_castells SET nom = $1 WHERE id = $2`;
+        await client.query(query, [descripcio, id]);
+        res.status(200).json({ msg: 'Descripció actualitzada correctament', status: true });
     } 
     catch (error) {
         console.error("Error: ", error);
