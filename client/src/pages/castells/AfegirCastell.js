@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Typography, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { TextField, Button, Box, Typography, IconButton, Card, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Autocomplete } from '@mui/material';
 import { useTitol } from '../../context/TitolNavbar';
+
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -68,7 +69,7 @@ function AfegirCastell({ assaig }) {
 
   return (
     <Box className='page' display="flex" justifyContent="center">
-      <Box sx={{ width: '100%', maxWidth: '400px' }} display="flex" flexDirection="column" gap={2}>
+      <Box sx={{ width: '100%', maxWidth: '400px' }} display="flex" flexDirection="column">
         <Typography variant="body1" mb={1}>
           {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
         </Typography>
@@ -94,23 +95,31 @@ function AfegirCastell({ assaig }) {
           )}
         />
 
-        <List>
-          {selectedCastells.map((castell) => (
-            <ListItem
-              key={castell.id}
-              secondaryAction={
-                <IconButton edge="end" aria-label="delete" onClick={() => esborrarCastell(castell.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              }
-            >
-              <ListItemText primary={castell.nom} />
-            </ListItem>
-          ))}
-        </List>
+        <Box sx={{ mt: 2, mb: 2 }}>
+          <Grid container spacing={2}>
+            {selectedCastells.map((castell) => (
+              <Grid item xs={12} key={castell.id}>
+                <Card variant="outlined">
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px' }}>
+                    <Typography variant="body1" component="div">
+                      {castell.nom}
+                    </Typography>
+                    <IconButton 
+                      size="small" 
+                      onClick={() => esborrarCastell(castell.id)}
+                      aria-label="esborrar castell"
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
-        <Button variant="contained" onClick={guardarCanvis}>
-          Guardar canvis
+        <Button variant="contained" onClick={guardarCanvis} sx={{ mt: 2 }}>
+          {assaig ? 'Afegir proves' : 'Afegir castells'}
         </Button>
       </Box>
     </Box>
