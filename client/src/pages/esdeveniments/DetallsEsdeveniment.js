@@ -403,7 +403,7 @@ function DetallsEsdeveniment({ assaig }) {
                         aria-label="editar"
                         sx={{ padding: 0.5 }}
                       >
-                        <EditIcon fontSize="small" />
+                        <EditIcon />
                       </IconButton>
                       <IconButton
                         size="small"
@@ -415,7 +415,7 @@ function DetallsEsdeveniment({ assaig }) {
                         aria-label="eliminar"
                         sx={{ padding: 0.5 }}
                       >
-                        <DeleteIcon fontSize="small" />
+                        <DeleteIcon />
                       </IconButton>
                     </Box>
                   </CardContent>
