@@ -12,7 +12,6 @@ function AfegirCastell({ assaig }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCastells, setFilteredCastells] = useState([]);
   const [selectedCastells, setSelectedCastells] = useState([]);
-  const [selectedCastellId, setSelectedCastellId] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
   const { setTitol } = useTitol();
@@ -28,9 +27,6 @@ function AfegirCastell({ assaig }) {
         if (data.status) {
           setCastells(data.castells);
           setFilteredCastells(data.castells);
-          if (data.castells.length > 0) {
-            setSelectedCastellId(data.castells[0].id.toString());
-          }
         } else {
           console.error(data.msg);
         }
@@ -45,11 +41,6 @@ function AfegirCastell({ assaig }) {
       castell.nom.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredCastells(filtered);
-    if (filtered.length > 0) {
-      setSelectedCastellId(filtered[0].id.toString());
-    } else {
-      setSelectedCastellId('');
-    }
   };
 
   const esborrarCastell = (id) => {
@@ -76,51 +67,52 @@ function AfegirCastell({ assaig }) {
   };
 
   return (
-    <Box className="page"> 
-      <Typography variant="body1" mb={1}>
-        {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
-      </Typography>
+    <Box className='page' display="flex" justifyContent="center">
+      <Box sx={{ width: '100%', maxWidth: '400px' }} display="flex" flexDirection="column" gap={2}>
+        <Typography variant="body1" mb={1}>
+          {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
+        </Typography>
 
-      <Autocomplete
-        options={filteredCastells}
-        getOptionLabel={(option) => option.nom}
-        value={null}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            setSelectedCastellId(newValue.id.toString());
-            const selectedCastell = castells.find(castell => castell.id === newValue.id);
-            if (selectedCastell && !selectedCastells.includes(selectedCastell)) {
-              setSelectedCastells([...selectedCastells, selectedCastell]);
+        <Autocomplete
+          options={filteredCastells}
+          getOptionLabel={(option) => option.nom}
+          value={null}
+          onChange={(event, newValue) => {
+            if (newValue) {
+              const selectedCastell = castells.find(castell => castell.id === newValue.id);
+              if (selectedCastell && !selectedCastells.includes(selectedCastell)) {
+                setSelectedCastells([...selectedCastells, selectedCastell]);
+              }
             }
-          }
-          setSearchTerm('');
-          setFilteredCastells(castells);
-        }}
-        inputValue={searchTerm}
-        onInputChange={(event, newInputValue) => handleSearchChange({ target: { value: newInputValue } })}
-        renderInput={(params) => (
-          <TextField {...params} label="Cerca castells" placeholder="Cerca..." fullWidth margin="normal" />
-        )}
-      />
+            setSearchTerm('');
+            setFilteredCastells(castells);
+          }}
+          inputValue={searchTerm}
+          onInputChange={(event, newInputValue) => handleSearchChange({ target: { value: newInputValue } })}
+          renderInput={(params) => (
+            <TextField {...params} label="Cerca castells" placeholder="Cerca..." fullWidth margin="normal" />
+          )}
+        />
 
-      <List> 
-        {selectedCastells.map((castell) => (  
-          <ListItem
-            key={castell.id}
-            secondaryAction={
-              <IconButton edge="end" aria-label="delete" onClick={() => esborrarCastell(castell.id)}>
-                <DeleteIcon />
-              </IconButton>
-            }
-          >
-            <ListItemText primary={castell.nom} />
-          </ListItem>
-        ))}
-      </List>
+        <List>
+          {selectedCastells.map((castell) => (
+            <ListItem
+              key={castell.id}
+              secondaryAction={
+                <IconButton edge="end" aria-label="delete" onClick={() => esborrarCastell(castell.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              }
+            >
+              <ListItemText primary={castell.nom} />
+            </ListItem>
+          ))}
+        </List>
 
-      <Button variant="contained" onClick={guardarCanvis}>
-        Guardar canvis
-      </Button>
+        <Button variant="contained" onClick={guardarCanvis}>
+          Guardar canvis
+        </Button>
+      </Box>
     </Box>
   );
 }
