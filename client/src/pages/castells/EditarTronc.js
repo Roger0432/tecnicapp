@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PlantillaTronc from '../castells/PlantillaTronc';
-import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip, Snackbar, Alert } from '@mui/material';
+import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip, Snackbar, Alert, Divider } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
@@ -43,14 +43,26 @@ function EditarTronc({ castell }) {
         setSearchTerm('');
     };
 
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value.toLowerCase());
+    // Funció per normalitzar text (eliminar accents i convertir a minúscules)
+    const normalizeText = (text) => {
+        return text
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
     };
 
-    const filteredMembers = membresNoTronc.filter(membre => 
-        membre.mote.toLowerCase().includes(searchTerm) || 
-        `${membre.nom} ${membre.cognoms}`.toLowerCase().includes(searchTerm)
-    );
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value); // Actualitzem el terme de cerca amb el valor original
+    };
+
+    const filteredMembers = membresNoTronc.filter(membre => {
+        const normalizedSearchTerm = normalizeText(searchTerm);
+        const normalizedMote = normalizeText(membre.mote);
+        const normalizedFullName = normalizeText(`${membre.nom} ${membre.cognoms}`);
+        
+        return normalizedMote.includes(normalizedSearchTerm) || 
+               normalizedFullName.includes(normalizedSearchTerm);
+    });
 
     const handleMemberSelect = (membreSeleccionat) => {
         const membresTroncActuals = [...membresTronc];
@@ -230,15 +242,16 @@ function EditarTronc({ castell }) {
                         width: 400,
                         bgcolor: 'background.paper',
                         boxShadow: 24,
-                        p: 4,
-                        borderRadius: 2
+                        padding: 2,
+                        borderRadius: 2,
+                        overflow: 'hidden'
                     }}
                 >
                     <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
                         Selecciona membre
                     </Typography>
 
-                    <Box sx={{ position: 'absolute', top: 32, right: 16 }}>
+                    <Box sx={{ position: 'absolute', paddingTop: 2, paddingRight: 0, right: 0, top: 0 }}>
                         <Button onClick={handleCancelar} color="primary" size="small">
                             <CloseIcon />
                         </Button>
@@ -247,39 +260,37 @@ function EditarTronc({ castell }) {
                     <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Cercar membres..."
+                        sx={{ mb: 2 }}
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        sx={{ mb: 2 }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
+                        label="Cercar membres"
                     />
-
-                    <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'space-between', ml: 2, mr: 2, mb: 1 }}>
-                        <span><strong>Nom</strong></span>
-                        <span><strong>Alçada hombro</strong></span>
-                    </Typography>
                     
-                    <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
+                    <Typography variant="subtitle2" sx={{ display: 'flex', justifyContent: 'space-between', ml: 2, mr: 2, mb: 1 }}>
+                        <span>Nom</span>
+                        <span>Alçada espatlla</span>
+                    </Typography>
+
+                    <List sx={{ maxHeight: 400, overflow: 'auto', border: '1px solid #e0e0e0', borderRadius: 1 }}>
                         {filteredMembers.length > 0 ? (
                             filteredMembers.map((membre) => (
-                                <ListItemButton 
-                                    onClick={() => handleMemberSelect(membre)} 
-                                    key={membre.id}
-                                >
-                                    <ListItemText 
-                                        primary={membre.mote} 
-                                        secondary={`${membre.nom} ${membre.cognoms}`} 
-                                    />
-                                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
-                                        {membre.alcada_hombro} cm
-                                    </Typography>
-                                </ListItemButton>
+                                <Box key={membre.id}>
+                                    <ListItemButton 
+                                        onClick={() => handleMemberSelect(membre)}
+                                        sx={{ 
+                                            padding: 1, 
+                                        }}
+                                    >
+                                        <ListItemText 
+                                            primary={membre.mote}
+                                            sx={{ ml: 1 }}
+                                        />
+                                        <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+                                            {membre.alcada_hombro}
+                                        </Typography>
+                                    </ListItemButton>
+                                    <Divider />
+                                </Box>
                             ))
                         ) : (
                             <Typography color="text.secondary" align="center" sx={{ py: 2 }}>
@@ -288,11 +299,12 @@ function EditarTronc({ castell }) {
                         )}
                     </List>
                     
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                    {/* Botons per eliminar o cancel·lar */}
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Button 
                             onClick={handleEliminarMembre} 
-                            color="error" 
-                            variant="contained"
+                            variant="outlined"
+                            color="error"
                             sx={{ mt:2 }}
                             startIcon={<DeleteIcon />}
                         >

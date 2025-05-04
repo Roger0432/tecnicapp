@@ -3,8 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
 import { ReactComponent as PinyaTorre } from '../../svg/pinya-torre.svg';
-import { Box, Modal, Paper, Typography, TextField, InputAdornment, List, ListItemButton, ListItemText, Button, Fab, Tooltip, Snackbar, Alert } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Box, Modal, Paper, Typography, TextField, List, ListItemButton, ListItemText, Button, Fab, Tooltip, Snackbar, Alert , Divider } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -111,16 +110,28 @@ const EditarPinya = ({ castell }) => {
         setSearchTerm(''); // Reiniciem el terme de cerca
     };
 
+    // Funció per normalitzar text (eliminar accents i convertir a minúscules)
+    const normalizeText = (text) => {
+        return text
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    };
+
     // Funció per gestionar el canvi en el camp de cerca
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value.toLowerCase()); // Actualitzem el terme de cerca
+        setSearchTerm(event.target.value); // Actualitzem el terme de cerca amb el valor original
     };
 
     // Filtrar els membres no assignats segons el terme de cerca
-    const filteredMembers = membresNoPinya.filter(membre => 
-        membre.mote.toLowerCase().includes(searchTerm) || 
-        `${membre.nom} ${membre.cognoms}`.toLowerCase().includes(searchTerm)
-    );
+    const filteredMembers = membresNoPinya.filter(membre => {
+        const normalizedSearchTerm = normalizeText(searchTerm);
+        const normalizedMote = normalizeText(membre.mote);
+        const normalizedFullName = normalizeText(`${membre.nom} ${membre.cognoms}`);
+        
+        return normalizedMote.includes(normalizedSearchTerm) || 
+               normalizedFullName.includes(normalizedSearchTerm);
+    });
 
     // Funció per assignar un membre a una cel·la seleccionada
     const handleMemberSelect = (membreSeleccionat) => {
@@ -387,8 +398,7 @@ const EditarPinya = ({ castell }) => {
                         width: 400,
                         bgcolor: 'background.paper',
                         boxShadow: 24,
-                        p: 4,
-                        borderRadius: 2
+                        padding: 2,
                     }}
                 >
                   
@@ -396,49 +406,48 @@ const EditarPinya = ({ castell }) => {
                         Selecciona membre
                     </Typography>
 
-                    <Box sx={{ position: 'absolute', top: 32, right: 16 }}>
+                    <Box sx={{ position: 'absolute', paddingTop: 2, paddingRight: 0, right: 0, top: 0 }}>
                         <Button onClick={handleCancelar} color="primary" size="small">
                             <CloseIcon />
                         </Button>
                     </Box>
                     
-                    {/* Camp de cerca */}
                     <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Cercar membres..."
+                        sx={{ mb: 2 }}
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        sx={{ mb: 2 }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
+                        label="Cercar membres"
                     />
                     
-                    <Typography variant="subtitle1" sx={{ display: 'flex', justifyContent: 'space-between', ml: 2, mr: 2, mb: 1 }}>
-                        <span><strong>Nom</strong></span>
-                        <span><strong>Alçada mans</strong></span>
+                    <Typography variant="subtitle2" sx={{ display: 'flex', justifyContent: 'space-between', ml: 2, mr: 2, mb: 1 }}>
+                        <span>Nom</span>
+                        <span>Alçada mans</span>
                     </Typography>
 
-                    <List sx={{ maxHeight: 400, overflow: 'auto', mb: 2 }}>
+                    <List sx={{ maxHeight: 400, overflow: 'auto', border: '1px solid #e0e0e0', borderRadius: 1 }}>
                         {filteredMembers.length > 0 ? (
                             filteredMembers.map((membre) => (
-                                <ListItemButton 
-                                    onClick={() => handleMemberSelect(membre)} 
-                                    key={membre.id}
-                                >
-                                    <ListItemText 
-                                        primary={membre.mote} 
-                                        secondary={`${membre.nom} ${membre.cognoms}`} 
-                                    />
-                                    <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
-                                        {membre.alcada_mans} cm
-                                    </Typography>
-                                </ListItemButton>
+                                <Box>
+                                    <ListItemButton 
+                                        onClick={() => handleMemberSelect(membre)} 
+                                        key={membre.id}
+                                        sx={{ 
+                                            padding: 1, 
+                                        }}
+                                    >
+                                        <ListItemText 
+                                            primary={membre.mote}
+                                            sx={{ ml: 1 }}
+                                        />
+                                        <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+                                            {membre.alcada_mans}
+                                        </Typography>
+                                    </ListItemButton>
+                                    <Divider />
+                                </Box>
+                                
                             ))
                         ) : (
                             <Typography color="text.secondary" align="center" sx={{ py: 2 }}>
@@ -448,11 +457,11 @@ const EditarPinya = ({ castell }) => {
                     </List>
                     
                     {/* Botons per eliminar o cancel·lar */}
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Button 
                             onClick={handleEliminarMembre} 
-                            color="error" 
-                            variant="contained"
+                            variant="outlined"
+                            color="error"
                             sx={{ mt:2 }}
                             startIcon={<DeleteIcon />}
                         >
