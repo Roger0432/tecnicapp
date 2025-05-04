@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import '../styles/Tronc.css';
+import '../../styles/Tronc.css';
 import { Box } from '@mui/material';
 
 const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick }) => {

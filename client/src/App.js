@@ -13,7 +13,7 @@ import AfegirCastell from './pages/castells/AfegirCastell';
 import CrearMembre from './pages/membres/CrearMembre';
 import Membres from './pages/membres/Membres';
 
-import CustomNavbar from './components/CustomNavbar';
+import CustomNavbar from './pages/altres/CustomNavbar';
 import Main from './pages/Main';
 import Perfil from './pages/altres/Perfil';
 

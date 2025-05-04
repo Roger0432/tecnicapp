@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import PlantillaTronc from '../../components/PlantillaTronc';
+import PlantillaTronc from '../castells/PlantillaTronc';
 import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip, Snackbar, Alert } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';

@@ -4,7 +4,7 @@ import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDi
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
-import TaulaDetallsMembre from '../../components/DetallsMembres';
+import TaulaDetallsMembre from '../membres/DetallsMembres';
 import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

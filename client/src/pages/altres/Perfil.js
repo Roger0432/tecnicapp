@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableRow, Fab, Dialog, Dia
 import { useTitol } from '../../context/TitolNavbar';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
-import SwitchTheme from '../../components/SwitchTheme';
+import SwitchTheme from '../altres/SwitchTheme';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
