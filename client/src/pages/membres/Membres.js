@@ -22,12 +22,15 @@ function Membres() {
       .then(response => response.json())
       .then(data => {
         if (data.status) {
-          setMembres(data.membres);
           const membresAmbNomComplet = data.membres.map(membre => ({
-          ...membre,
-          nomComplet: `${membre.nom} ${membre.cognoms}`,
+            ...membre,
+            nomComplet: `${membre.nom} ${membre.cognoms}`,
           }));
-          setMembres(membresAmbNomComplet);
+          // Ordenar membres alfabèticament per nom i cognoms
+          const membresOrdenats = membresAmbNomComplet.sort((a, b) => 
+            a.nomComplet.localeCompare(b.nomComplet)
+          );
+          setMembres(membresOrdenats);
         } else {
           console.error('Error:', data.msg);
         }
