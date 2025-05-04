@@ -289,22 +289,40 @@ const EditarPinya = ({ castell }) => {
 
     // Renderitzem el component
     return (
-        <Box m={1}>
+        <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            height: 'calc(100vh - 112px)',
+            position: 'relative',
+            overflow: 'hidden',
+            flex: 1
+        }}>
             {/* Contenidor per a l'SVG */}
             <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
+                className="svg-container"
                 sx={{
-                    maxWidth: '650px',
-                    maxHeight: '650px',
+                    
+                    flexGrow: 1,
                     width: '100%',
-                    height: 'auto',
-                    marginLeft: { xs: 0, sm: 'calc((100vw - 650px) / 2)' },
+                    height: '100%',
+                    overflow: 'hidden'
                 }}
             >
-                <TransformWrapper>
-                    <TransformComponent>
+                <TransformWrapper
+                    defaultScale={1}
+                    defaultPositionX={0}
+                    defaultPositionY={0}
+                >
+                    <TransformComponent
+                        wrapperStyle={{
+                            width: '100%',
+                            height: '100%'
+                        }}
+                        contentStyle={{
+                            width: '100%',
+                            height: '100%'
+                        }}
+                    >
                         {pinya_svg}
                     </TransformComponent>
                 </TransformWrapper>

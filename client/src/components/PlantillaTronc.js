@@ -169,11 +169,12 @@ const PlantillaTronc = ({ files, columnes, agulla, castellersTronc, onCellClick 
   }, [crearTaula]);
   
   return (
-    <Box m={1} mt={4} sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', border:1,
-        width: '100vw', 
-        height: '80vh',
+    <Box sx={{ 
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
         overflow: 'auto'
     }}>
           <table className='tronc'>

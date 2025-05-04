@@ -19,8 +19,7 @@ function EditarTronc({ castell }) {
     const [castellData, setCastellData] = useState([]);
     const [selectedCell, setSelectedCell] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [snackbarOpen, setSnackbarOpen] = useState(false); // Estat per controlar el Snackbar
-
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     useEffect(() => {
         if (castell) setCastellData(castell);
         else console.error('Castell no trobat');
@@ -138,33 +137,50 @@ function EditarTronc({ castell }) {
             if (!data.status) {
                 console.error(data.msg);
             } else {
-                setSnackbarOpen(true); // Mostrem el Snackbar si la resposta és correcta
+                setSnackbarOpen(true);
             }
         })
         .catch(error => console.error('Error:', error));
     };
 
-    // Funció per tancar el Snackbar
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
 
     return (
-        <Box>
+        <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            height: 'calc(100vh - 112px)',
+            position: 'relative',
+            overflow: 'hidden',
+            flex: 1
+        }}>
+            {/* Contenidor per a la plantilla del tronc */}
             <Box
+                className="svg-container"
                 sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    flexGrow: 1,
                     width: '100%',
                     height: '100%',
-                    border: 1, 
-                    borderColor: 'red'
+                    overflow: 'hidden'
                 }}
             >
-                <TransformWrapper>
-                    <TransformComponent>
-                       
+                <TransformWrapper
+                    defaultScale={1}
+                    defaultPositionX={0}
+                    defaultPositionY={0}
+                >
+                    <TransformComponent
+                        wrapperStyle={{
+                            width: '100%',
+                            height: '100%'
+                        }}
+                        contentStyle={{
+                            width: '100%',
+                            height: '100%'
+                        }}
+                    >
                         <PlantillaTronc 
                             files={parseInt(castellData.alcada - 4, 10)} 
                             columnes={parseInt(castellData.amplada, 10)} 
@@ -172,11 +188,11 @@ function EditarTronc({ castell }) {
                             castellersTronc={membresTronc}
                             onCellClick={handleCellClick}
                         />
-                       
                     </TransformComponent>
                 </TransformWrapper>
             </Box>
 
+            {/* Botó per guardar els canvis */}
             <Box
                 sx={{
                     position: 'fixed',
@@ -187,7 +203,7 @@ function EditarTronc({ castell }) {
                 }}
             >
             
-                <Tooltip title="Guardar" placement="right">
+                <Tooltip title="Guardar" placement="top">
                     <Fab 
                         color="primary" 
                         aria-label="guardar"
