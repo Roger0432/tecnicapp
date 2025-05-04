@@ -36,6 +36,7 @@ function DetallsEsdeveniment({ assaig }) {
         .then((data) => {
           if (data.status) {
             setDetalls(data.esdeveniment);
+            setTitol(data.esdeveniment.nom);
           } else {
             console.error(data.msg);
           }
@@ -134,7 +135,7 @@ function DetallsEsdeveniment({ assaig }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.status) {
-          window.location.reload();
+          setCastells(castells.filter(castell => castell.id !== selectedCastellId));
         } else {
           console.error("Error en esborrar el castell");
         }
@@ -361,7 +362,6 @@ function DetallsEsdeveniment({ assaig }) {
                   position: 'relative',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   '&:hover': {
-                    transform: 'translateY(-4px)',
                     boxShadow: 3
                   }
                 }}
@@ -378,7 +378,6 @@ function DetallsEsdeveniment({ assaig }) {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    '&:last-child': { paddingBottom: 1.5 }
                   }}>
                     <Box sx={{ flexGrow: 1, pr: 1 }}>
                       <Typography variant="subtitle1" component="div" sx={{ fontWeight: 'medium' }}>
@@ -392,7 +391,7 @@ function DetallsEsdeveniment({ assaig }) {
                       )}
                     </Box>
                     
-                    <Box sx={{ display: 'flex', flexShrink: 0 }}>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
                       <IconButton
                         size="small"
                         onClick={(e) => {
@@ -401,7 +400,6 @@ function DetallsEsdeveniment({ assaig }) {
                           editarDescripcioCastell(castell.id);
                         }}
                         aria-label="editar"
-                        sx={{ padding: 0.5 }}
                       >
                         <EditIcon />
                       </IconButton>
@@ -413,7 +411,6 @@ function DetallsEsdeveniment({ assaig }) {
                           borrarCastell(castell.id);
                         }}
                         aria-label="eliminar"
-                        sx={{ padding: 0.5 }}
                       >
                         <DeleteIcon />
                       </IconButton>
