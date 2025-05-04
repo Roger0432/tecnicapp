@@ -7,7 +7,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

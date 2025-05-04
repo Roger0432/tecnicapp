@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Tab, Tabs, Box } from '@mui/material';
 import EditarTronc from './EditarTronc';
 import EditarPinya from './EditarPinya';
-import '../../styles/EditarCastell.css';
 import '../../styles/Tronc.css';
 import { useTitol } from '../../context/TitolNavbar';
 
