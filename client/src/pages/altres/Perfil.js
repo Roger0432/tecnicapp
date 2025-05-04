@@ -63,7 +63,7 @@ function Perfil() {
   };
 
   return (
-    <div className='page'>
+    <Box m={2}>
       <TableContainer>
         <Table>
           <TableBody>
@@ -130,7 +130,7 @@ function Perfil() {
         </DialogActions>
       </Dialog>
 
-    </div>
+    </Box>
   );
 }
 

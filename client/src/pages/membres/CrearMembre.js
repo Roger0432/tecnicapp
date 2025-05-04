@@ -113,7 +113,7 @@ function CrearMembre() {
   };
 
   return (
-    <Box className='page' display="flex" justifyContent="center">
+    <Box m={2} mt={4} display="flex" justifyContent="center">
       {!modeEdicio && editar && (
         <Box display="flex" alignItems="center" sx={{ position: 'fixed', bottom: 24, right: 24 }}>
           <SpeedDial

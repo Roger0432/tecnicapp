@@ -195,7 +195,7 @@ function DetallsEsdeveniment({ assaig }) {
   const routeAfegir = assaig ? `/nova-prova/${id}` : `/nou-castell/${id}`;
 
   return (
-    <Box className="page" sx={{ position: "relative" }}>
+    <Box m={2} sx={{ position: "relative" }}>
 
       <Box
         display="flex"

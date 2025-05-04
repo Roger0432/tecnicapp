@@ -68,7 +68,7 @@ function AfegirCastell({ assaig }) {
   };
 
   return (
-    <Box className='page' display="flex" justifyContent="center">
+    <Box m={2} mt={4} display="flex" justifyContent="center">
       <Box sx={{ width: '100%', maxWidth: '400px' }} display="flex" flexDirection="column">
         <Typography variant="body1" mb={1}>
           {assaig ? 'Selecciona les proves que vols afegir' : 'Selecciona els castells que vols afegir'}
@@ -95,7 +95,7 @@ function AfegirCastell({ assaig }) {
           )}
         />
 
-        <Box sx={{ mt: 2, mb: 2 }}>
+        <Box sx={{ mt: 2 }}>
           <Grid container spacing={2}>
             {selectedCastells.map((castell) => (
               <Grid item xs={12} key={castell.id}>
@@ -118,7 +118,7 @@ function AfegirCastell({ assaig }) {
           </Grid>
         </Box>
 
-        <Button variant="contained" onClick={guardarCanvis} sx={{ mt: 2 }}>
+        <Button variant="contained" onClick={guardarCanvis} sx={{ mt: 3 }}>
           {assaig ? 'Afegir proves' : 'Afegir castells'}
         </Button>
       </Box>

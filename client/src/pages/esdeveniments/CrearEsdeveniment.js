@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { TextField, Button, Box, Select, MenuItem, FormControl, InputLabel, Alert, Collapse, IconButton, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import '../../styles/App.css';
 import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -87,7 +86,7 @@ function CrearEsdeveniment({ assaig }) {
 
   return (
     <>
-      <Box className='page' display="flex" justifyContent="center">
+      <Box m={2} mt={4} display="flex" justifyContent="center">
         <Box component="form" onSubmit={handleSubmit} maxWidth={400} width="100%">
           <Box className="form-group" display="flex" flexDirection="column" gap={2}>
             <TextField

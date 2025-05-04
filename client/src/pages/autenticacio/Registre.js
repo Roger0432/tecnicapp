@@ -98,7 +98,7 @@ function Registre() {
   }
 
   return (
-    <Box className='page' display="flex" justifyContent="center">
+    <Box m={4} display="flex" justifyContent="center">
       <Box component="form" id="register-form" onSubmit={handleRegister} sx={{ width: '100%', maxWidth: '400px' }}>
         <Box className="form-group" display="flex" flexDirection="column" gap={2}>
           <Typography variant="h5" mb={2} mt={2} sx={{ fontWeight: 'bold' }}><b>REGISTRE</b></Typography>

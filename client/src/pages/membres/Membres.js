@@ -50,7 +50,7 @@ function Membres() {
   };
 
   return (
-    <Box m={4}>
+    <Box m={2}>
       <Box sx={{ position: 'relative', height: '100%' }}>
         <Box>
           <DataGrid

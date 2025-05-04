@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/App.css';
 import '../styles/Tronc.css';
 import { Link } from 'react-router-dom';
 import { Button, Box, Typography } from '@mui/material';
@@ -38,9 +37,7 @@ function Main() {
         
 
   return (
-    <Box className='page'>
-
-      
+    <Box m={2} mt={4}>
 
         <Typography component="h1" variant="h6" mb={3} align="center">
           Benvingut, {(userData.nom)}!

@@ -36,7 +36,7 @@ function CustomNavbar() {
     ];
 
     return (
-        <>
+        <Box>
             <AppBar position="fixed">
                 <Toolbar>
                     <IconButton
@@ -78,7 +78,7 @@ function CustomNavbar() {
                 </Drawer>
             </AppBar>
             <Toolbar />
-        </>
+        </Box>
     );
 }
 
