@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PlantillaTronc from '../../components/PlantillaTronc';
-import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip } from '@mui/material';
+import { Button, Typography, Modal, Box, List, ListItemText, ListItemButton, Paper, TextField, InputAdornment, Fab, Tooltip, Snackbar, Alert } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
@@ -19,6 +19,7 @@ function EditarTronc({ castell }) {
     const [castellData, setCastellData] = useState([]);
     const [selectedCell, setSelectedCell] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false); // Estat per controlar el Snackbar
 
     useEffect(() => {
         if (castell) setCastellData(castell);
@@ -136,9 +137,16 @@ function EditarTronc({ castell }) {
         .then(data => {
             if (!data.status) {
                 console.error(data.msg);
+            } else {
+                setSnackbarOpen(true); // Mostrem el Snackbar si la resposta és correcta
             }
         })
         .catch(error => console.error('Error:', error));
+    };
+
+    // Funció per tancar el Snackbar
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
     };
 
     return (
@@ -278,6 +286,25 @@ function EditarTronc({ castell }) {
                     </Box>
                 </Paper>
             </Modal>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={1000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                sx={{ 
+                    mb: 3, 
+                    ml: 3 
+                }}
+            >
+                <Alert 
+                    onClose={handleSnackbarClose} 
+                    severity="success" 
+                    sx={{ width: 'auto' }}
+                >
+                    Canvis guardats
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }
