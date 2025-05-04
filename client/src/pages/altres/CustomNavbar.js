@@ -4,7 +4,6 @@ import NavbarListDrawer from "./NavbarListDrawer";
 import { AppBar, Drawer, IconButton, Toolbar, Typography, Box, List, ListItemButton, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import '../../styles/Navbar.css';
 import { useTitol } from "../../context/TitolNavbar";
 
 function CustomNavbar() {
