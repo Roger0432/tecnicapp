@@ -149,7 +149,7 @@ function Esdeveniments({ assaig }) {
     }
     return Object.keys(groupedEvents).map(monthYear => (
       <Box key={monthYear} mt={2}>
-        <Typography variant="subtitle2" color="textSecondary" ml={2} mb={1}>
+        <Typography variant="subtitle2" color="textSecondary"mb={1}>
           {monthYear}
         </Typography>
         <Grid container spacing={2}>
@@ -176,7 +176,7 @@ function Esdeveniments({ assaig }) {
         <Tab label={'Passat'} />
       </Tabs>
 
-      <Box mr={4} sx={{ position: 'relative', height: '100%' }}>
+      <Box mr={2} sx={{ position: 'relative', height: '100%' }}>
         <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1 }}>
           {assaig ? (
             <Fab color="primary" onClick={() => navigate('/crear-assaig')}>
@@ -189,7 +189,7 @@ function Esdeveniments({ assaig }) {
           )}
         </Box>
 
-        <Box ml={4} mt={2}>
+        <Box ml={2} mt={2}>
           <TextField
             fullWidth
             variant="standard"
