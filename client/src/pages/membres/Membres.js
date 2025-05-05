@@ -91,7 +91,14 @@ function Membres() {
           <TextField
             fullWidth
             variant="standard"
-            label="Cerca un membre"
+            placeholder="Cerca un membre"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
             value={cercaText}
             onChange={handleCercaChange}
           />

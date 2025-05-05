@@ -1,13 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Tabs, Tab, Typography } from '@mui/material';
+import { Box, Tabs, Tab, Typography, TextField, InputAdornment } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import { useTitol } from '../../context/TitolNavbar';
 import CardEsdeveniment from './CardEsdeveniment';
 import Grid from '@mui/material/Grid';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+// Funció per normalitzar text (eliminar accents i convertir a minúscules)
+const normalitzarText = (text) => {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
 
 const parseDate = (dateString) => {
   const [day, month, year] = dateString.split('-');
@@ -19,8 +29,40 @@ function Esdeveniments({ assaig }) {
   const [esdevenimentsFuturs, setEsdevenimentsFuturs] = useState([]);
   const [esdevenimentsPassats, setEsdevenimentsPassats] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
+  const [cercaText, setCercaText] = useState('');
   const navigate = useNavigate();
   const { setTitol } = useTitol();
+
+  // Esdeveniments filtrats segons el text de cerca
+  const esdevenimentsFutursFiltrats = useMemo(() => {
+    if (!cercaText.trim()) return esdevenimentsFuturs;
+    
+    const textNormalitzat = normalitzarText(cercaText);
+    return esdevenimentsFuturs.filter(esdeveniment => {
+      const nomNormalitzat = normalitzarText(esdeveniment.nom);
+      const llocNormalitzat = normalitzarText(esdeveniment.lloc);
+      
+      return nomNormalitzat.includes(textNormalitzat) || 
+             llocNormalitzat.includes(textNormalitzat);
+    });
+  }, [esdevenimentsFuturs, cercaText]);
+
+  const esdevenimentsPassatsFiltrats = useMemo(() => {
+    if (!cercaText.trim()) return esdevenimentsPassats;
+    
+    const textNormalitzat = normalitzarText(cercaText);
+    return esdevenimentsPassats.filter(esdeveniment => {
+      const nomNormalitzat = normalitzarText(esdeveniment.nom);
+      const llocNormalitzat = normalitzarText(esdeveniment.lloc);
+      
+      return nomNormalitzat.includes(textNormalitzat) || 
+             llocNormalitzat.includes(textNormalitzat);
+    });
+  }, [esdevenimentsPassats, cercaText]);
+
+  const handleCercaChange = (event) => {
+    setCercaText(event.target.value);
+  };
 
   useEffect(() => {
     setTitol(assaig ? 'Assaigs' : 'Diades');
@@ -106,11 +148,11 @@ function Esdeveniments({ assaig }) {
       );
     }
     return Object.keys(groupedEvents).map(monthYear => (
-      <Box key={monthYear}>
-        <Typography variant="subtitle2" color="textSecondary" sx={{ marginLeft: 2, marginBottom: 1, marginTop: 3 }}>
+      <Box key={monthYear} mt={2}>
+        <Typography variant="subtitle2" color="textSecondary" ml={2} mb={1}>
           {monthYear}
         </Typography>
-        <Grid container spacing={2} sx={{ padding: 2 }}>
+        <Grid container spacing={2}>
           {groupedEvents[monthYear].map(event => (
             <Grid item xs={12} sm={6} md={4} key={event.id}>
               <CardEsdeveniment
@@ -134,7 +176,7 @@ function Esdeveniments({ assaig }) {
         <Tab label={'Passat'} />
       </Tabs>
 
-      <Box sx={{ position: 'relative', height: '100%' }}>
+      <Box mr={4} sx={{ position: 'relative', height: '100%' }}>
         <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1 }}>
           {assaig ? (
             <Fab color="primary" onClick={() => navigate('/crear-assaig')}>
@@ -147,10 +189,24 @@ function Esdeveniments({ assaig }) {
           )}
         </Box>
 
-        <Box>
+        <Box ml={4} mt={2}>
+          <TextField
+            fullWidth
+            variant="standard"
+            placeholder={`Cerca un ${assaig ? 'assaig' : 'diada'}`}
+            value={cercaText}
+            onChange={handleCercaChange}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
           {tabIndex === 0
-            ? renderGroupedEvents(esdevenimentsFuturs)
-            : renderGroupedEvents(esdevenimentsPassats)}
+            ? renderGroupedEvents(esdevenimentsFutursFiltrats)
+            : renderGroupedEvents(esdevenimentsPassatsFiltrats)}
         </Box>
       </Box>
     </Box>
