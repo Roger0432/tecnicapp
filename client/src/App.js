@@ -14,7 +14,7 @@ import CrearMembre from './pages/membres/CrearMembre';
 import Membres from './pages/membres/Membres';
 
 import CustomNavbar from './pages/altres/CustomNavbar';
-import Main from './pages/Main';
+import Main from './pages/altres/Main';
 import Perfil from './pages/altres/Perfil';
 
 

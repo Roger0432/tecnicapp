@@ -1,19 +1,37 @@
 import React, { useContext } from 'react';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import { ThemeContext } from '../../index';
+import { ButtonGroup, Button } from '@mui/material';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 
 const SwitchTheme = () => {
-    const { toggleTheme } = useContext(ThemeContext);
+    const { theme, changeTheme } = useContext(ThemeContext);
 
     return (
-        <FormGroup>
-            <FormControlLabel
-                control={<Switch sx={{ ml: 1 }} onChange={toggleTheme} />}
-                label="Canviar tema"
-            />
-        </FormGroup>
+        <ButtonGroup variant="outlined" aria-label="selecció de tema">
+            <Button 
+                startIcon={<LightModeIcon />}
+                onClick={() => changeTheme('light')}
+                variant={theme === 'light' ? 'contained' : 'outlined'}
+            >
+                Clar
+            </Button>
+            <Button 
+                startIcon={<DarkModeIcon />}
+                onClick={() => changeTheme('dark')}
+                variant={theme === 'dark' ? 'contained' : 'outlined'}
+            >
+                Fosc
+            </Button>
+            <Button 
+                startIcon={<SettingsBrightnessIcon />}
+                onClick={() => changeTheme('system')}
+                variant={theme === 'system' ? 'contained' : 'outlined'}
+            >
+                Sistema
+            </Button>
+        </ButtonGroup>
     );
 };
 

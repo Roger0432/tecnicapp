@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
@@ -14,14 +14,50 @@ import '@fontsource/roboto/700.css';
 export const ThemeContext = createContext();
 
 const ThemeProviderWrapper = ({ children }) => {
-    const [theme, setTheme] = useState('light');
-
-    const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    // Funció per detectar el tema del sistema
+    const detectSystemTheme = () => {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
 
+    const [theme, setTheme] = useState(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'system') {
+            return detectSystemTheme();
+        }
+        return savedTheme || 'light';
+    });
+
+    // Efecte per detectar canvis en el tema del sistema
+    useEffect(() => {
+        if (theme === 'system') {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            const handleChange = () => {
+                // Actualitzem el tema de l'aplicació però mantenim 'system' com a preferència
+                localStorage.setItem('actualTheme', detectSystemTheme());
+                // Forcem un re-render
+                setTheme('system');
+            };
+            
+            mediaQuery.addEventListener('change', handleChange);
+            return () => mediaQuery.removeEventListener('change', handleChange);
+        }
+    }, [theme]);
+
+    // Guardem les preferències al localStorage
+    useEffect(() => {
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const changeTheme = (newTheme) => {
+        setTheme(newTheme);
+    };
+
+    // Determinem quin tema mostrar
+    const displayTheme = theme === 'system' ? detectSystemTheme() : theme;
+
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme, displayTheme, changeTheme }}>
             {children}
         </ThemeContext.Provider>
     );
@@ -76,8 +112,8 @@ root.render(
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ThemeProviderWrapper>
             <ThemeContext.Consumer>
-                {({ theme }) => (
-                    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+                {({ displayTheme }) => (
+                    <ThemeProvider theme={displayTheme === 'light' ? lightTheme : darkTheme}>
                         <CssBaseline />
                         <TitolProvider>
                             <App />

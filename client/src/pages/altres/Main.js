@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/Tronc.css';
+import '../../styles/Tronc.css';
 import { Link } from 'react-router-dom';
 import { Button, Box, Typography } from '@mui/material';
-import { useTitol } from '../context/TitolNavbar';
+import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Main() {
   const { setTitol } = useTitol();
   const [userData, setUserData] = useState('');
+  const [proximAssaig, setProximAssaig] = useState('');
+  const [proximaDiada, setProximaDiada] = useState('');
 
   useEffect(() => {
     setTitol('Menú');
@@ -46,7 +48,9 @@ function Main() {
         <Box display='flex' justifyContent='center'>
           <Box className="form-group" display="flex" flexDirection="column" gap={2} style={{ width: '100%', maxWidth: '400px' }}>
             <Button variant="contained" component={Link} to="/crear-assaig">Crear assaig</Button>
+            <Button variant="contained" component={Link} to="/">Pròxim assaig</Button>
             <Button variant="contained" component={Link} to="/crear-diada">Crear diada</Button>
+            <Button variant="contained" component={Link} to="/">Pròxima diada</Button>
           </Box>
           
           {/* 
