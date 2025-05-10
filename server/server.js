@@ -375,6 +375,63 @@ app.put('/editar-esdeveniment/:id', async (req, res) => {
 });
 
 
+app.get('/proxims-esdeveniments', async (req, res) => {
+    let client;
+    try {
+        client = await pool.connect();
+        
+        const queryAssaig = `
+            SELECT id, dia, lloc, hora_inici, hora_fi, nom, assaig
+            FROM esdeveniments
+            WHERE dia >= CURRENT_DATE AND assaig = true
+            LIMIT 1
+        `;
+        const resultAssaig = await client.query(queryAssaig);
+        
+        const queryDiada = `
+            SELECT id, dia, lloc, hora_inici, hora_fi, nom, assaig
+            FROM esdeveniments
+            WHERE dia >= CURRENT_DATE AND assaig = false
+            LIMIT 1
+        `;
+        const resultDiada = await client.query(queryDiada);
+        
+        if (resultAssaig.rows.length === 0 && resultDiada.rows.length === 0) {
+            return res.status(404).json({ msg: 'No hi ha esdeveniments', status: false });
+        }
+
+        let proximAssaig = null;
+        if (resultAssaig.rows.length > 0) {
+            proximAssaig = resultAssaig.rows[0];
+            proximAssaig.dia = formatDate(proximAssaig.dia);
+            proximAssaig.hora_inici = formatTime(proximAssaig.hora_inici);
+            proximAssaig.hora_fi = formatTime(proximAssaig.hora_fi);
+        }
+        
+        let proximaDiada = null;
+        if (resultDiada.rows.length > 0) {
+            proximaDiada = resultDiada.rows[0];
+            proximaDiada.dia = formatDate(proximaDiada.dia);
+            proximaDiada.hora_inici = formatTime(proximaDiada.hora_inici);
+            proximaDiada.hora_fi = formatTime(proximaDiada.hora_fi);
+        }
+
+        res.status(200).json({ 
+            proximAssaig: proximAssaig, 
+            proximaDiada: proximaDiada, 
+            status: true 
+        });
+    } 
+    catch (error) {
+        console.error("Error: ", error);
+        res.status(500).json({ msg: 'Error del servidor', status: false });
+    } 
+    finally {
+        client.release();
+    }
+});
+
+
 // tronc
 
 

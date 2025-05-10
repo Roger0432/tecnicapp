@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-// Funció per normalitzar text (eliminar accents i convertir a minúscules)
 const normalitzarText = (text) => {
   if (!text) return '';
   return text
@@ -33,7 +32,6 @@ function Esdeveniments({ assaig }) {
   const navigate = useNavigate();
   const { setTitol } = useTitol();
 
-  // Esdeveniments filtrats segons el text de cerca
   const esdevenimentsFutursFiltrats = useMemo(() => {
     if (!cercaText.trim()) return esdevenimentsFuturs;
     
