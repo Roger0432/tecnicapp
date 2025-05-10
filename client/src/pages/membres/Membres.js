@@ -1,24 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Box, 
-  Fab, 
-  TextField, 
-  InputAdornment, 
-  Card, 
-  CardContent, 
-  Typography, 
-  Grid,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
-  IconButton,
-  Tooltip
-} from '@mui/material';
+import { Box, Fab, TextField, InputAdornment, Card, CardContent, Typography, Grid, FormControl, Select, MenuItem, InputLabel, IconButton, Tooltip } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchIcon from '@mui/icons-material/Search';
-import SortIcon from '@mui/icons-material/Sort';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useTitol } from '../../context/TitolNavbar';
@@ -215,7 +199,7 @@ function Membres() {
                   onClick={() => handleCardClick(membre)}
                 >
                   <CardContent>
-                    <Typography variant="h6" component="div">
+                    <Typography variant="body1" component="div" fontWeight="bold">
                       {membre.mote || "Sense mote"}
                     </Typography>
                     <Box sx={{ 
@@ -223,7 +207,7 @@ function Membres() {
                       justifyContent: 'space-between', 
                       alignItems: 'center' 
                     }}>
-                      <Typography variant="subtitle1" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary">
                         {membre.nomComplet}
                       </Typography>
                       {membre.alcada_hombro && (

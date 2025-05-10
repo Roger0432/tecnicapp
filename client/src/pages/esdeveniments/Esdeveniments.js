@@ -190,7 +190,7 @@ function Esdeveniments({ assaig }) {
         <Box ml={2} mt={2}>
           <TextField
             fullWidth
-            variant="standard"
+            variant="outlined"
             placeholder={`Cerca un ${assaig ? 'assaig' : 'diada'}`}
             value={cercaText}
             onChange={handleCercaChange}
