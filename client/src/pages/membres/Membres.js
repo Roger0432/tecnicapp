@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Fab, TextField, InputAdornment } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { 
+  Box, 
+  Fab, 
+  TextField, 
+  InputAdornment, 
+  Card, 
+  CardContent, 
+  Typography, 
+  Grid,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  IconButton,
+  Tooltip
+} from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchIcon from '@mui/icons-material/Search';
+import SortIcon from '@mui/icons-material/Sort';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useTitol } from '../../context/TitolNavbar';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-// Funció per normalitzar text (eliminar accents i convertir a minúscules)
 const normalitzarText = (text) => {
   return text
     .toLowerCase()
@@ -20,6 +36,8 @@ function Membres() {
   const [membres, setMembres] = useState([]);
   const [membresFiltrats, setMembresFiltrats] = useState([]);
   const [cercaText, setCercaText] = useState('');
+  const [ordenacio, setOrdenacio] = useState('nom');
+  const [direccioOrdenacio, setDireccioOrdenacio] = useState('asc');
   const navigate = useNavigate();
   const { setTitol } = useTitol();
 
@@ -37,12 +55,7 @@ function Membres() {
             ...membre,
             nomComplet: `${membre.nom} ${membre.cognoms}`,
           }));
-          // Ordenar membres alfabèticament per nom i cognoms
-          const membresOrdenats = membresAmbNomComplet.sort((a, b) => 
-            a.nomComplet.localeCompare(b.nomComplet)
-          );
-          setMembres(membresOrdenats);
-          setMembresFiltrats(membresOrdenats);
+          ordenarMembres(membresAmbNomComplet, ordenacio, direccioOrdenacio);
         } else {
           console.error('Error:', data.msg);
         }
@@ -52,14 +65,43 @@ function Membres() {
       });
   }, [setTitol]);
 
-  useEffect(() => {
+  const getValorOrdenacio = (membre, criteri) => {
+    switch (criteri) {
+      case 'nom':
+        return membre.nomComplet;
+      case 'mote':
+        return membre.mote || membre.nomComplet;
+      case 'alcada':
+        return membre.alcada_hombro !== undefined ? membre.alcada_hombro : Infinity;
+      default:
+        return membre.nomComplet;
+    }
+  };
+
+  const ordenarMembres = (membresPerOrdenar, criteriOrdenacio, direccio) => {
+    const membresOrdenats = [...membresPerOrdenar].sort((a, b) => {
+      const valorA = getValorOrdenacio(a, criteriOrdenacio);
+      const valorB = getValorOrdenacio(b, criteriOrdenacio);
+      
+      if (criteriOrdenacio === 'alcada') {
+        return direccio === 'asc' ? valorA - valorB : valorB - valorA;
+      } else {
+        const comparacio = String(valorA).localeCompare(String(valorB));
+        return direccio === 'asc' ? comparacio : -comparacio;
+      }
+    });
+
+    setMembres(membresOrdenats);
+    aplicarCercaActual(membresOrdenats);
+  };
+
+  const aplicarCercaActual = (membresOrdenats) => {
     if (cercaText.trim() === '') {
-      setMembresFiltrats(membres);
+      setMembresFiltrats(membresOrdenats);
     } else {
       const textNormalitzat = normalitzarText(cercaText);
       
-      const filtrats = membres.filter(membre => {
-        // Normalitzar nom complet i mote per a la comparació
+      const filtrats = membresOrdenats.filter(membre => {
         const nomNormalitzat = normalitzarText(membre.nomComplet);
         const moteNormalitzat = membre.mote ? normalitzarText(membre.mote) : '';
         
@@ -69,28 +111,47 @@ function Membres() {
       
       setMembresFiltrats(filtrats);
     }
+  }
+
+  useEffect(() => {
+    if (membres.length > 0) {
+      ordenarMembres(membres, ordenacio, direccioOrdenacio);
+    }
+  }, [ordenacio, direccioOrdenacio]);
+
+  useEffect(() => {
+    aplicarCercaActual(membres);
   }, [cercaText, membres]);
 
   const handleCercaChange = (event) => {
     setCercaText(event.target.value);
   };
 
-  const columnes = [
-    { field: 'mote', headerName: 'Mote', flex: 0.6 },
-    { field: 'nomComplet', headerName: 'Nom', flex: 1 },
-  ];
+  const handleOrdenacioChange = (event) => {
+    setOrdenacio(event.target.value);
+  };
 
-  const handleRowClick = (params) => {
-    navigate('/crear-membre', { state: { membre: params.row, editar: true } });
+  const toggleDireccioOrdenacio = () => {
+    setDireccioOrdenacio(prev => prev === 'asc' ? 'desc' : 'asc');
+  };
+
+  const handleCardClick = (membre) => {
+    navigate('/crear-membre', { state: { membre, editar: true } });
   };
 
   return (
     <Box m={2}>
       <Box sx={{ position: 'relative', height: '100%' }}>
-        <Box mb={2}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { xs: 'stretch', sm: 'flex-end' },
+          gap: 2,
+          mb: 2 
+        }}>
           <TextField
             fullWidth
-            variant="standard"
+            variant="outlined"
             placeholder="Cerca un membre"
             InputProps={{
               startAdornment: (
@@ -102,17 +163,80 @@ function Membres() {
             value={cercaText}
             onChange={handleCercaChange}
           />
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            minWidth: { xs: '100%', sm: '200px' } 
+          }}>
+            <FormControl sx={{ flexGrow: 1 }}>
+              <InputLabel id="ordenacio-label">Ordenar per</InputLabel>
+              <Select
+                labelId="ordenacio-label"
+                id="ordenacio-select"
+                value={ordenacio}
+                onChange={handleOrdenacioChange}
+                label="Ordenar per"
+                variant="outlined"
+              >
+                <MenuItem value="nom">Nom</MenuItem>
+                <MenuItem value="mote">Mote</MenuItem>
+                <MenuItem value="alcada">Alçada espatlla</MenuItem>
+              </Select>
+            </FormControl>
+            <Tooltip title={direccioOrdenacio === 'asc' ? 'Ascendent' : 'Descendent'}>
+              <IconButton 
+                onClick={toggleDireccioOrdenacio} 
+                sx={{ 
+                  ml: 1,
+                  height: 40,
+                  width: 40,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                {direccioOrdenacio === 'asc' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
-        <Box>
-          <DataGrid
-            rows={membresFiltrats}
-            columns={columnes}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 100]}
-            disableSelectionOnClick
-            onRowClick={handleRowClick}
-            sx={{ marginTop: 4 }}
-          />
+        
+        <Box sx={{ marginTop: 4 }}>
+          <Grid container spacing={2}>
+            {membresFiltrats.map((membre) => (
+              <Grid item xs={12} sm={6} md={4} key={membre.id}>
+                <Card 
+                  sx={{ 
+                    cursor: 'pointer',
+                    '&:hover': {
+                      boxShadow: 6,
+                    }
+                  }}
+                  onClick={() => handleCardClick(membre)}
+                >
+                  <CardContent>
+                    <Typography variant="h6" component="div">
+                      {membre.mote || "Sense mote"}
+                    </Typography>
+                    <Box sx={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center' 
+                    }}>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        {membre.nomComplet}
+                      </Typography>
+                      {membre.alcada_hombro && (
+                        <Typography variant="body2" color="text.secondary">
+                          {membre.alcada_hombro} cm
+                        </Typography>
+                      )}
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
 
         <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1 }}>
