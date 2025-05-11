@@ -101,6 +101,7 @@ function CrearEsdeveniment({ assaig }) {
               label="Dia"
               type="date"
               value={dia}
+              placeholder="Dia de la diada"
               onChange={(e) => setDia(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
@@ -134,6 +135,7 @@ function CrearEsdeveniment({ assaig }) {
               label="Hora"
               type="time"
               value={hora}
+              placeholder='Hora de la diada'
               onChange={(e) => setHora(e.target.value)}
               InputLabelProps={{ shrink: true }}
               fullWidth
