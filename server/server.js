@@ -134,10 +134,10 @@ app.post('/registre', async (req, res) => {
         }
 
         const queryInsert = `
-            INSERT INTO users (nom, cognoms, email, password, descodificat, rol_id)
+            INSERT INTO users (nom, cognoms, email, password, rol_id)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
-        const values = [nom, cognoms, email, bcrypt.hashSync(password, 10), password, rol];
+        const values = [nom, cognoms, email, bcrypt.hashSync(password, 10), rol];
         await client.query(queryInsert, values);
 
         const authtoken = generateToken(email);
