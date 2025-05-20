@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { 
   List, 
@@ -6,7 +5,7 @@ import {
   ListItemText, 
   ListItemIcon,
   Box, 
-  Divider, 
+  Divider,
   Typography, 
   Avatar,
   Paper,
@@ -113,12 +112,6 @@ function NavbarListDrawer({ navLinks, setOpen }) {
             
             <Box sx={{ flexGrow: 1 }} />
             
-            <Divider sx={{ mt: 'auto' }} />
-            <Box sx={{ p: 2, textAlign: 'center' }}>
-                <Typography variant="caption" color="text.secondary">
-                    © Tecnicapp {new Date().getFullYear()}
-                </Typography>
-            </Box>
         </Paper>
     );
 }
