@@ -1,57 +1,115 @@
-# Getting Started with Create React App
+# Tecnicapp - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aquest és el frontend de l'aplicació Tecnicapp, una aplicació per gestionar castellers, esdeveniments i castells.
 
-## Available Scripts
+## Requisits previs
 
-In the project directory, you can run:
+- Node.js (v18 o superior)
+- npm o yarn
+- Backend de Tecnicapp en execució (al port 5000 per defecte)
 
-### `npm start`
+## Instal·lació
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Clona el repositori o descarrega els fitxers
+2. Navega a la carpeta del client:
+```bash
+cd Tecnicapp/client
+```
+3. Instal·la les dependències:
+```bash
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Configuració
 
-### `npm test`
+La configuració principal ja està feta a través del fitxer `package.json`. Per defecte, l'aplicació es connecta al backend a través del proxy configurat en:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```json
+"proxy": "http://localhost:5000"
+```
 
-### `npm run build`
+Això significa que el backend ha d'estar en execució a http://localhost:5000. Si el backend s'executa en una altra ubicació, modifica aquesta línia.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Execució en mode desenvolupament
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Per iniciar l'aplicació en mode desenvolupament:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `npm run eject`
+Això iniciarà l'aplicació i obrirà automàticament el navegador a http://localhost:3000.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Compilació per a producció
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Per crear una compilació optimitzada per a producció:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Això generarà una versió optimitzada de l'aplicació a la carpeta `build/`.
 
-## Learn More
+## Desplegament
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+La versió de producció generada amb `npm run build` pot ser desplegada a qualsevol servei d'allotjament estàtic com:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Vercel
+- Netlify
+- GitHub Pages
+- Firebase Hosting
 
-### Code Splitting
+### Desplegament a Vercel
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Per desplegar a Vercel:
 
-### Analyzing the Bundle Size
+1. Instal·la Vercel CLI:
+```bash
+npm install -g vercel
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. Executa la comanda de desplegament:
+```bash
+vercel
+```
+
+3. Segueix les instruccions per completar el desplegament
+
+## Característiques de l'aplicació
+
+L'aplicació client de Tecnicapp inclou les següents característiques:
+
+### Tema clar/fosc
+L'aplicació suporta tema clar i fosc, i pot detectar automàticament la preferència del sistema.
+
+### Pàgines principals
+
+- **Autenticació**: Inici de sessió i registre d'usuaris
+- **Esdeveniments**: Gestió d'assajos i actuacions
+- **Membres**: Gestió dels membres de la colla
+- **Castells**: Configuració i gestió de castells
+- **Tronc i Pinya**: Eina visual per organitzar el tronc i la pinya dels castells
+
+## Estructura del projecte
+
+```
+client/
+├── public/                  # Fitxers estàtics
+│   └── img/                 # Imatges públiques
+├── src/                     # Codi font
+│   ├── App.js               # Component principal
+│   ├── index.js             # Punt d'entrada
+│   ├── context/             # Context de React
+│   ├── pages/               # Components de pàgina
+│   │   ├── altres/          # Components generals
+│   │   ├── autenticacio/    # Components d'inici de sessió i registre
+│   │   ├── castells/        # Components de gestió de castells
+│   │   ├── esdeveniments/   # Components de gestió d'esdeveniments
+│   │   └── membres/         # Components de gestió de membres
+│   ├── styles/              # Fitxers CSS
+│   └── svg/                 # Gràfics SVG per a les plantilles
+└── package.json             # Configuració i dependències
+```
 
 ### Making a Progressive Web App
 
