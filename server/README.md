@@ -27,84 +27,263 @@ npm install
 ```sql
 CREATE DATABASE tecnicapp;
 ```
-3. Connecta't a la base de dades i crea les taules necessàries:
+3. Connecta't a la base de dades i executa el següent script de creació complet:
 
 ```sql
--- Crear taula de rols
-CREATE TABLE rols (
-    id SERIAL PRIMARY KEY,
-    rol VARCHAR(50) NOT NULL
+-- Creació de taules
+
+-- Taula de rols
+CREATE TABLE public.rols (
+    id integer NOT NULL,
+    rol character varying NOT NULL
 );
 
--- Crear taula d'usuaris
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    cognoms VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    rol_id INTEGER REFERENCES rols(id)
+ALTER TABLE public.rols 
+    ADD CONSTRAINT rols_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.rols_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.rols_id_seq OWNED BY public.rols.id;
+ALTER TABLE ONLY public.rols ALTER COLUMN id SET DEFAULT nextval('public.rols_id_seq'::regclass);
+
+-- Taula d'usuaris
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    nom character varying NOT NULL,
+    cognoms character varying NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    rol_id integer NOT NULL
 );
 
--- Crear taula de membres
-CREATE TABLE membres (
-    id SERIAL PRIMARY KEY,
-    mote VARCHAR(100),
-    nom VARCHAR(100) NOT NULL,
-    cognoms VARCHAR(100) NOT NULL,
-    alcada_hombro NUMERIC(4,2),
-    alcada_mans NUMERIC(4,2),
-    comentaris TEXT
+ALTER TABLE public.users 
+    ADD CONSTRAINT users_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_rols_fk FOREIGN KEY (rol_id) REFERENCES public.rols(id) ON DELETE CASCADE;
+
+-- Taula de resultats
+CREATE TABLE public.resultats (
+    id integer NOT NULL,
+    descripcio character varying NOT NULL
 );
 
--- Crear taula d'esdeveniments
-CREATE TABLE esdeveniments (
-    id SERIAL PRIMARY KEY,
-    dia DATE NOT NULL,
-    lloc VARCHAR(200) NOT NULL,
-    hora_inici TIME NOT NULL,
-    hora_fi TIME NOT NULL,
-    assaig BOOLEAN NOT NULL,
-    nom VARCHAR(200)
+ALTER TABLE public.resultats 
+    ADD CONSTRAINT resultats_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.resultats_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.resultats_id_seq OWNED BY public.resultats.id;
+ALTER TABLE ONLY public.resultats ALTER COLUMN id SET DEFAULT nextval('public.resultats_id_seq'::regclass);
+
+-- Taula d'esdeveniments
+CREATE TABLE public.esdeveniments (
+    id integer NOT NULL,
+    dia date NOT NULL,
+    lloc character varying NOT NULL,
+    hora_inici time without time zone NOT NULL,
+    hora_fi time without time zone NOT NULL,
+    assaig boolean NOT NULL,
+    nom character varying NOT NULL
 );
 
--- Crear taula de castells
-CREATE TABLE castells (
-    id SERIAL PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL
+ALTER TABLE public.esdeveniments 
+    ADD CONSTRAINT esdeveniments_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.assaigsdiades_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.assaigsdiades_id_seq OWNED BY public.esdeveniments.id;
+ALTER TABLE ONLY public.esdeveniments ALTER COLUMN id SET DEFAULT nextval('public.assaigsdiades_id_seq'::regclass);
+
+-- Taula de castells
+CREATE TABLE public.castells (
+    id integer NOT NULL,
+    nom character varying NOT NULL,
+    amplada numeric NOT NULL,
+    alcada numeric NOT NULL,
+    agulla boolean NOT NULL,
+    folre boolean NOT NULL,
+    manilles boolean NOT NULL,
+    puntals boolean NOT NULL,
+    per_sota boolean NOT NULL,
+    margarita boolean,
+    grup numeric NOT NULL,
+    subgrup numeric NOT NULL,
+    punts_carregat numeric NOT NULL,
+    punts_descarregat numeric NOT NULL
 );
 
--- Crear taula de relació entre esdeveniments i castells
-CREATE TABLE esdeveniments_castells (
-    id SERIAL PRIMARY KEY,
-    esdeveniment_id INTEGER REFERENCES esdeveniments(id) ON DELETE CASCADE,
-    castell_id INTEGER REFERENCES castells(id) ON DELETE CASCADE,
-    nom VARCHAR(100)
+ALTER TABLE public.castells 
+    ADD CONSTRAINT castells_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.castells_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.castells_id_seq OWNED BY public.castells.id;
+ALTER TABLE ONLY public.castells ALTER COLUMN id SET DEFAULT nextval('public.castells_id_seq'::regclass);
+
+-- Taula d'esdeveniments_castells
+CREATE TABLE public.esdeveniments_castells (
+    id integer NOT NULL,
+    esdeveniment_id integer NOT NULL,
+    castell_id integer NOT NULL,
+    resultat_id integer NOT NULL,
+    nom character varying
 );
 
--- Crear taula per al tronc
-CREATE TABLE tronc (
-    id SERIAL PRIMARY KEY,
-    esdeveniment_castell_id INTEGER REFERENCES esdeveniments_castells(id) ON DELETE CASCADE,
-    membre_id INTEGER REFERENCES membres(id) ON DELETE CASCADE,
-    posicio_id INTEGER NOT NULL
+ALTER TABLE public.esdeveniments_castells 
+    ADD CONSTRAINT esdeveniments_castells_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.assaigsdiades_castells_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.assaigsdiades_castells_id_seq OWNED BY public.esdeveniments_castells.id;
+ALTER TABLE ONLY public.esdeveniments_castells ALTER COLUMN id SET DEFAULT nextval('public.assaigsdiades_castells_id_seq'::regclass);
+ALTER TABLE ONLY public.esdeveniments_castells
+    ADD CONSTRAINT esdeveniments_castells_castells_fk FOREIGN KEY (castell_id) REFERENCES public.castells(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.esdeveniments_castells
+    ADD CONSTRAINT esdeveniments_castells_esdeveniments_fk FOREIGN KEY (esdeveniment_id) REFERENCES public.esdeveniments(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.esdeveniments_castells
+    ADD CONSTRAINT esdeveniments_castells_resultats_fk FOREIGN KEY (resultat_id) REFERENCES public.resultats(id) ON DELETE CASCADE;
+
+-- Taula de membres
+CREATE TABLE public.membres (
+    id integer NOT NULL,
+    nom character varying NOT NULL,
+    cognoms character varying,
+    mote character varying NOT NULL,
+    comentaris character varying,
+    alcada_hombro numeric,
+    alcada_mans numeric
 );
 
--- Crear taula per a la pinya
-CREATE TABLE pinya (
-    id SERIAL PRIMARY KEY,
-    esdeveniment_castell_id INTEGER REFERENCES esdeveniments_castells(id) ON DELETE CASCADE,
-    membre_id INTEGER REFERENCES membres(id) ON DELETE CASCADE,
-    posicio_id INTEGER NOT NULL
+ALTER TABLE public.membres 
+    ADD CONSTRAINT membres_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.membres_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.membres_id_seq OWNED BY public.membres.id;
+ALTER TABLE ONLY public.membres ALTER COLUMN id SET DEFAULT nextval('public.membres_id_seq'::regclass);
+
+-- Taula de posicions
+CREATE TABLE public.posicions (
+    id integer NOT NULL,
+    nom character varying NOT NULL
 );
 
--- Inserir rols bàsics
-INSERT INTO rols (rol) VALUES ('Administrador');
-INSERT INTO rols (rol) VALUES ('Tècnic');
-INSERT INTO rols (rol) VALUES ('Cap de colla');
+ALTER TABLE public.posicions 
+    ADD CONSTRAINT posicions_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.posicions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.posicions_id_seq OWNED BY public.posicions.id;
+ALTER TABLE ONLY public.posicions ALTER COLUMN id SET DEFAULT nextval('public.posicions_id_seq'::regclass);
+
+-- Taula de membres_posicions
+CREATE TABLE public.membres_posicions (
+    id integer NOT NULL,
+    membre_id integer NOT NULL,
+    esdeveniment_castell_id integer NOT NULL,
+    posicio character varying NOT NULL
+);
+
+ALTER TABLE public.membres_posicions 
+    ADD CONSTRAINT membres_posicions_pk PRIMARY KEY (id);
+
+CREATE SEQUENCE public.membres_posicions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.membres_posicions_id_seq OWNED BY public.membres_posicions.id;
+ALTER TABLE ONLY public.membres_posicions ALTER COLUMN id SET DEFAULT nextval('public.membres_posicions_id_seq'::regclass);
+ALTER TABLE ONLY public.membres_posicions
+    ADD CONSTRAINT membres_posicions_membres_fk FOREIGN KEY (membre_id) REFERENCES public.membres(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.membres_posicions
+    ADD CONSTRAINT members_posicions_esdeveniments_castells_fk FOREIGN KEY (esdeveniment_castell_id) REFERENCES public.esdeveniments_castells(id) ON DELETE CASCADE;
+
+-- Dades mínimes necessàries per al funcionament de l'aplicació
+-- Inserció de rols bàsics
+INSERT INTO public.rols (id, rol) VALUES (1, 'Cap de colla');
+INSERT INTO public.rols (id, rol) VALUES (2, 'Sots cap de colla');
+INSERT INTO public.rols (id, rol) VALUES (3, 'Cap de troncs');
+INSERT INTO public.rols (id, rol) VALUES (4, 'Cap de canalla');
+INSERT INTO public.rols (id, rol) VALUES (5, 'Cap de pinyes');
+INSERT INTO public.rols (id, rol) VALUES (6, 'Cap de baixos');
+INSERT INTO public.rols (id, rol) VALUES (7, 'Cap de crosses');
+INSERT INTO public.rols (id, rol) VALUES (8, 'Equip de troncs');
+INSERT INTO public.rols (id, rol) VALUES (9, 'Equip de canalla');
+INSERT INTO public.rols (id, rol) VALUES (10, 'Equip de pinyes');
+INSERT INTO public.rols (id, rol) VALUES (11, 'Equip de baixos');
+INSERT INTO public.rols (id, rol) VALUES (12, 'Equip de crosses');
+
+-- Inserció de resultats possibles per als castells
+INSERT INTO public.resultats (id, descripcio) VALUES (1, 'Per fer');
+INSERT INTO public.resultats (id, descripcio) VALUES (2, 'Descarregat');
+INSERT INTO public.resultats (id, descripcio) VALUES (3, 'Carregat');
+INSERT INTO public.resultats (id, descripcio) VALUES (4, 'Intent desmuntat');
+INSERT INTO public.resultats (id, descripcio) VALUES (5, 'Intent');
+
+-- Inserció de posicions bàsiques
+INSERT INTO public.posicions (id, nom) VALUES (1, 'baix');
+INSERT INTO public.posicions (id, nom) VALUES (2, 'tronc');
+INSERT INTO public.posicions (id, nom) VALUES (3, 'dosos');
+INSERT INTO public.posicions (id, nom) VALUES (4, 'acotxador');
+INSERT INTO public.posicions (id, nom) VALUES (5, 'enxaneta');
 ```
-
-4. Opcionalment, pots inserir dades d'exemple per provar l'aplicació
 
 ## Configuració del fitxer .env
 

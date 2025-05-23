@@ -111,18 +111,35 @@ client/
 └── package.json             # Configuració i dependències
 ```
 
-### Making a Progressive Web App
+## Tecnologies utilitzades
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- React 19
+- React Router 6
+- Material UI 6
+- Emotion (per a estils)
+- React Zoom Pan Pinch (per a la visualització de plantilles)
 
-### Advanced Configuration
+## API i integració amb el backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+El frontend es comunica amb el backend a través d'una API REST. Les peticions principals inclouen:
 
-### Deployment
+- Autenticació d'usuaris (login/registre)
+- Gestió d'esdeveniments (crear, editar, eliminar)
+- Gestió de membres (afegir, editar, eliminar)
+- Gestió de castells i les seves configuracions
+- Organització de tronc i pinya
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Totes les peticions API inclouen un token JWT per autenticació després de l'inici de sessió.
 
-### `npm run build` fails to minify
+## Desenvolupament
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Per contribuir al desenvolupament:
+
+1. Fes un fork del repositori
+2. Crea una branca per a la teva característica o correcció
+3. Implementa els canvis
+4. Envia un pull request
+
+## Suport
+
+Si tens problemes amb la instal·lació o l'ús de l'aplicació, no dubtis en contactar amb l'equip de desenvolupament.
