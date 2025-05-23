@@ -273,8 +273,8 @@ const EditarPinya = ({ castell }) => {
                 pinya_svg = <PinyaPilar ref={svgRef} style={{ width: '100%', height: '100%' }}/>;
                 break;
             case 2:
-                pinya_svg = <PinyaTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                break;
+                //pinya_svg = <PinyaTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                //break;
             case 3:
                 //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
                 //else pinya_svg = <PinyaTres ref={svgRef} style={{ width: '100%', height: '100%' }} />;
