@@ -14,7 +14,6 @@ import '@fontsource/roboto/700.css';
 export const ThemeContext = createContext();
 
 const ThemeProviderWrapper = ({ children }) => {
-    // Funció per detectar el tema del sistema
     const detectSystemTheme = () => {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
@@ -27,15 +26,12 @@ const ThemeProviderWrapper = ({ children }) => {
         return savedTheme || 'light';
     });
 
-    // Efecte per detectar canvis en el tema del sistema
     useEffect(() => {
         if (theme === 'system') {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
             
             const handleChange = () => {
-                // Actualitzem el tema de l'aplicació però mantenim 'system' com a preferència
                 localStorage.setItem('actualTheme', detectSystemTheme());
-                // Forcem un re-render
                 setTheme('system');
             };
             
@@ -44,7 +40,6 @@ const ThemeProviderWrapper = ({ children }) => {
         }
     }, [theme]);
 
-    // Guardem les preferències al localStorage
     useEffect(() => {
         localStorage.setItem('theme', theme);
     }, [theme]);

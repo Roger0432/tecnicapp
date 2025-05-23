@@ -1,57 +1,41 @@
-// Importem les llibreries necessàries
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as PinyaPilar } from '../../svg/pinya-pilar.svg';
-import { ReactComponent as PinyaTorre } from '../../svg/pinya-torre.svg';
 import { Box, Modal, Paper, Typography, TextField, List, ListItemButton, ListItemText, Button, Fab, Tooltip, Snackbar, Alert , Divider } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
-// Definim la URL del backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-// Component principal per editar la pinya d'un castell
 const EditarPinya = ({ castell }) => {
-    // Obtenim l'ID del castell des de la URL
     const { id } = useParams();
 
-    // Definim els estats del component
-    const [castellData, setCastellData] = useState(null); // Dades del castell
-    const [membresPinya, setMembresPinya] = useState([]); // Membres assignats a la pinya
-    const [membresNoPinya, setMembresNoPinya] = useState([]); // Membres no assignats a la pinya
-    const [selectedCell, setSelectedCell] = useState(null); // Cel·la seleccionada a l'SVG
-    const [searchTerm, setSearchTerm] = useState(''); // Terme de cerca per filtrar membres
-    const svgRef = useRef(null); // Referència a l'SVG
-    const [snackbarOpen, setSnackbarOpen] = useState(false); // Estat per controlar el Snackbar
-
-    // Efecte per carregar les dades inicials del castell i els membres
-    useEffect(() => {
-        if (castell) setCastellData(castell); // Assignem les dades del castell si existeixen
+    const [castellData, setCastellData] = useState(null);
+    const [membresPinya, setMembresPinya] = useState([]);
+    const [membresNoPinya, setMembresNoPinya] = useState([]);
+    const [selectedCell, setSelectedCell] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const svgRef = useRef(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);    useEffect(() => {
+        if (castell) setCastellData(castell);
         else console.error('Castell no trobat');
 
-        // Fem dues crides al backend per obtenir els membres assignats i no assignats
         Promise.all([
             fetch(`${BACKEND_URL}/membres-no-pinya/${id}`).then(response => response.json()),
             fetch(`${BACKEND_URL}/membres-pinya/${id}`).then(response => response.json())
         ])
         .then(([membresNoPinyaData, pinyaData]) => {
-            // Assignem els membres no assignats si la resposta és correcta
             if (membresNoPinyaData.status) setMembresNoPinya(membresNoPinyaData.membres);
             else console.error(membresNoPinyaData.msg);
 
-            // Assignem els membres de la pinya si la resposta és correcta
             if (pinyaData.status) setMembresPinya(pinyaData.pinya);
             else console.error(pinyaData.msg);
         })
-        .catch(error => console.error('Error:', error)); // Gestionem errors
-    }, [id, castell]);
-
-    // Efecte per actualitzar l'SVG amb els membres de la pinya
-    useEffect(() => {
+        .catch(error => console.error('Error:', error));
+    }, [id, castell]);    useEffect(() => {
         if (svgRef.current) {
-            // Actualitzem els textos de l'SVG amb els noms dels membres
             membresPinya.forEach(membre => {
                 const textElement = svgRef.current.querySelector(`#text-${membre.posicio}`);
                 if (textElement) {
@@ -59,58 +43,47 @@ const EditarPinya = ({ castell }) => {
                 }
             });
 
-            // Fem clicables totes les formes de l'SVG
             const formElements = svgRef.current.querySelectorAll(
                 '[id^="baix-"], [id^="contrafort-"], [id^="agulla-"], [id^="rengla-"], [id^="lateral-"], [id^="crossa-"]'
             );
             
             formElements.forEach(element => {
-                element.style.cursor = 'pointer'; // Canviem el cursor per indicar que és clicable
+                element.style.cursor = 'pointer';
                 
-                // Netegem l'event listener anterior si n'hi ha
                 const newElement = element.cloneNode(true);
                 if (element.parentNode) {
                     element.parentNode.replaceChild(newElement, element);
                 }
                 
-                // Afegim un event listener per gestionar el clic
                 newElement.addEventListener('click', () => {
                     handleCellClick(newElement.id);
                 });
             });
 
-            // Fem clicables també els textos de l'SVG
             const textElements = svgRef.current.querySelectorAll(
                 '[id^="text-baix-"], [id^="text-contrafort-"], [id^="text-agulla-"], [id^="text-rengla-"], [id^="text-lateral-"], [id^="text-crossa-"]'
             );
             
             textElements.forEach(element => {
-                element.style.cursor = 'pointer'; // Canviem el cursor per indicar que és clicable
+                element.style.cursor = 'pointer';
                 
-                // Netegem l'event listener anterior si n'hi ha
                 const newElement = element.cloneNode(true);
                 if (element.parentNode) {
                     element.parentNode.replaceChild(newElement, element);
                 }
                 
-                // Afegim un event listener per gestionar el clic
                 newElement.addEventListener('click', () => {
-                    // Eliminem el prefix "text-" per obtenir l'ID real de posició
                     const posicioId = newElement.id.replace('text-', '');
                     handleCellClick(posicioId);
                 });
             });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [membresPinya, castellData]);
-
-    // Funció per gestionar el clic en una cel·la de l'SVG
-    const handleCellClick = (posicio) => {
-        setSelectedCell(posicio); // Assignem la cel·la seleccionada
-        setSearchTerm(''); // Reiniciem el terme de cerca
+    }, [membresPinya, castellData]);    const handleCellClick = (posicio) => {
+        setSelectedCell(posicio);
+        setSearchTerm('');
     };
 
-    // Funció per normalitzar text (eliminar accents i convertir a minúscules)
     const normalizeText = (text) => {
         return text
             .toLowerCase()
@@ -118,27 +91,19 @@ const EditarPinya = ({ castell }) => {
             .replace(/[\u0300-\u036f]/g, "");
     };
 
-    // Funció per gestionar el canvi en el camp de cerca
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value); // Actualitzem el terme de cerca amb el valor original
-    };
-
-    // Filtrar els membres no assignats segons el terme de cerca
-    const filteredMembers = membresNoPinya.filter(membre => {
+        setSearchTerm(event.target.value);
+    };    const filteredMembers = membresNoPinya.filter(membre => {
         const normalizedSearchTerm = normalizeText(searchTerm);
         const normalizedMote = normalizeText(membre.mote);
         const normalizedFullName = normalizeText(`${membre.nom} ${membre.cognoms}`);
         
         return normalizedMote.includes(normalizedSearchTerm) || 
                normalizedFullName.includes(normalizedSearchTerm);
-    });
-
-    // Funció per assignar un membre a una cel·la seleccionada
-    const handleMemberSelect = (membreSeleccionat) => {
+    });    const handleMemberSelect = (membreSeleccionat) => {
         const membresPinyaActuals = [...membresPinya];
         const membresNoPinyaActuals = [...membresNoPinya];
     
-        // Buscar si ja hi ha un membre a aquesta posició
         let membreAnterior = null;
         for (let i = 0; i < membresPinyaActuals.length; i++) {
             if (membresPinyaActuals[i].posicio === selectedCell) {
@@ -147,12 +112,10 @@ const EditarPinya = ({ castell }) => {
             }
         }
     
-        // Si n'hi ha, el tornem a la llista de membres disponibles
         if (membreAnterior) {
             membresNoPinyaActuals.push(membreAnterior);
         }
     
-        // Eliminem el membre anterior de la pinya
         const nousMembresPinya = [];
         for (let i = 0; i < membresPinyaActuals.length; i++) {
             if (membresPinyaActuals[i].posicio !== selectedCell) {
@@ -160,10 +123,8 @@ const EditarPinya = ({ castell }) => {
             }
         }
     
-        // Afegim el nou membre seleccionat
         nousMembresPinya.push({ ...membreSeleccionat, posicio: selectedCell });
     
-        // Actualitzem la llista de membres no assignats
         const nousMembresNoPinya = [];
         for (let i = 0; i < membresNoPinyaActuals.length; i++) {
             if (membresNoPinyaActuals[i].id !== membreSeleccionat.id) {
@@ -171,22 +132,17 @@ const EditarPinya = ({ castell }) => {
             }
         }
     
-        // Actualitzem l'estat
         setMembresPinya(nousMembresPinya);
         setMembresNoPinya(nousMembresNoPinya);
         setSelectedCell(null);
     
-        // Actualitzem el text a l'SVG amb el nou membre
         if (svgRef.current) {
             const textElement = svgRef.current.querySelector(`#text-${selectedCell}`);
             if (textElement) {
                 textElement.textContent = membreSeleccionat.mote;
             }
         }
-    };
-
-    // Funció per eliminar un membre d'una cel·la seleccionada
-    const handleEliminarMembre = () => {
+    };    const handleEliminarMembre = () => {
         const membresPinyaActuals = [...membresPinya];
         const membresNoPinyaActuals = [...membresNoPinya];
     
@@ -214,21 +170,16 @@ const EditarPinya = ({ castell }) => {
     
         setSelectedCell(null);
 
-        // Neteja el contingut de text de l'SVG
         if (svgRef.current) {
             const textElement = svgRef.current.querySelector(`#text-${selectedCell}`);
             if (textElement) {
                 textElement.textContent = '';
             }
         }
-    };
-
-    // Funció per cancel·lar la selecció d'una cel·la
-    const handleCancelar = () => {
+    };    const handleCancelar = () => {
         setSelectedCell(null);
     };
 
-    // Funció per guardar els canvis al backend
     const handleGuardar = () => {
         fetch(`${BACKEND_URL}/actualitzar-pinya/${id}`, {
             method: 'PUT',
@@ -242,19 +193,15 @@ const EditarPinya = ({ castell }) => {
             if (!data.status) {
                 console.error(data.msg);
             } else {
-                setSnackbarOpen(true); // Mostrem el Snackbar si la resposta és correcta
+                setSnackbarOpen(true);
             }
         })
         .catch(error => console.error('Error:', error));
     };
 
-    // Funció per tancar el Snackbar
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
-    };
-
-    // Actualitza el text de l'SVG amb els noms dels membres
-    useEffect(() => {
+    };    useEffect(() => {
         if (svgRef.current && membresPinya.length > 0) {
             membresPinya.forEach(membre => {
                 const textElement = svgRef.current.querySelector(`#text-${membre.posicio}`);
@@ -265,7 +212,6 @@ const EditarPinya = ({ castell }) => {
         }
     }, [membresPinya]);
 
-    // Seleccionem l'SVG adequat segons l'amplada del castell
     let pinya_svg = null;
     if (castellData) {
         switch (parseInt(castellData.amplada)) {
@@ -296,10 +242,7 @@ const EditarPinya = ({ castell }) => {
                 console.error('Pinya no trobada');
                 break;
         }
-    }     
-
-    // Renderitzem el component
-    return (
+    }    return (
         <Box sx={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -308,7 +251,6 @@ const EditarPinya = ({ castell }) => {
             overflow: 'hidden',
             flex: 1
         }}>
-            {/* Contenidor per a l'SVG */}
             <Box
                 className="svg-container"
                 sx={{
@@ -337,10 +279,7 @@ const EditarPinya = ({ castell }) => {
                         {pinya_svg}
                     </TransformComponent>
                 </TransformWrapper>
-            </Box>
-
-            {/* Botó per guardar els canvis */}
-            <Box
+            </Box>            <Box
                 sx={{
                     position: 'fixed',
                     bottom: 24,
@@ -361,10 +300,7 @@ const EditarPinya = ({ castell }) => {
                         <SaveIcon />
                     </Fab>
                 </Tooltip>
-            </Box>
-
-            {/* Snackbar per mostrar missatges */}
-            <Snackbar
+            </Box>            <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={1000}
                 onClose={handleSnackbarClose}
@@ -381,10 +317,7 @@ const EditarPinya = ({ castell }) => {
                 >
                     Canvis guardats
                 </Alert>
-            </Snackbar>
-
-            {/* Modal per seleccionar un membre */}
-            <Modal
+            </Snackbar>            <Modal
                 open={selectedCell !== null}
                 onClose={handleCancelar}
                 aria-labelledby="modal-seleccionar-membre"
