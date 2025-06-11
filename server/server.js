@@ -232,8 +232,16 @@ app.post('/esdeveniments', async (req, res) => {
     let client;
     try {
         client = await pool.connect();
-        const query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom FROM esdeveniments WHERE assaig = $1 ORDER BY dia ASC`;
-        const result = await client.query(query, [assaig]);
+        let query;
+        let result;
+        
+        if (assaig === undefined || assaig === null) {
+            query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom, assaig FROM esdeveniments ORDER BY dia ASC`;
+            result = await client.query(query);
+        } else {
+            query = `SELECT id, dia, lloc, hora_inici, hora_fi, nom, assaig FROM esdeveniments WHERE assaig = $1 ORDER BY dia ASC`;
+            result = await client.query(query, [assaig]);
+        }
 
         result.rows.forEach(esdeveniment => {
             esdeveniment.dia = formatDate(esdeveniment.dia);
@@ -246,30 +254,6 @@ app.post('/esdeveniments', async (req, res) => {
         console.error("Error: ", error);
         res.status(500).json({ msg: 'Error del servidor', status: false });
     } finally {
-        client.release();
-    }
-});
-
-
-app.get('/events', async (req, res) => {
-    let client;
-    try {
-        client = await pool.connect();
-        const query = `
-            SELECT id, dia, lloc, hora_inici, hora_fi, nom, assaig
-            FROM esdeveniments
-            WHERE dia >= CURRENT_DATE
-            ORDER BY dia ASC
-        `;
-        const result = await client.query(query);
-
-        res.status(200).json({ events: result.rows, status: true });
-    }
-    catch (error) {
-        console.error("Error: ", error);
-        res.status(500).json({ msg: 'Error del servidor', status: false });
-    }
-    finally {
         client.release();
     }
 });
