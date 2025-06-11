@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Box, 
     Modal, 
@@ -8,10 +9,12 @@ import {
     CardHeader, 
     IconButton, 
     Divider,
-    Chip
+    Button
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EventIcon from '@mui/icons-material/Event';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -26,6 +29,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function CalendarEvents() {
 
     const { setTitol } = useTitol();
+    const navigate = useNavigate();
     const [ esdeveniments, setEsdeveniments ] = useState([]);
     const [ selectedEvent, setSelectedEvent ] = useState(null);
     const [ modalOpen, setModalOpen ] = useState(false);
@@ -65,14 +69,16 @@ function CalendarEvents() {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                }}
-                events={
+                }}                events={
                     esdeveniments.map(event => ({
+                        id: event.id,
                         title: event.nom,
                         start: event.dia,
                         allDay: true,
                         extendedProps: {
-                            location: event.lloc
+                            location: event.lloc,
+                            eventId: event.id,
+                            assaig: event.assaig
                         }
                     }))
                 }
@@ -87,19 +93,19 @@ function CalendarEvents() {
                     info.el.style.cursor = 'pointer';
                 }}                eventClick={(info) => {
                     setSelectedEvent({
+                        id: info.event.extendedProps.eventId,
                         title: info.event.title,
                         start: info.event.start,
-                        location: info.event.extendedProps.location
+                        location: info.event.extendedProps.location,
+                        assaig: info.event.extendedProps.assaig
                     });
                     setModalOpen(true);
-                }}            />
+                }}/>
             
             {/* Modal per mostrar informació de l'esdeveniment */}
             <Modal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
-                aria-labelledby="event-modal-title"
-                aria-describedby="event-modal-description"
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -112,13 +118,31 @@ function CalendarEvents() {
                     outline: 'none',
                     boxShadow: 24,
                     borderRadius: 2
-                }}>                    <CardHeader
+                }}>                    
+                <CardHeader
                         title={
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <EventIcon color="primary" />
+                                
                                 <Typography variant="h6" component="h2">
-                                    {selectedEvent?.title || 'Esdeveniment'}
-                                </Typography>
+                                    {selectedEvent?.title || "Esdeveniment"}
+                                </Typography>                                <Button
+                                    variant="contained"
+                                    size="small"
+                                    onClick={() => {
+                                        if (selectedEvent) {
+                                            const route = selectedEvent.assaig ? `/assaig/${selectedEvent.id}` : `/diada/${selectedEvent.id}`;
+                                            navigate(route);
+                                        }
+                                    }}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginLeft: '5px',
+                                    }}
+                                >
+                                    <ArrowOutwardIcon />
+                                </Button>
+
                             </Box>
                         }
                         action={
@@ -132,33 +156,62 @@ function CalendarEvents() {
                         }
                         sx={{ pb: 1 }}
                     />
-                    <Divider />                    <CardContent sx={{ pt: 2 }}>
+                    <Divider />
+                                        
+                    <CardContent sx={{ pt: 2 }}>
                         {selectedEvent && (
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <Box>
-                                    
-                                    <Typography variant="body1">
-                                        {selectedEvent.start ? 
-                                            new Date(selectedEvent.start).toLocaleDateString('ca-ES', {
+                           
+                                {/* dia (dijous, 19 de juny del 2025) */}
+                                {selectedEvent.start && (
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <EventIcon color="action" fontSize="small" />
+                                        <Typography variant="body1">
+                                            {new Date(selectedEvent.start).toLocaleDateString('ca-ES', {
                                                 weekday: 'long',
                                                 year: 'numeric',
                                                 month: 'long',
-                                                day: 'numeric'
-                                            }) : 'No disponible'
-                                        }
-                                    </Typography>
-                                </Box>
-                                
-                                {selectedEvent.location && (
-                                    <Box>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <LocationOnIcon color="action" fontSize="small" />
-                                            <Typography variant="body1">
-                                                {selectedEvent.location}
-                                            </Typography>
-                                        </Box>
+                                                day: 'numeric'  
+                                            })}
+                                        </Typography>
                                     </Box>
                                 )}
+                                
+                                {/* hora (10:00 - 12:00) */}
+                                {selectedEvent.start && (
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <AccessTimeIcon color="action" fontSize="small" />
+                                        <Typography variant="body1">
+                                            {new Date(selectedEvent.start).toLocaleTimeString('ca-ES', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })} - {new Date(selectedEvent.start).toLocaleTimeString('ca-ES', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })}
+                                        </Typography>
+                                    </Box>
+                                )}
+                                
+                                {/* lloc (Local de Capgrossos) */}
+                                {selectedEvent.location && (
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <LocationOnIcon color="action" fontSize="small" />
+                                        <Typography 
+                                            variant="body1"
+                                            component="span"
+                                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedEvent.location)}`, '_blank')}
+                                            sx={{ 
+                                                cursor: 'pointer', 
+                                                textDecoration: 'underline', 
+                                                color: 'primary.main' 
+                                            }}
+                                        >
+                                            {selectedEvent.location}
+                                        </Typography>
+                                    </Box>
+                                )}
+
                             </Box>
                         )}
                     </CardContent>
