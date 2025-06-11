@@ -11,7 +11,7 @@ import {
   Paper,
   useTheme
 } from "@mui/material";
-
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import HomeIcon from '@mui/icons-material/Home';
 import EventIcon from '@mui/icons-material/Event';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -33,6 +33,8 @@ function NavbarListDrawer({ navLinks, setOpen }) {
                 return <EventIcon />;
             case "/diades":
                 return <EmojiEventsIcon />;
+            case "/calendari":
+                return <CalendarTodayIcon />;
             case "/membres":
                 return <PeopleIcon />;
             case "/perfil":

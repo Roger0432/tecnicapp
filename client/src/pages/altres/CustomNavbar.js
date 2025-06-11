@@ -31,6 +31,7 @@ function CustomNavbar() {
         { title: "Menú", path: "/main" },
         { title: "Assaigs", path: "/assaigs" },
         { title: "Diades", path: "/diades" },
+        { title: "Calendari", path: "/calendari" },
         { title: "Membres", path: "/membres" },
         { title: "Perfil", path: "/perfil" },
     ];

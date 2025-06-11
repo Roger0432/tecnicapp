@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../../styles/Tronc.css';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Grid, Card, CardContent, Divider } from '@mui/material';
 import { useTitol } from '../../context/TitolNavbar';
@@ -179,7 +178,6 @@ function Main() {
             </Card>
           </Grid>
         </Grid>
-        
     </Box>
   );
 }

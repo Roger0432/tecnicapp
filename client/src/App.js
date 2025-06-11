@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import IniciSessio from './pages/autenticacio/IniciSessio';
 import Registre from './pages/autenticacio/Registre';
+import CalendarEvents from './pages/altres/CalendarEvents';
 
 import Esdeveniments from './pages/esdeveniments/Esdeveniments';
 import CrearEsdeveniment from './pages/esdeveniments/CrearEsdeveniment';
@@ -72,6 +73,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Main />} />
           <Route path="/perfil" element={<Perfil />} />
+          <Route path="/calendari" element={<CalendarEvents />} />
 
           <Route path="/membres" element={<Membres />} />
           <Route path="/crear-membre" element={<CrearMembre />} />
