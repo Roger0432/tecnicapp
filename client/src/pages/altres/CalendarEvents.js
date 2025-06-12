@@ -9,10 +9,10 @@ import {
     CardHeader, 
     IconButton, 
     Divider,
+    Chip
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EventIcon from '@mui/icons-material/Event';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -117,29 +117,19 @@ function CalendarEvents() {
                 initialView="dayGridMonth"                  
                 headerToolbar={{
                     center: 'title',
-                    left: 'prev',
-                    right: 'next'
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 }}
-                footerToolbar={{
-                    center: '',
-                    left: 'today',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-                }}                
-                titleFormat={(date) => {
-                    const month = date.date.marker.toLocaleDateString('ca-ES', { month: 'long' });
-                    const year = date.date.marker.getFullYear();
-                    
-                    const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1);
-                    
-                    return `${monthCapitalized} del ${year}`;
-                }}
-                views={{
-                    listMonth: {
-                        buttonText: 'Agenda'
-                    }
-                }}
-                events={esdeveniments}
-                height="85vh"
+                events={
+                    esdeveniments.map(event => ({
+                        title: event.nom,
+                        start: event.dia,
+                        allDay: true,
+                        extendedProps: {
+                            location: event.lloc
+                        }
+                    }))
+                }
+                height="600px"
                 locales={[esLocale, caLocale]}
                 locale="ca"
                 selectable={true}
@@ -151,7 +141,9 @@ function CalendarEvents() {
                 }}                
                 eventClick={(info) => {
                     setSelectedEvent({
-                        ...info.event.extendedProps,
+                        title: info.event.title,
+                        start: info.event.start,
+                        location: info.event.extendedProps.location
                     });
                     setModalOpen(true);
                 }}/>
@@ -176,24 +168,10 @@ function CalendarEvents() {
                 <CardHeader
                         title={
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                  <Typography 
-                                    variant="h6" 
-                                    component="h2"
-                                    onClick={() => {
-                                        if (selectedEvent) {
-                                            const route = selectedEvent.assaig ? `/assaig/${selectedEvent.id}` : `/diada/${selectedEvent.id}`;
-                                            navigate(route);
-                                        }
-                                    }}
-                                    sx={{ 
-                                        cursor: 'pointer', 
-                                        textDecoration: 'underline', 
-                                        color: 'primary.main' 
-                                    }}
-                                >
-                                    {selectedEvent?.nom || "Esdeveniment"}
+                                <EventIcon color="primary" />
+                                <Typography variant="h6" component="h2">
+                                    {selectedEvent?.title || 'Esdeveniment'}
                                 </Typography>
-
                             </Box>
                         }
                         action={
@@ -211,58 +189,29 @@ function CalendarEvents() {
                                         
                     <CardContent sx={{ pt: 2 }}>
                         {selectedEvent && (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>                                                                
-                            {/* dia (dijous, 19 de juny del 2025) */}
-                                {selectedEvent.dia && (
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <EventIcon color="action" fontSize="small" />
-                                        <Typography variant="body1">
-                                            {(() => {
-                                                const [dia, mes, anyo] = selectedEvent.dia.split('-').map(num => parseInt(num, 10));
-                                                const fecha = new Date(anyo, mes - 1, dia);
-                                                
-                                                if (isNaN(fecha.getTime())) {
-                                                    console.error('Fecha inválida:', selectedEvent.dia);
-                                                    return selectedEvent.dia;
-                                                }
-                                                
-                                                const dateString = fecha.toLocaleDateString('ca-ES', {
-                                                    weekday: 'long',
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric'  
-                                                });
-                                                return dateString.charAt(0).toUpperCase() + dateString.slice(1);
-                                            })()}
-                                        </Typography>
-                                    </Box>
-                                )}
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                <Box>
+                                    
+                                    <Typography variant="body1">
+                                        {selectedEvent.start ? 
+                                            new Date(selectedEvent.start).toLocaleDateString('ca-ES', {
+                                                weekday: 'long',
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            }) : 'No disponible'
+                                        }
+                                    </Typography>
+                                </Box>
                                 
-                                {/* hora (10:00 - 12:00) */}
-                                {selectedEvent.hora_inici && selectedEvent.hora_fi && (
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <AccessTimeIcon color="action" fontSize="small" />
-                                        <Typography variant="body1">
-                                            {selectedEvent.hora_inici} - {selectedEvent.hora_fi}
-                                        </Typography>
-                                    </Box>
-                                )}
-                                  {/* lloc (Local de Capgrossos) */}
-                                {selectedEvent.lloc && (
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <LocationOnIcon color="action" fontSize="small" />
-                                        <Typography 
-                                            variant="body1"
-                                            component="span"
-                                            onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedEvent.lloc)}`, '_blank')}
-                                            sx={{ 
-                                                cursor: 'pointer', 
-                                                textDecoration: 'underline', 
-                                                color: 'primary.main' 
-                                            }}
-                                        >
-                                            {selectedEvent.lloc}
-                                        </Typography>
+                                {selectedEvent.location && (
+                                    <Box>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <LocationOnIcon color="action" fontSize="small" />
+                                            <Typography variant="body1">
+                                                {selectedEvent.location}
+                                            </Typography>
+                                        </Box>
                                     </Box>
                                 )}
 
