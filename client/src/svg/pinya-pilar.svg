@@ -221,12 +221,12 @@
           <path d="M190.45,612.14h0c2.42,0,4.69.95,6.4,2.67l56.26,56.88c3.49,3.53,3.46,9.24-.07,12.73l-21.33,21.1c-1.7,1.68-3.94,2.6-6.33,2.6s-4.7-.95-6.4-2.67l-56.26-56.88c-1.69-1.71-2.61-3.97-2.6-6.38.01-2.4.96-4.66,2.67-6.35l21.33-21.1c1.7-1.68,3.94-2.6,6.33-2.6M190.45,611.14c-2.54,0-5.08.96-7.03,2.89l-21.33,21.1c-3.93,3.88-3.96,10.22-.08,14.14l56.26,56.88c1.96,1.98,4.53,2.97,7.11,2.97s5.08-.96,7.03-2.89l21.33-21.1c3.93-3.88,3.96-10.22.08-14.14l-56.26-56.88c-1.96-1.98-4.53-2.97-7.11-2.97h0Z"/>
         </g>
       
-        <g id="lateral-0-10" data-name="lateral-0">
+        <g id="lateral-10" data-name="lateral-0">
           <path class="cls-1 lateral" d="M192.48,255.88c-2.56,0-4.96-1-6.75-2.82l-21.1-21.33c-3.68-3.72-3.65-9.75.07-13.44l56.88-56.26c1.79-1.77,4.16-2.75,6.68-2.75s4.96,1,6.75,2.82l21.1,21.33c1.78,1.8,2.76,4.19,2.75,6.73s-1.02,4.92-2.82,6.7l-56.88,56.26c-1.79,1.77-4.16,2.75-6.68,2.75Z"/>
           <path d="M228.26,159.79h0c2.42,0,4.69.95,6.4,2.67l21.1,21.33c3.49,3.53,3.46,9.24-.07,12.73l-56.88,56.26c-1.7,1.68-3.94,2.6-6.33,2.6s-4.7-.95-6.4-2.67l-21.1-21.33c-3.49-3.53-3.46-9.24.07-12.73l56.88-56.26c1.7-1.68,3.94-2.6,6.33-2.6M228.26,158.79c-2.54,0-5.08.96-7.03,2.89l-56.88,56.26c-3.93,3.88-3.96,10.22-.08,14.14l21.1,21.33c1.96,1.98,4.53,2.97,7.11,2.97s5.08-.96,7.03-2.89l56.88-56.26c3.93-3.88,3.96-10.22.08-14.14l-21.1-21.33c-1.96-1.98-4.53-2.97-7.11-2.97h0Z"/>
         </g>
       
-        <g id="lateral-0-11" data-name="lateral-0">
+        <g id="lateral-11" data-name="lateral-0">
           <path class="cls-1 lateral" d="M680.38,258.53c-2.56,0-4.96-1-6.75-2.82l-56.26-56.88c-1.78-1.8-2.76-4.19-2.75-6.73s1.02-4.92,2.82-6.7l21.33-21.1c1.79-1.77,4.16-2.75,6.68-2.75s4.96,1,6.75,2.82l56.26,56.88c3.68,3.72,3.65,9.75-.07,13.44l-21.33,21.1c-1.79,1.77-4.16,2.75-6.68,2.75Z"/>
           <path d="M645.45,162.06h0c2.42,0,4.69.95,6.4,2.67l56.26,56.88c3.49,3.53,3.46,9.24-.07,12.73l-21.33,21.1c-1.7,1.68-3.94,2.6-6.33,2.6s-4.7-.95-6.4-2.67l-56.26-56.88c-3.49-3.53-3.46-9.24.07-12.73l21.33-21.1c1.7-1.68,3.94-2.6,6.33-2.6M645.45,161.06c-2.54,0-5.08.96-7.03,2.89l-21.33,21.1c-3.93,3.88-3.96,10.22-.08,14.14l56.26,56.88c1.96,1.98,4.53,2.97,7.11,2.97s5.08-.96,7.03-2.89l21.33-21.1c3.93-3.88,3.96-10.22.08-14.14l-56.26-56.88c-1.96-1.98-4.53-2.97-7.11-2.97h0Z"/>
         </g>
@@ -325,31 +325,31 @@
     </g>
 
     <g id="text-laterals">
-        <g>
+        <g> <!-- primer cordó laterals -->
             <text id="text-lateral-0" class="cls-2" transform="translate(575.33 572.23) rotate(135.31)"></text>
             <text id="text-lateral-1" class="cls-2" transform="translate(297.77 575.33) rotate(-134.69)"></text>
             <text id="text-lateral-2" class="cls-2" transform="translate(294.67 297.77) rotate(-44.69)"></text>
             <text id="text-lateral-3" class="cls-2" transform="translate(572.23 294.67) rotate(45.31)"></text>
         </g>
-        <g>
+        <g> <!-- segon cordó laterals -->
             <text id="text-lateral-4" class="cls-2" transform="translate(617.53 614.89) rotate(135.31)"></text>
             <text id="text-lateral-5" class="cls-2" transform="translate(255.11 617.53) rotate(-134.69)"></text>
             <text id="text-lateral-6" class="cls-2" transform="translate(252.47 255.11) rotate(-44.69)"></text>
             <text id="text-lateral-7" class="cls-2" transform="translate(614.89 252.47) rotate(45.31)"></text>
         </g>
-        <g>
-            <text id="text-lateral-8" class="cls-2" transform="translate(659.72 657.54) rotate(135.31)"></text>
-            <text id="text-lateral-9" class="cls-2" transform="translate(212.46 659.72) rotate(-134.69)"></text>
-            <text id="text-lateral-10" class="cls-2" transform="translate(210.28 212.46) rotate(-44.69)"></text>
-            <text id="text-lateral-11" class="cls-2" transform="translate(657.54 210.28) rotate(45.31)"></text>
+        <g> <!-- tercer cordó laterals -->
+            <text id="text-lateral-8" class="cls-2" transform="translate(659.72 657.54) rotate(135.31)">4</text>
+            <text id="text-lateral-9" class="cls-2" transform="translate(212.46 659.72) rotate(-134.69)">3</text>
+            <text id="text-lateral-10" class="cls-2" transform="translate(210.28 212.46) rotate(-44.69)">2</text>
+            <text id="text-lateral-11" class="cls-2" transform="translate(657.54 210.28) rotate(45.31)">1</text>
         </g>
-        <g>
+        <g> <!-- quart cordó laterals -->
             <text id="text-lateral-12" class="cls-2" transform="translate(701.92 700.2) rotate(135.31)"></text>
             <text id="text-lateral-13" class="cls-2" transform="translate(169.8 701.91) rotate(-134.69)"></text>
             <text id="text-lateral-14" class="cls-2" transform="translate(168.08 169.8) rotate(-44.69)"></text>
             <text id="text-lateral-15" class="cls-2" transform="translate(700.2 168.08) rotate(45.31)"></text>
         </g>
-        <g>
+        <g> <!-- cinquè cordó laterals -->
             <text id="text-lateral-16" class="cls-2" transform="translate(744.11 742.86) rotate(135.31)"></text>
             <text id="text-lateral-17" class="cls-2" transform="translate(127.14 744.11) rotate(-134.69)"></text>
             <text id="text-lateral-18" class="cls-2" transform="translate(125.89 127.14) rotate(-44.69)"></text>
