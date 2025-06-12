@@ -1,5 +1,12 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 function TaulaDetallsMembre({ membre }) {
   return (

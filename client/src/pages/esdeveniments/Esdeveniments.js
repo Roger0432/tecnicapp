@@ -1,17 +1,24 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, Tabs, Tab, Typography, TextField, InputAdornment } from '@mui/material';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
-import { useTitol } from '../../context/TitolNavbar';
-import CardEsdeveniment from './CardEsdeveniment';
-import Grid from '@mui/material/Grid';
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Typography,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import { useTitol } from "../../context/TitolNavbar";
+import CardEsdeveniment from "./CardEsdeveniment";
+import Grid from "@mui/material/Grid";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const normalitzarText = (text) => {
-  if (!text) return '';
+  if (!text) return "";
   return text
     .toLowerCase()
     .normalize("NFD")
@@ -19,42 +26,45 @@ const normalitzarText = (text) => {
 };
 
 const parseDate = (dateString) => {
-  const [day, month, year] = dateString.split('-');
+  const [day, month, year] = dateString.split("-");
   return new Date(`${year}-${month}-${day}`);
 };
 
 function Esdeveniments({ assaig }) {
-  
   const [esdevenimentsFuturs, setEsdevenimentsFuturs] = useState([]);
   const [esdevenimentsPassats, setEsdevenimentsPassats] = useState([]);
   const [tabIndex, setTabIndex] = useState(0);
-  const [cercaText, setCercaText] = useState('');
+  const [cercaText, setCercaText] = useState("");
   const navigate = useNavigate();
   const { setTitol } = useTitol();
 
   const esdevenimentsFutursFiltrats = useMemo(() => {
     if (!cercaText.trim()) return esdevenimentsFuturs;
-    
+
     const textNormalitzat = normalitzarText(cercaText);
-    return esdevenimentsFuturs.filter(esdeveniment => {
+    return esdevenimentsFuturs.filter((esdeveniment) => {
       const nomNormalitzat = normalitzarText(esdeveniment.nom);
       const llocNormalitzat = normalitzarText(esdeveniment.lloc);
-      
-      return nomNormalitzat.includes(textNormalitzat) || 
-             llocNormalitzat.includes(textNormalitzat);
+
+      return (
+        nomNormalitzat.includes(textNormalitzat) ||
+        llocNormalitzat.includes(textNormalitzat)
+      );
     });
   }, [esdevenimentsFuturs, cercaText]);
 
   const esdevenimentsPassatsFiltrats = useMemo(() => {
     if (!cercaText.trim()) return esdevenimentsPassats;
-    
+
     const textNormalitzat = normalitzarText(cercaText);
-    return esdevenimentsPassats.filter(esdeveniment => {
+    return esdevenimentsPassats.filter((esdeveniment) => {
       const nomNormalitzat = normalitzarText(esdeveniment.nom);
       const llocNormalitzat = normalitzarText(esdeveniment.lloc);
-      
-      return nomNormalitzat.includes(textNormalitzat) || 
-             llocNormalitzat.includes(textNormalitzat);
+
+      return (
+        nomNormalitzat.includes(textNormalitzat) ||
+        llocNormalitzat.includes(textNormalitzat)
+      );
     });
   }, [esdevenimentsPassats, cercaText]);
 
@@ -63,31 +73,36 @@ function Esdeveniments({ assaig }) {
   };
 
   useEffect(() => {
-    setTitol(assaig ? 'Assaigs' : 'Diades');
+    setTitol(assaig ? "Assaigs" : "Diades");
 
     fetch(`${BACKEND_URL}/esdeveniments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ assaig }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.status) {
-
           const esdeveniments = data.esdeveniments;
 
           let now = new Date();
-          now = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+          now = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            now.getHours(),
+            now.getMinutes()
+          );
 
           const futurs = esdeveniments
-            .filter(e => {
+            .filter((e) => {
               const eventDate = parseDate(e.dia);
               return eventDate >= now;
             })
             .sort((a, b) => parseDate(a.dia) - parseDate(b.dia));
 
           const passats = esdeveniments
-            .filter(e => {
+            .filter((e) => {
               const eventDate = parseDate(e.dia);
               return eventDate < now;
             })
@@ -95,14 +110,12 @@ function Esdeveniments({ assaig }) {
 
           setEsdevenimentsFuturs(futurs);
           setEsdevenimentsPassats(passats);
-
-        } 
-        else {
-          console.error('Failed to fetch esdeveniments');
+        } else {
+          console.error("Failed to fetch esdeveniments");
         }
       })
-      .catch(error => {
-        console.error('Error:', error);
+      .catch((error) => {
+        console.error("Error:", error);
       });
   }, [assaig, setTitol]);
 
@@ -120,10 +133,13 @@ function Esdeveniments({ assaig }) {
 
   const groupByMonth = (events) => {
     const grouped = {};
-    events.forEach(event => {
+    events.forEach((event) => {
       const eventDate = parseDate(event.dia);
-      const monthYear = eventDate.toLocaleString('ca-ES', { month: 'long', year: 'numeric' }).replace(' del', '');
-      const formattedMonthYear = monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
+      const monthYear = eventDate
+        .toLocaleString("ca-ES", { month: "long", year: "numeric" })
+        .replace(" del", "");
+      const formattedMonthYear =
+        monthYear.charAt(0).toUpperCase() + monthYear.slice(1);
       if (!grouped[formattedMonthYear]) {
         grouped[formattedMonthYear] = [];
       }
@@ -139,19 +155,24 @@ function Esdeveniments({ assaig }) {
         <Typography
           variant="body1"
           color="textSecondary"
-          sx={{ marginTop: 4, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}
+          sx={{
+            marginTop: 4,
+            marginLeft: "auto",
+            marginRight: "auto",
+            textAlign: "center",
+          }}
         >
-          No hi ha cap {assaig ? 'assaig' : 'diada'}
+          No hi ha cap {assaig ? "assaig" : "diada"}
         </Typography>
       );
     }
-    return Object.keys(groupedEvents).map(monthYear => (
+    return Object.keys(groupedEvents).map((monthYear) => (
       <Box key={monthYear} mt={2}>
-        <Typography variant="subtitle2" color="textSecondary"mb={1}>
+        <Typography variant="subtitle2" color="textSecondary" mb={1}>
           {monthYear}
         </Typography>
         <Grid container spacing={2}>
-          {groupedEvents[monthYear].map(event => (
+          {groupedEvents[monthYear].map((event) => (
             <Grid item xs={12} sm={6} md={4} key={event.id}>
               <CardEsdeveniment
                 nom={event.nom}
@@ -170,18 +191,18 @@ function Esdeveniments({ assaig }) {
   return (
     <Box>
       <Tabs variant="fullWidth" value={tabIndex} onChange={handleTabChange}>
-        <Tab label={'Futur'} />
-        <Tab label={'Passat'} />
+        <Tab label={"Futur"} />
+        <Tab label={"Passat"} />
       </Tabs>
 
-      <Box mr={2} sx={{ position: 'relative', height: '100%' }}>
-        <Box sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1 }}>
+      <Box mr={2} sx={{ position: "relative", height: "100%" }}>
+        <Box sx={{ position: "fixed", bottom: 24, right: 24, zIndex: 1 }}>
           {assaig ? (
-            <Fab color="primary" onClick={() => navigate('/crear-assaig')}>
+            <Fab color="primary" onClick={() => navigate("/crear-assaig")}>
               <AddIcon />
             </Fab>
           ) : (
-            <Fab color="primary" onClick={() => navigate('/crear-diada')}>
+            <Fab color="primary" onClick={() => navigate("/crear-diada")}>
               <AddIcon />
             </Fab>
           )}
@@ -191,7 +212,7 @@ function Esdeveniments({ assaig }) {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder={`Cerca un ${assaig ? 'assaig' : 'diada'}`}
+            placeholder={`Cerca un ${assaig ? "assaig" : "diada"}`}
             value={cercaText}
             onChange={handleCercaChange}
             InputProps={{

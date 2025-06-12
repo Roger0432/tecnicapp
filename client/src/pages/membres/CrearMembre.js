@@ -1,11 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Box, Button, TextField, Typography, SpeedDial, SpeedDialAction, SpeedDialIcon, Dialog, DialogActions, DialogTitle, DialogContentText, DialogContent, Tooltip, Fab } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import TaulaDetallsMembre from '../membres/DetallsMembres';
-import { useTitol } from '../../context/TitolNavbar';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  Tooltip,
+  Fab,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import TaulaDetallsMembre from "../membres/DetallsMembres";
+import { useTitol } from "../../context/TitolNavbar";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,13 +30,13 @@ function CrearMembre() {
   const { membre = {}, editar = false } = location.state || {};
 
   const [modeEdicio, setModeEdicio] = useState(false);
-  const [mote, setMote] = useState(membre.mote || '');
-  const [nom, setNom] = useState(membre.nom || '');
-  const [cognoms, setCognoms] = useState(membre.cognoms || '');
-  const [alcadaHombro, setAlcadaHombro] = useState(membre.alcada_hombro || '');
-  const [alcadaMans, setAlcadaMans] = useState(membre.alcada_mans || '');
-  const [comentaris, setComentaris] = useState(membre.comentaris || '');
-  const [error, setError] = useState('');
+  const [mote, setMote] = useState(membre.mote || "");
+  const [nom, setNom] = useState(membre.nom || "");
+  const [cognoms, setCognoms] = useState(membre.cognoms || "");
+  const [alcadaHombro, setAlcadaHombro] = useState(membre.alcada_hombro || "");
+  const [alcadaMans, setAlcadaMans] = useState(membre.alcada_mans || "");
+  const [comentaris, setComentaris] = useState(membre.comentaris || "");
+  const [error, setError] = useState("");
   const { setTitol } = useTitol();
 
   const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
@@ -30,7 +45,7 @@ function CrearMembre() {
 
   const handleSuccessDialogClose = () => {
     setOpenSuccessDialog(false);
-    navigate('/membres');
+    navigate("/membres");
   };
 
   const handleDeleteDialogClose = () => {
@@ -39,8 +54,8 @@ function CrearMembre() {
 
   const handleDeleteConfirm = () => {
     fetch(`${BACKEND_URL}/borrar-membre/${membre.id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
     })
       .then((response) => response.json())
       .then((data) => {
@@ -48,11 +63,11 @@ function CrearMembre() {
           setSuccessDialogTitle("El membre ha estat eliminat correctament");
           setOpenSuccessDialog(true);
         } else {
-          console.error('Error:', data.msg);
+          console.error("Error:", data.msg);
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
     setOpenDeleteDialog(false);
   };
@@ -62,19 +77,25 @@ function CrearMembre() {
   };
 
   const handleSaveSuccess = () => {
-    setSuccessDialogTitle(editar ? "Membre editat correctament" : "Membre creat correctament");
+    setSuccessDialogTitle(
+      editar ? "Membre editat correctament" : "Membre creat correctament"
+    );
     setOpenSuccessDialog(true);
   };
 
   useEffect(() => {
-    const titol = editar ? (modeEdicio ? 'Editar Membre' : 'Detalls') : 'Crear Membre';
+    const titol = editar
+      ? modeEdicio
+        ? "Editar Membre"
+        : "Detalls"
+      : "Crear Membre";
     setTitol(titol);
   }, [editar, modeEdicio, setTitol]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (mote === '' || nom === '') {
+    if (mote === "" || nom === "") {
       setError("Has d'omplir els camps nom i mote");
       return;
     }
@@ -90,13 +111,13 @@ function CrearMembre() {
 
     let url = `${BACKEND_URL}`;
     if (editar) url += `/editar-membre/${membre.id}`;
-    else url += '/crear-membre';
+    else url += "/crear-membre";
 
-    const method = editar ? 'PUT' : 'POST';
+    const method = editar ? "PUT" : "POST";
 
     fetch(url, {
       method: method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
@@ -104,18 +125,22 @@ function CrearMembre() {
         if (data.status) {
           handleSaveSuccess();
         } else {
-          console.error('Error:', data.msg);
+          console.error("Error:", data.msg);
         }
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
   return (
     <Box m={2} mt={4} display="flex" justifyContent="center">
       {!modeEdicio && editar && (
-        <Box display="flex" alignItems="center" sx={{ position: 'fixed', bottom: 24, right: 24 }}>
+        <Box
+          display="flex"
+          alignItems="center"
+          sx={{ position: "fixed", bottom: 24, right: 24 }}
+        >
           <SpeedDial
             ariaLabel="SpeedDial basic example"
             icon={<SpeedDialIcon />}
@@ -136,9 +161,22 @@ function CrearMembre() {
       )}
 
       {!modeEdicio && editar ? (
-        <TaulaDetallsMembre membre={{ mote, nom, cognoms, alcada_hombro: alcadaHombro, alcada_mans: alcadaMans, comentaris }} />
+        <TaulaDetallsMembre
+          membre={{
+            mote,
+            nom,
+            cognoms,
+            alcada_hombro: alcadaHombro,
+            alcada_mans: alcadaMans,
+            comentaris,
+          }}
+        />
       ) : (
-        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: '400px' }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ width: "100%", maxWidth: "400px" }}
+        >
           <Box className="form-group" display="flex" flexDirection="column">
             <Box mb={2}>
               <TextField
@@ -211,20 +249,20 @@ function CrearMembre() {
           {modeEdicio && (
             <Box
               sx={{
-                position: 'fixed',
+                position: "fixed",
                 bottom: 24,
                 right: 24,
-                display: 'flex',
-                justifyContent: 'space-between',
+                display: "flex",
+                justifyContent: "space-between",
               }}
             >
               <Tooltip title="Guardar" placement="top">
-                <Fab 
-                  color="primary" 
+                <Fab
+                  color="primary"
                   aria-label="guardar"
                   onClick={handleSubmit}
                   sx={{
-                    boxShadow: 3
+                    boxShadow: 3,
                   }}
                 >
                   <SaveIcon />
@@ -234,9 +272,15 @@ function CrearMembre() {
           )}
 
           {!editar && (
-            <Button type="submit" variant="contained" color="primary" fullWidth>Crear</Button>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Crear
+            </Button>
           )}
-          {error && <Typography color="error" mt={2}>{error}</Typography>}
+          {error && (
+            <Typography color="error" mt={2}>
+              {error}
+            </Typography>
+          )}
         </Box>
       )}
 
@@ -266,7 +310,9 @@ function CrearMembre() {
         onClose={handleSuccessDialogClose}
         aria-labelledby="success-dialog-title"
       >
-        <DialogTitle id="success-dialog-title">{successDialogTitle}</DialogTitle>
+        <DialogTitle id="success-dialog-title">
+          {successDialogTitle}
+        </DialogTitle>
         <DialogActions>
           <Button onClick={handleSuccessDialogClose} color="primary" autoFocus>
             OK
