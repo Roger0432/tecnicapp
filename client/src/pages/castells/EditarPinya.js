@@ -9,7 +9,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const EditarPinya = ({ castell }) => {
+const EditarPinya = ({ castell, estructura }) => {
     const { id } = useParams();
 
     const [castellData, setCastellData] = useState(null);
@@ -18,7 +18,9 @@ const EditarPinya = ({ castell }) => {
     const [selectedCell, setSelectedCell] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const svgRef = useRef(null);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);    useEffect(() => {
+    const [snackbarOpen, setSnackbarOpen] = useState(false);    
+    
+    useEffect(() => {
         if (castell) setCastellData(castell);
         else console.error('Castell no trobat');
 
@@ -34,7 +36,9 @@ const EditarPinya = ({ castell }) => {
             else console.error(pinyaData.msg);
         })
         .catch(error => console.error('Error:', error));
-    }, [id, castell]);    useEffect(() => {
+    }, [id, castell]);    
+    
+    useEffect(() => {
         if (svgRef.current) {
             membresPinya.forEach(membre => {
                 const textElement = svgRef.current.querySelector(`#text-${membre.posicio}`);
@@ -201,7 +205,10 @@ const EditarPinya = ({ castell }) => {
 
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
-    };    useEffect(() => {
+    };    
+    
+    
+    useEffect(() => {
         if (svgRef.current && membresPinya.length > 0) {
             membresPinya.forEach(membre => {
                 const textElement = svgRef.current.querySelector(`#text-${membre.posicio}`);
@@ -214,35 +221,96 @@ const EditarPinya = ({ castell }) => {
 
     let pinya_svg = null;
     if (castellData) {
-        switch (parseInt(castellData.amplada)) {
-            case 1:
-                pinya_svg = <PinyaPilar ref={svgRef} style={{ width: '100%', height: '100%' }}/>;
-                break;
-            case 2:
-                //pinya_svg = <PinyaTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                //break;
-            case 3:
-                //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                //else pinya_svg = <PinyaTres ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                break;
-            case 4:
-                //if (castellData.agulla) pinya_svg = <PinyaQuatreAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                //else pinya_svg = <PinyaQuatre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                break;
-            case 5:
-                //pinya_svg = <PinyaCinc ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                break;
-            case 7:
-                //pinya_svg = <PinyaSet ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                break;
-            case 9:
-                //pinya_svg = <PinyaNou ref={svgRef} style={{ width: '100%', height: '100%' }} />;
-                break;
-            default:
-                console.error('Pinya no trobada');
-                break;
+
+        if (estructura === 'pinya') {
+
+            switch (parseInt(castellData.amplada)) {
+                case 1:
+                    pinya_svg = <PinyaPilar ref={svgRef} style={{ width: '100%', height: '100%' }}/>;
+                    break;
+                case 2:
+                    //pinya_svg = <PinyaTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    //break;
+                case 3:
+                    //if (castellData.agulla) pinya_svg = <PinyaTresAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    //else pinya_svg = <PinyaTres ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 4:
+                    //if (castellData.agulla) pinya_svg = <PinyaQuatreAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    //else pinya_svg = <PinyaQuatre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 5:
+                    //pinya_svg = <PinyaCinc ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 7:
+                    //pinya_svg = <PinyaSet ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 9:
+                    //pinya_svg = <PinyaNou ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                default:
+                    console.error('Pinya no trobada');
+                    break;
+            }
         }
-    }    return (
+
+        else if (estructura === 'folre') {
+            switch (parseInt(castellData.amplada)) {
+                case 1:
+                    //pinya_svg = <FolrePilar ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 2:
+                    //pinya_svg = <FolreTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 3:
+                    //if (castellData.agulla) pinya_svg = <FolreTresAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    //else pinya_svg = <FolreTres ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 4:
+                    //if (castellData.agulla) pinya_svg = <FolreQuatreAgulla ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    //else pinya_svg = <FolreQuatre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 5:
+                    //pinya_svg = <FolreCinc ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 7:
+                    //pinya_svg = <FolreSet ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                default:
+                    console.error('Folre no trobat');
+                    break;
+            }
+        }
+
+        else if (estructura === 'manilles') {
+            switch (parseInt(castellData.amplada)) {
+                case 1:
+                    //pinya_svg = <ManillesPilar ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 2:
+                    //pinya_svg = <ManillesTorre ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                case 3:
+                    //pinya_svg = <ManillesTres ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                default:
+                    console.error('Manilles no trobades');
+                    break;
+            }
+        }
+        else if (estructura === 'puntals') {
+            switch (parseInt(castellData.amplada)) {
+                case 1:
+                    //pinya_svg = <PuntalsPilar ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+                    break;
+                default:
+                    console.error('Puntals no trobats');
+                    break;
+            }
+        }
+    }    
+    
+    
+    return (
         <Box sx={{ 
             display: 'flex', 
             flexDirection: 'column', 

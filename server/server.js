@@ -708,7 +708,7 @@ app.get('/castell/:id', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT c.nom, c.amplada, c.alcada, c.agulla
+            SELECT c.nom, c.amplada, c.alcada, c.agulla, c.folre, c.manilles, c.puntals, c.per_sota, c.margarita
             FROM castells c
             JOIN esdeveniments_castells ec ON c.id = ec.castell_id
             WHERE ec.id = $1

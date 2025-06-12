@@ -338,10 +338,10 @@
             <text id="text-lateral-7" class="cls-2" transform="translate(614.89 252.47) rotate(45.31)"></text>
         </g>
         <g> <!-- tercer cordó laterals -->
-            <text id="text-lateral-8" class="cls-2" transform="translate(659.72 657.54) rotate(135.31)">4</text>
-            <text id="text-lateral-9" class="cls-2" transform="translate(212.46 659.72) rotate(-134.69)">3</text>
-            <text id="text-lateral-10" class="cls-2" transform="translate(210.28 212.46) rotate(-44.69)">2</text>
-            <text id="text-lateral-11" class="cls-2" transform="translate(657.54 210.28) rotate(45.31)">1</text>
+            <text id="text-lateral-8" class="cls-2" transform="translate(659.72 657.54) rotate(135.31)"></text>
+            <text id="text-lateral-9" class="cls-2" transform="translate(212.46 659.72) rotate(-134.69)"></text>
+            <text id="text-lateral-10" class="cls-2" transform="translate(210.28 212.46) rotate(-44.69)"></text>
+            <text id="text-lateral-11" class="cls-2" transform="translate(657.54 210.28) rotate(45.31)"></text>
         </g>
         <g> <!-- quart cordó laterals -->
             <text id="text-lateral-12" class="cls-2" transform="translate(701.92 700.2) rotate(135.31)"></text>
