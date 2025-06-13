@@ -1,16 +1,16 @@
-import { Link } from "react-router-dom";
-import { 
-  List, 
-  ListItemButton, 
-  ListItemText, 
-  ListItemIcon,
-  Box, 
-  Divider,
-  Typography, 
-  Avatar,
-  Paper,
-  useTheme
-} from "@mui/material";
+import { Link } from 'react-router-dom';
+import {
+    List,
+    ListItemButton,
+    ListItemText,
+    ListItemIcon,
+    Box,
+    Divider,
+    Typography,
+    Avatar,
+    Paper,
+    useTheme,
+} from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import HomeIcon from '@mui/icons-material/Home';
 import EventIcon from '@mui/icons-material/Event';
@@ -26,18 +26,18 @@ function NavbarListDrawer({ navLinks, setOpen }) {
     };
 
     const getIconByPath = (path) => {
-        switch(path) {
-            case "/main":
+        switch (path) {
+            case '/main':
                 return <HomeIcon />;
-            case "/assaigs":
+            case '/assaigs':
                 return <EventIcon />;
-            case "/diades":
+            case '/diades':
                 return <EmojiEventsIcon />;
-            case "/calendari":
+            case '/calendari':
                 return <CalendarTodayIcon />;
-            case "/membres":
+            case '/membres':
                 return <PeopleIcon />;
-            case "/perfil":
+            case '/perfil':
                 return <AccountCircleIcon />;
             default:
                 return <HomeIcon />;
@@ -45,20 +45,20 @@ function NavbarListDrawer({ navLinks, setOpen }) {
     };
 
     return (
-        <Paper 
-            sx={{ 
+        <Paper
+            sx={{
                 width: 250,
                 height: '100%',
                 overflow: 'auto',
                 bgcolor: theme.palette.background.paper,
-                borderRadius: 0
-            }} 
+                borderRadius: 0,
+            }}
         >
-            <Box 
-                sx={{ 
-                    p: 2, 
-                    display: 'flex', 
-                    flexDirection: 'column', 
+            <Box
+                sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     bgcolor: theme.palette.primary.main,
                     color: theme.palette.primary.contrastText,
@@ -67,53 +67,46 @@ function NavbarListDrawer({ navLinks, setOpen }) {
                 <Avatar
                     src="/img/escut_passerells.png"
                     alt="Escut Passerells"
-                    sx={{ 
-                        width: 80, 
-                        height: 80, 
-                        mb: 1
+                    sx={{
+                        width: 80,
+                        height: 80,
+                        mb: 1,
                     }}
                 />
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                     Passerells
                 </Typography>
-                <Typography variant="subtitle2">
-                    del TecnoCampus
-                </Typography>
+                <Typography variant="subtitle2">del TecnoCampus</Typography>
             </Box>
-            
+
             <Divider />
-            
+
             <List component="nav" sx={{ pt: 1 }}>
-                {
-                    navLinks.map((item) => (
-                        <ListItemButton 
-                            key={item.title} 
-                            component={Link} 
-                            to={item.path}
-                            onClick={handleClick}
-                            sx={{
-                                borderRadius: 1,
-                                mx: 1,
-                                mb: 0.5,
-                                '&:hover': {
-                                    bgcolor: theme.palette.action.hover,
-                                }
-                            }}
-                        >
-                            <ListItemIcon>
-                                {getIconByPath(item.path)}
-                            </ListItemIcon>
-                            <ListItemText 
-                                primary={item.title} 
-                                primaryTypographyProps={{ fontWeight: 'medium' }}
-                            />
-                        </ListItemButton>
-                    ))
-                }                
+                {navLinks.map((item) => (
+                    <ListItemButton
+                        key={item.title}
+                        component={Link}
+                        to={item.path}
+                        onClick={handleClick}
+                        sx={{
+                            borderRadius: 1,
+                            mx: 1,
+                            mb: 0.5,
+                            '&:hover': {
+                                bgcolor: theme.palette.action.hover,
+                            },
+                        }}
+                    >
+                        <ListItemIcon>{getIconByPath(item.path)}</ListItemIcon>
+                        <ListItemText
+                            primary={item.title}
+                            primaryTypographyProps={{ fontWeight: 'medium' }}
+                        />
+                    </ListItemButton>
+                ))}
             </List>
-            
+
             <Box sx={{ flexGrow: 1 }} />
-            
         </Paper>
     );
 }

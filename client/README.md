@@ -12,10 +12,13 @@ Aquest és el frontend de l'aplicació Tecnicapp, una aplicació per gestionar c
 
 1. Clona el repositori o descarrega els fitxers
 2. Navega a la carpeta del client:
+
 ```bash
 cd Tecnicapp/client
 ```
+
 3. Instal·la les dependències:
+
 ```bash
 npm install
 ```
@@ -64,11 +67,13 @@ La versió de producció generada amb `npm run build` pot ser desplegada a quals
 Per desplegar a Vercel:
 
 1. Instal·la Vercel CLI:
+
 ```bash
 npm install -g vercel
 ```
 
 2. Executa la comanda de desplegament:
+
 ```bash
 vercel
 ```
@@ -80,6 +85,7 @@ vercel
 L'aplicació client de Tecnicapp inclou les següents característiques:
 
 ### Tema clar/fosc
+
 L'aplicació suporta tema clar i fosc, i pot detectar automàticament la preferència del sistema.
 
 ### Pàgines principals

@@ -7,19 +7,19 @@ const SwitchTheme = () => {
 
     return (
         <ButtonGroup variant="outlined" aria-label="selecció de tema">
-            <Button 
+            <Button
                 onClick={() => changeTheme('light')}
                 variant={theme === 'light' ? 'contained' : 'outlined'}
             >
                 Clar
             </Button>
-            <Button 
+            <Button
                 onClick={() => changeTheme('dark')}
                 variant={theme === 'dark' ? 'contained' : 'outlined'}
             >
                 Fosc
             </Button>
-            <Button 
+            <Button
                 onClick={() => changeTheme('system')}
                 variant={theme === 'system' ? 'contained' : 'outlined'}
             >

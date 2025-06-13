@@ -1,10 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import NavbarListDrawer from "./NavbarListDrawer";
-import { AppBar, Drawer, IconButton, Toolbar, Typography, Box, List, ListItemButton, ListItemText } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import NavbarListDrawer from './NavbarListDrawer';
+import {
+    AppBar,
+    Drawer,
+    IconButton,
+    Toolbar,
+    Typography,
+    Box,
+    List,
+    ListItemButton,
+    ListItemText,
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { useTitol } from "../../context/TitolNavbar";
+import { useTitol } from '../../context/TitolNavbar';
 
 function CustomNavbar() {
     const [open, setOpen] = useState(false);
@@ -12,14 +22,7 @@ function CustomNavbar() {
     const location = useLocation();
     const { titol } = useTitol();
 
-    const menuPaths = [
-        '/',
-        '/main',
-        '/assaigs',
-        '/diades',
-        '/membres',
-        '/perfil',
-    ];
+    const menuPaths = ['/', '/main', '/assaigs', '/diades', '/membres', '/perfil'];
 
     const showMenuIcon = menuPaths.includes(location.pathname);
 
@@ -28,12 +31,12 @@ function CustomNavbar() {
     };
 
     const navLinks = [
-        { title: "Menú", path: "/main" },
-        { title: "Assaigs", path: "/assaigs" },
-        { title: "Diades", path: "/diades" },
-        { title: "Calendari", path: "/calendari" },
-        { title: "Membres", path: "/membres" },
-        { title: "Perfil", path: "/perfil" },
+        { title: 'Menú', path: '/main' },
+        { title: 'Assaigs', path: '/assaigs' },
+        { title: 'Diades', path: '/diades' },
+        { title: 'Calendari', path: '/calendari' },
+        { title: 'Membres', path: '/membres' },
+        { title: 'Perfil', path: '/perfil' },
     ];
 
     return (
@@ -43,7 +46,7 @@ function CustomNavbar() {
                     <IconButton
                         edge="start"
                         color="inherit"
-                        aria-label={showMenuIcon ? "menu" : "back"}
+                        aria-label={showMenuIcon ? 'menu' : 'back'}
                         onClick={showMenuIcon ? () => setOpen(true) : handleBackClick}
                         sx={{ display: { xs: 'flex', sm: 'none' } }}
                     >
@@ -54,16 +57,13 @@ function CustomNavbar() {
 
                     <Box sx={{ display: { xs: 'none', sm: 'flex' }, ml: 'auto' }}>
                         <List component="nav" sx={{ display: 'flex', flexDirection: 'row' }}>
-                            {
-                                navLinks.map((item) => (
-                                    <ListItemButton key={item.title} component={Link} to={item.path}>
-                                        <ListItemText primary={item.title} />
-                                    </ListItemButton>
-                                ))
-                            }
+                            {navLinks.map((item) => (
+                                <ListItemButton key={item.title} component={Link} to={item.path}>
+                                    <ListItemText primary={item.title} />
+                                </ListItemButton>
+                            ))}
                         </List>
                     </Box>
-
                 </Toolbar>
 
                 <Drawer
@@ -72,10 +72,7 @@ function CustomNavbar() {
                     onClose={() => setOpen(false)}
                     sx={{ display: { xs: 'flex', sm: 'none' } }}
                 >
-                    <NavbarListDrawer
-                        navLinks={navLinks}
-                        setOpen={setOpen}
-                    />
+                    <NavbarListDrawer navLinks={navLinks} setOpen={setOpen} />
                 </Drawer>
             </AppBar>
             <Toolbar />
