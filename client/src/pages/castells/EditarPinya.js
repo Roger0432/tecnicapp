@@ -97,7 +97,6 @@ const EditarPinya = ({ castell, estructura }) => {
                 });
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [membresPinya, castellData]);
     const handleCellClick = (posicio) => {
         setSelectedCell(posicio);
