@@ -117,7 +117,7 @@ app.post("/inicisessio", async (req, res) => {
 });
 
 app.post("/registre", async (req, res) => {
-  const { nom, cognoms, email, password, rol } = req.body;
+  const { nom, cognoms, email, password, rol, codiactivacio } = req.body;
   let client;
   try {
     client = await pool.connect();
@@ -132,7 +132,7 @@ app.post("/registre", async (req, res) => {
       });
     }
 
-    if (req.body.codiactivacio != CODI_ACTIVACIO) {
+    if (codiactivacio !== CODI_ACTIVACIO) {
       return res
         .status(400)
         .json({ msg: "Codi d'activació incorrecte", status: false });
@@ -140,7 +140,7 @@ app.post("/registre", async (req, res) => {
 
     const queryInsert = `
             INSERT INTO users (nom, cognoms, email, password, rol_id)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            VALUES ($1, $2, $3, $4, $5)
         `;
     const values = [nom, cognoms, email, bcrypt.hashSync(password, 10), rol];
     await client.query(queryInsert, values);
