@@ -33,7 +33,7 @@ function CrearMembre() {
     const [mote, setMote] = useState(membre.mote || '');
     const [nom, setNom] = useState(membre.nom || '');
     const [cognoms, setCognoms] = useState(membre.cognoms || '');
-    const [alcadaHombro, setAlcadaHombro] = useState(membre.alcada_hombro || '');
+    const [alcadaEspatlla, setAlcadaEspatlla] = useState(membre.alcada_espatlla || '');
     const [alcadaMans, setAlcadaMans] = useState(membre.alcada_mans || '');
     const [comentaris, setComentaris] = useState(membre.comentaris || '');
     const [error, setError] = useState('');
@@ -98,7 +98,7 @@ function CrearMembre() {
             mote,
             nom,
             cognoms,
-            alcada_hombro: alcadaHombro ? parseFloat(alcadaHombro) : 0,
+            alcada_espatlla: alcadaEspatlla ? parseFloat(alcadaEspatlla) : 0,
             alcada_mans: alcadaMans ? parseFloat(alcadaMans) : 0,
             comentaris,
         };
@@ -160,7 +160,7 @@ function CrearMembre() {
                         mote,
                         nom,
                         cognoms,
-                        alcada_hombro: alcadaHombro,
+                        alcada_espatlla: alcadaEspatlla,
                         alcada_mans: alcadaMans,
                         comentaris,
                     }}
@@ -208,9 +208,9 @@ function CrearMembre() {
                         <Box mb={2}>
                             <TextField
                                 fullWidth
-                                label="Alçada de l'hombro (cm)"
-                                value={alcadaHombro}
-                                onChange={(e) => setAlcadaHombro(e.target.value)}
+                                label="Alçada de l'espatlla (cm)"
+                                value={alcadaEspatlla}
+                                onChange={(e) => setAlcadaEspatlla(e.target.value)}
                                 variant="outlined"
                                 type="number"
                             />

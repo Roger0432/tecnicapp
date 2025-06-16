@@ -71,7 +71,7 @@ function Membres() {
             case 'mote':
                 return membre.mote || membre.nomComplet;
             case 'alcada':
-                return membre.alcada_hombro !== undefined ? membre.alcada_hombro : Infinity;
+                return membre.alcada_espatlla !== undefined ? membre.alcada_espatlla : Infinity;
             default:
                 return membre.nomComplet;
         }
@@ -241,9 +241,9 @@ function Membres() {
                                             <Typography variant="body2" color="text.secondary">
                                                 {membre.nomComplet}
                                             </Typography>
-                                            {membre.alcada_hombro && (
+                                            {membre.alcada_espatlla && (
                                                 <Typography variant="body2" color="text.secondary">
-                                                    {membre.alcada_hombro} cm
+                                                    {membre.alcada_espatlla} cm
                                                 </Typography>
                                             )}
                                         </Box>

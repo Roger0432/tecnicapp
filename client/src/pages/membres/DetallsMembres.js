@@ -26,9 +26,9 @@ function TaulaDetallsMembre({ membre }) {
                     </TableRow>
                     <TableRow>
                         <TableCell component="th" scope="row">
-                            <strong>Alçada de l'hombro</strong>
+                            <strong>Alçada de l'espatlla</strong>
                         </TableCell>
-                        <TableCell>{membre.alcada_hombro}</TableCell>
+                        <TableCell>{membre.alcada_espatlla}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell component="th" scope="row">

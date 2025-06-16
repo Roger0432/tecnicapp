@@ -12,10 +12,13 @@ Aquest és el backend de l'aplicació Tecnicapp, una aplicació per gestionar ca
 
 1. Clona el repositori o descarrega els fitxers
 2. Navega a la carpeta del servidor:
+
 ```bash
 cd Tecnicapp/server
 ```
+
 3. Instal·la les dependències:
+
 ```bash
 npm install
 ```
@@ -24,9 +27,11 @@ npm install
 
 1. Assegura't de tenir PostgreSQL instal·lat i en funcionament
 2. Crea una nova base de dades per a l'aplicació:
+
 ```sql
 CREATE DATABASE tecnicapp;
 ```
+
 3. Connecta't a la base de dades i executa el següent script de creació complet:
 
 ```sql
@@ -38,7 +43,7 @@ CREATE TABLE public.rols (
     rol character varying NOT NULL
 );
 
-ALTER TABLE public.rols 
+ALTER TABLE public.rols
     ADD CONSTRAINT rols_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.rols_id_seq
@@ -62,7 +67,7 @@ CREATE TABLE public.users (
     rol_id integer NOT NULL
 );
 
-ALTER TABLE public.users 
+ALTER TABLE public.users
     ADD CONSTRAINT users_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.users_id_seq
@@ -84,7 +89,7 @@ CREATE TABLE public.resultats (
     descripcio character varying NOT NULL
 );
 
-ALTER TABLE public.resultats 
+ALTER TABLE public.resultats
     ADD CONSTRAINT resultats_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.resultats_id_seq
@@ -109,7 +114,7 @@ CREATE TABLE public.esdeveniments (
     nom character varying NOT NULL
 );
 
-ALTER TABLE public.esdeveniments 
+ALTER TABLE public.esdeveniments
     ADD CONSTRAINT esdeveniments_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.assaigsdiades_id_seq
@@ -141,7 +146,7 @@ CREATE TABLE public.castells (
     punts_descarregat numeric NOT NULL
 );
 
-ALTER TABLE public.castells 
+ALTER TABLE public.castells
     ADD CONSTRAINT castells_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.castells_id_seq
@@ -164,7 +169,7 @@ CREATE TABLE public.esdeveniments_castells (
     nom character varying
 );
 
-ALTER TABLE public.esdeveniments_castells 
+ALTER TABLE public.esdeveniments_castells
     ADD CONSTRAINT esdeveniments_castells_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.assaigsdiades_castells_id_seq
@@ -191,11 +196,11 @@ CREATE TABLE public.membres (
     cognoms character varying,
     mote character varying NOT NULL,
     comentaris character varying,
-    alcada_hombro numeric,
+    alcada_espatlla numeric,
     alcada_mans numeric
 );
 
-ALTER TABLE public.membres 
+ALTER TABLE public.membres
     ADD CONSTRAINT membres_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.membres_id_seq
@@ -215,7 +220,7 @@ CREATE TABLE public.posicions (
     nom character varying NOT NULL
 );
 
-ALTER TABLE public.posicions 
+ALTER TABLE public.posicions
     ADD CONSTRAINT posicions_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.posicions_id_seq
@@ -237,7 +242,7 @@ CREATE TABLE public.membres_posicions (
     posicio character varying NOT NULL
 );
 
-ALTER TABLE public.membres_posicions 
+ALTER TABLE public.membres_posicions
     ADD CONSTRAINT membres_posicions_pk PRIMARY KEY (id);
 
 CREATE SEQUENCE public.membres_posicions_id_seq
@@ -326,12 +331,14 @@ L'aplicació s'executarà per defecte al port 5000 o al port especificat a l'arx
 L'API inclou els següents endpoints principals:
 
 ### Autenticació
+
 - `POST /inicisessio` - Iniciar sessió
 - `POST /registre` - Registrar un nou usuari
 - `GET /verify-token` - Verificar token JWT
 - `GET /rols` - Obtenir els rols disponibles
 
 ### Esdeveniments
+
 - `POST /crear-esdeveniment` - Crear un nou esdeveniment
 - `POST /esdeveniments` - Obtenir els esdeveniments (assaig o actuació)
 - `GET /detalls-esdeveniment/:id` - Obtenir els detalls d'un esdeveniment
@@ -339,17 +346,20 @@ L'API inclou els següents endpoints principals:
 - `PUT /editar-esdeveniment/:id` - Actualitzar un esdeveniment
 
 ### Membres
+
 - `GET /membres` - Obtenir tots els membres
 - `POST /crear-membre` - Crear un nou membre
 - `DELETE /borrar-membre/:id` - Eliminar un membre
 - `PUT /editar-membre/:id` - Actualitzar un membre
 
 ### Castells
+
 - `GET /castells` - Obtenir tots els castells
 - `POST /guardar-castells` - Guardar castells per a un esdeveniment
 - `DELETE /borrar-castell/:id` - Eliminar un castell
 
 ### Tronc i Pinya
+
 - `GET /membres-tronc/:id` - Obtenir els membres del tronc per a un castell
 - `GET /membres-no-tronc/:id` - Obtenir els membres disponibles per al tronc
 - `PUT /actualitzar-tronc/:id` - Actualitzar el tronc d'un castell
@@ -362,11 +372,13 @@ L'API inclou els següents endpoints principals:
 El servidor està configurat per ser desplegat a Vercel. El fitxer `vercel.json` ja conté la configuració necessària. Per desplegar-lo:
 
 1. Instal·la Vercel CLI:
+
 ```bash
 npm install -g vercel
 ```
 
 2. Desplega l'aplicació:
+
 ```bash
 vercel
 ```
@@ -376,5 +388,6 @@ vercel
 ## Connexió amb el client
 
 El client per defecte es connecta a l'API en les següents URLs:
+
 - En mode desenvolupament: `http://localhost:5000`
 - En producció: `https://tecnicapp-server.vercel.app`

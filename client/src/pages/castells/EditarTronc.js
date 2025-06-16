@@ -323,7 +323,7 @@ function EditarTronc({ castell }) {
                                             color="text.secondary"
                                             sx={{ mr: 1 }}
                                         >
-                                            {membre.alcada_hombro}
+                                            {membre.alcada_espatlla}
                                         </Typography>
                                     </ListItemButton>
                                     <Divider />

@@ -126,12 +126,10 @@ app.post("/registre", async (req, res) => {
     const count = result.rows[0].count;
 
     if (count > 0) {
-      return res
-        .status(400)
-        .json({
-          msg: "Aquest correu electrònic ja està registrat",
-          status: false,
-        });
+      return res.status(400).json({
+        msg: "Aquest correu electrònic ja està registrat",
+        status: false,
+      });
     }
 
     if (req.body.codiactivacio != CODI_ACTIVACIO) {
@@ -433,7 +431,7 @@ app.get("/membres-no-tronc/:id", async (req, res) => {
   try {
     client = await pool.connect();
     const query = `
-            SELECT id, mote, nom, cognoms, alcada_hombro
+            SELECT id, mote, nom, cognoms, alcada_espatlla
             FROM membres
             WHERE id NOT IN (SELECT membre_id FROM membres_posicions WHERE esdeveniment_castell_id = $1)
         `;
@@ -454,7 +452,7 @@ app.get("/membres-tronc/:id", async (req, res) => {
   try {
     client = await pool.connect();
     const query = `
-            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_hombro, m.nom, m.cognoms
+            SELECT m.id AS id, m.mote, mp.posicio, m.alcada_espatlla, m.nom, m.cognoms
             FROM membres_posicions mp
             JOIN membres m ON mp.membre_id = m.id
             WHERE mp.esdeveniment_castell_id = $1
@@ -578,7 +576,7 @@ app.get("/membres", async (req, res) => {
   try {
     client = await pool.connect();
     const query = `
-            SELECT id, mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris
+            SELECT id, mote, nom, cognoms, alcada_espatlla, alcada_mans, comentaris
             FROM membres
         `;
 
@@ -593,17 +591,24 @@ app.get("/membres", async (req, res) => {
 });
 
 app.post("/crear-membre", async (req, res) => {
-  const { mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris } =
+  const { mote, nom, cognoms, alcada_espatlla, alcada_mans, comentaris } =
     req.body;
   let client;
 
   try {
     client = await pool.connect();
     const query = `
-            INSERT INTO membres (mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris)
+            INSERT INTO membres (mote, nom, cognoms, alcada_espatlla, alcada_mans, comentaris)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
-    const values = [mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris];
+    const values = [
+      mote,
+      nom,
+      cognoms,
+      alcada_espatlla,
+      alcada_mans,
+      comentaris,
+    ];
     await client.query(query, values);
     res.status(200).json({ msg: "Membre creat correctament", status: true });
   } catch (error) {
@@ -632,21 +637,21 @@ app.delete("/borrar-membre/:id", async (req, res) => {
 
 app.put("/editar-membre/:id", async (req, res) => {
   const id = req.params.id;
-  const { mote, nom, cognoms, alcada_hombro, alcada_mans, comentaris } =
+  const { mote, nom, cognoms, alcada_espatlla, alcada_mans, comentaris } =
     req.body;
   let client;
   try {
     client = await pool.connect();
     const query = `
             UPDATE membres 
-            SET mote = $1, nom = $2, cognoms = $3, alcada_hombro = $4, alcada_mans = $5, comentaris = $6
+            SET mote = $1, nom = $2, cognoms = $3, alcada_espatlla = $4, alcada_mans = $5, comentaris = $6
             WHERE id = $7
         `;
     const values = [
       mote,
       nom,
       cognoms,
-      alcada_hombro,
+      alcada_espatlla,
       alcada_mans,
       comentaris,
       id,
